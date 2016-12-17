@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+
+{% block browsertitle %}
+  Testimonials
+{% endblock %}
+
+
+{% block content %}
+<div class="page-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Testimonials</h1>
+            <hr>
+        </div>
+
+        <div class="col-md-8">
+            <div>
+                <div class="list-group">
+                  <div class="list-group-item testimonials-title-bg-box">
+                    <h3>What clients are saying . . .</h3>
+                  </div>
+                    {% for item in testimonials %}
+                    <a href="#" class="list-group-item">
+                      <h4 class="list-group-item-heading"><strong>{{ item.title }}</strong></h4>
+                      <p class="list-group-item-text">{{ item.created_at }}</p>
+                      <p class="list-group-item-text">{{ item.testimonial }}</p>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+              
+              <br><br>
+        </div>
+    </div><!-- // .row  -->
+</div>
+{% endblock %}

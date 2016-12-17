@@ -1,0 +1,681 @@
+{% extends 'base-admin.html' %}
+
+{% block title %}
+  Edit Real Estate Listing | ABT
+{% endblock %}
+
+{% block css %}
+<!-- Datepicker for warranty-registration.php @https://jqueryui.com/datepicker/#default -->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/assets/css/jquery-ui.min.css">
+{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div id="dashboard-toggle" class="col-md-8" style="margin-top:-20px;margin-left:254px;">
+
+          <h2>Edit real estate listing</h2>
+          <hr>
+
+            <form method="post" action="/admin/brokers/update-real-estate-listing?id={{ listing.id }}&amp;broker_id={{ listing.broker_id }}"
+              class="form-horizontal" name="edit-real-estate-listing-form"
+              id="edit-real-estate-listing-form" enctype="multipart/form-data">
+
+                <h3 class="subheading">Listing agent information</h3>
+
+                <div class="form-group">
+                    <label for="listing_agent_id" class="control-label col-sm-3">
+                      Listing agent(ID)
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control p1 required"
+                          name="listing_agent_id" id="listing_agent_id">
+                            <option value="{{ listing.listing_agent_id }}">{{ listing.listing_agent_id }}</option>
+                            {% for agent in agents %}
+                              <option value="{{ agent.agent_id }} ">
+                                {{ agent.agent_last_name }}  {{ agent.agent_first_name }}, (ID = {{ agent.agent_id }})
+                              </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <hr>
+
+                <h3 class="subheading">
+                  Important data stored by search engines
+                  <a href="https://moz.com/learn/seo/meta-description" target="_blank">
+                    (learn more)
+                  </a>
+                </h3>
+
+                <div class="form-group">
+                    <label for="type" class="control-label col-sm-3">
+                      Meta description
+                    </label>
+                    <div class="col-sm-9">
+                        <p id="meta-description-content"><a style="text-decoration:underline;cursor:pointer" title="Category">{{ listing.subtype }}</a> commercial real estate {% if listing.type == 'sale' %}<a style="text-decoration:underline;cursor:pointer" title="Listing type">for sale.</a> {% else %}<a style="text-decoration:underline;cursor:pointer" title="Type">for lease.</a> {% endif %}<a style="text-decoration:underline;cursor:pointer" title="Address">{{ listing.address }}</a>, <a style="text-decoration:underline;cursor:pointer" title="City">{{ listing.city }}</a>,<a style="text-decoration:underline;cursor:pointer" title="State">{{ listing.state }}</a> <a style="text-decoration:underline;cursor:pointer" title="Zip">{{ listing.zip }}.</a> {% if listing.date_available %}Occupy date: <a style="text-decoration:underline;cursor:pointer" title="Date available">{{ listing.date_available }}.</a>{% endif %} <a style="text-decoration:underline;cursor:pointer" title="Ad title">{{ listing.ad_title }}</a> <a style="text-decoration:underline;cursor:pointer" title="Today's date">{{ 'now'|date('Y-m-d') }}.</a></p>
+                        <p id="display-meta-description-length"></p>
+                    </div>
+                </div>
+                <hr>
+
+                <h3 class="subheading">Real estate information</h3>
+
+                <div class="form-group">
+                    <label for="type" class="control-label col-sm-3">
+                      Listing type
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control required"
+                          name="type" id="re-edit-type">
+                            <option value="{{ listing.type }}">
+                              {% if listing.type == 'sale' %}
+                                Sale
+                              {% else %}
+                                Lease
+                              {% endif %}
+                            </option>
+                            <option value="sale">For Sale</option>
+                            <option value="lease">For Lease</option>
+                        </select>
+                        <small>
+                          *Displays in meta description as "for sale" or "for lease"
+                        </small>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="re-edit-subtype" class="control-label col-sm-3">
+                      Category
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control required"
+                          name="subtype" id="re-edit-subtype">
+                            {% if listing.subtype %}
+                              <option value="{{ listing.subtype }}">{{ listing.subtype }}</option>
+                            {% endif %}
+                        </select>
+                        <small>
+                          *Displays in meta description. To change category,
+                          select &quot;For Sale&quot; or &quot;For Lease&quot;
+                          in Listing type
+                        </small>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="listing_status" class="control-label col-sm-3">Display status</label>
+                    <div class="col-sm-9">
+                        <select name="display" id="display" class="form-control">
+                            <option value="{{ listing.display }}"> {{ listing.display }}</option>
+                            <option value="1">Show</option>
+                            <option value="0">Hide</option>
+                        </select>
+                        <small>1 = show, 0 = hide. To change status select Hide or Show & click "Update real estate listing" button below.</small>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="clients_id" class="control-label col-sm-3">
+                      Your company ID
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control"
+                        name="clients_id" id="clients_id"
+                        placeholder="Your company ID or reference"
+                        value="{{ listing.clients_id }}">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="ad_title" class="control-label col-sm-3">
+                      Ad title
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control required"
+                        name="ad_title" id="ad_title"
+                        placeholder="Text displays at top of ad &amp; used for search engine indexes"
+                        value="{{ listing.ad_title }}">
+                        <small>
+                          *Displays in meta description.
+                        </small>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="asking_price" class="control-label col-sm-3">
+                      Asking price
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" name="asking_price"
+                        class="form-control required" id="asking_price"
+                        placeholder="Price" value="{{ listing.asking_price }}">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="date_available" class="control-label col-sm-3">
+                      Date available
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" id="datepicker" class="form-control"
+                        name="date_available" placeholder="Date new tenant or owner can occupy"
+                        value="{{ listing.date_available }}">
+                        <small>
+                          *Displays in meta description.
+                        </small>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="square_feet" class="control-label col-sm-3">
+                      Square feet
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="number" name="square_feet"
+                        class="form-control required" id="square_feet" step="100"
+                        placeholder="Total square feet" value="{{ listing.square_feet }}">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="acres" class="control-label col-sm-3">
+                      Acres
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="number" name="acres" step="0.1" min="0"
+                        class="form-control required" id="acres"
+                        placeholder="Acres - leave blank if not applicable"
+                        value="{{ listing.acres }}">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="address" class="control-label col-sm-3">
+                      Address
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" name="address"
+                        class="form-control required" id="address" placeholder="Address"
+                        value="{{ listing.address }}">
+                        <small>
+                          *Displays in meta description.
+                        </small>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="address2" class="control-label col-sm-3">
+                      Address2
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" name="address2"
+                        class="form-control required" id="address2" placeholder="Address2"
+                        value="{{ listing.address2 }}">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="city" class="control-label col-sm-3">
+                      City
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" name="city"
+                        class="form-control required" id="city" placeholder="City"
+                        value="{{ listing.city }}">
+                        <small>
+                          *Displays in meta description.
+                        </small>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="state" class="control-label col-sm-3">
+                      State
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control required" name="state" id="add-listing-state-list">
+                            <option value="{{ listing.state }}">{{ listing.state }}</option>
+                            {% for state in states %}
+                                <option value="{{ state.abbrev }}">{{ state.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <small>
+                          *Displays in meta description.
+                        </small>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="county" class="control-label col-sm-3">
+                      County
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control required" name="county"
+                            id="add-listing-county-list" placeholder="County">
+                            <option value="{{ listing.county }}">{{ listing.county }}</option>
+                            {% if county %}
+                            <option>{{ county }}</option>
+                            {% endif %}
+                            <option value="">Select county</option>
+                            <!-- jquery appends here; Ajax code below -->
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="zip" class="control-label col-sm-3">
+                      Zip
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" name="zip" class="form-control required"
+                        id="zip" placeholder="Zip" value="{{ listing.zip }}">
+                        <small>
+                          *Displays in meta description.
+                        </small>
+                     </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="description" class="control-label col-sm-3">
+                      Description
+                    </label>
+                    <div class="col-sm-9">
+                      <textarea name="description" class="form-control required" id="re-description" placeholder="Real estate description">{{ listing.description|raw }}</textarea>
+                      <script>
+                        CKEDITOR.replace( 're-description' );
+                      </script>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="keywords" class="control-label col-sm-3">
+                      Keywords
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" name="keywords" class="form-control"
+                        id="keywords" placeholder="List 6 - 10 words to aid search engines (must be comma separated)"
+                        value="{{ listing.keywords }}">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                   <label class="control-label col-sm-3">
+                     Add or change brochure
+                   </label>
+                   <div class="col-sm-9">
+                         <p><input type="file" name="brochure" id="brochure"></p>
+                         <p class="help-block small" style="margin-top:-7px;">
+                           **Must be pdf, gif, jpg, jpeg or png under 5MB each
+                         </p>
+                         <!-- <p style="margin-top: 14px;">
+                           <img src="/assets/images/uploaded_real_estate_brochures/{{ listing.img01 }}" alt="{{ broker_company_name }}"  height="90">
+                         </p> -->
+                         <p style="margin-top: 5px;">
+                           <span style="padding-right:10px;">
+                             Current brochure:
+                           </span>
+                           {% if listing.brochure %}{{ listing.brochure }} {% else %} No brochure {% endif %}
+                         </p>
+                   </div>
+               </div>
+
+              <hr>
+
+              <label class="control-label col-sm-3"></label>
+              <div class="col-sm-9 p3">
+                <a class="btn btn-default" id="show-images-section-btn">
+                  Click to add or modify images
+                </a>
+              </div>
+
+
+              <div id="edit-images-section">
+               <!-- - - - - - - - - -  Images - - - - - - - - - - - - - - -  -->
+
+               <h3 class="subheading">Add or modify images</h3>
+
+               <div class="form-group" id="upload-business-photos">
+                  <label class="control-label col-sm-3">
+
+                  </label>
+                  <div class="col-sm-9">
+                        <p><input type="file" name="img01" id="img01"></p>
+                        <p class="help-block small" style="margin-top:-7px;">
+                          **Must be gif, jpg, jpeg or png under 2MB each
+                        </p>
+                        <p style="margin-top: 14px;">
+                          <img src="/assets/images/uploaded_real_estate_photos/{{ listing.img01 }}" alt="{{ broker_company_name }}"  height="90">
+                        </p>
+                        <p style="margin-top: -5px;">
+                          <span style="padding-right:10px;">
+                            Current image 1:
+                          </span>
+                          {% if listing.img01 %}{{ listing.img01 }} {% else %} No image {% endif %}
+                        </p>
+                        <hr/>
+
+                        <p><input type="file" name="img02" id="img02"></p>
+                        <p class="help-block small" style="margin-top:-7px;">
+                          **Must be gif, jpg, jpeg or png under 2MB each
+                        </p>
+                        <p style="margin-top: 14px;">
+                          <img src="/assets/images/uploaded_real_estate_photos/{{ listing.img02 }}" alt="{{ broker_company_name }}"  height="90">
+                        </p>
+                        <p style="margin-top: -5px;">
+                          <span style="padding-right:10px;">
+                            Current image 2:
+                          </span>
+                          {% if listing.img02 %}{{ listing.img02 }} {% else %} No image {% endif %}
+                        </p>
+                        <a class="btn btn-danger btn-sm"
+                           href="/admin/brokers/delete-real-estate-listing-image?id={{ listing.id}}&amp;image={{ listing.img02 }}&amp;broker_id={{ listing.broker_id }}"
+                           onclick="return confirm('Are you sure you want to delete image 2?')">
+                           delete image
+                        </a>
+                        <hr/>
+
+                        <p><input type="file" name="img03" id="img03"></p>
+                        <p class="help-block small" style="margin-top:-7px;">
+                          **Must be gif, jpg, jpeg or png under 2MB each
+                        </p>
+                        <p style="margin-top: 14px;">
+                          <img src="/assets/images/uploaded_real_estate_photos/{{ listing.img03 }}" alt="{{ broker_company_name }}"  height="90">
+                        </p>
+                        <p style="margin-top: -5px;">
+                          <span style="padding-right:10px;">
+                            Current image 3:
+                          </span>
+                          {% if listing.img03 %}{{ listing.img03 }} {% else %} No image {% endif %}
+                        </p>
+                        <a class="btn btn-danger btn-sm"
+                           href="/admin/brokers/delete-real-estate-listing-image?id={{ listing.id}}&amp;image={{ listing.img03 }}&amp;broker_id={{ listing.broker_id }}"
+                           onclick="return confirm('Are you sure you want to delete image 3?')">
+                           delete image
+                        </a>
+                        <hr/>
+
+                        <p><input type="file" name="img04" id="img04"></p>
+                        <p class="help-block small" style="margin-top:-7px;">
+                          **Must be gif, jpg, jpeg or png under 2MB each
+                        </p>
+                        <p style="margin-top: 14px;">
+                          <img src="/assets/images/uploaded_real_estate_photos/{{ listing.img04 }}" alt="{{ broker_company_name }}"  height="90">
+                        </p>
+                        <p style="margin-top: -5px;">
+                          <span style="padding-right:10px;">
+                            Current image 4:
+                          </span>
+                          {% if listing.img04 %}{{ listing.img04 }} {% else %} No image {% endif %}
+                        </p>
+                        <a class="btn btn-danger btn-sm"
+                           href="/admin/brokers/delete-real-estate-listing-image?id={{ listing.id}}&amp;image={{ listing.img04 }}&amp;broker_id={{ listing.broker_id }}"
+                           onclick="return confirm('Are you sure you want to delete image 4?')">
+                           delete image
+                        </a>
+                        <hr/>
+
+                        <p><input type="file" name="img05" id="img05"></p>
+                        <p class="help-block small" style="margin-top:-7px;">
+                          **Must be gif, jpg, jpeg or png under 2MB each
+                        </p>
+                        <p style="margin-top: 14px;">
+                          <img src="/assets/images/uploaded_real_estate_photos/{{ listing.img05 }}" alt="{{ broker_company_name }}"  height="90">
+                        </p>
+                        <p style="margin-top: -5px;">
+                          <span style="padding-right:10px;">
+                            Current image 5:
+                          </span>
+                          {% if listing.img05 %}{{ listing.img05 }} {% else %} No image {% endif %}
+                        </p>
+                        <a class="btn btn-danger btn-sm"
+                           href="/admin/brokers/delete-real-estate-listing-image?id={{ listing.id}}&amp;image={{ listing.img05 }}&amp;broker_id={{ listing.broker_id }}"
+                           onclick="return confirm('Are you sure you want to delete image 5?')">
+                           delete image
+                        </a>
+                        <hr/>
+
+                        <p><input type="file" name="img06" id="img06"></p>
+                        <p class="help-block small" style="margin-top:-7px;">
+                          **Must be gif, jpg, jpeg or png under 2MB each
+                        </p>
+                        <p style="margin-top: 14px;">
+                          <img src="/assets/images/uploaded_real_estate_photos/{{ listing.img06 }}" alt="{{ broker_company_name }}"  height="90">
+                        </p>
+                        <p style="margin-top: -5px;">
+                          <span style="padding-right:10px;">
+                            Current image 6:
+                          </span>
+                          {% if listing.img06 %}{{ listing.img06 }} {% else %} No image {% endif %}
+                        </p>
+                        <a class="btn btn-danger btn-sm"
+                           href="/admin/brokers/delete-real-estate-listing-image?id={{ listing.id}}&amp;image={{ listing.img06 }}&amp;broker_id={{ listing.broker_id }}"
+                           onclick="return confirm('Are you sure you want to delete image 6?')">
+                           delete image
+                        </a>
+                   </div>
+               </div>
+            </div><!-- // #edit-images-section -->
+
+                <hr/>
+
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+                <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
+          <!--
+                <h3 class="subheading">Upload images <span class="small">(optional - can be added later)</span></h3>
+
+
+                <div class="form-group" id="upload-business-photos">
+                    <label for="business_photos" class="control-label col-sm-3">&nbsp;</label>
+                    <div class="col-sm-9">
+                        <p style="margin-bottom: 15px; color: #222;">
+                            Ctrl+ image to multi-select <em>up to 5 images</em> (1 only if you use MS Internet Explorer).
+                            <br>
+                            <em>For optimum results, upload images >= 750px wide.</em>
+                            <br><br>
+                            After posting your ad, you can view, upload and change images by clicking "Manage listings (ads)" and then the "Edit" button.
+                        </p>
+                        <p><input type="file" name="biz_photos[]" id="business_photo01" multiple="multiple" min="1" max="5"></p>
+                        <p class="help-block small" style="margin-top:-7px;">*Up to 5 images. Must be gif, jpg, jpeg or png under 2MB each</p>
+                    </div>
+                </div>
+
+                <hr/>
+          -->
+
+
+
+                <div class="form-group p3">
+                    <div class="col-sm-offset-3 col-sm-8">
+                        <button  id="edit-real-estate-listing-form-btn" type="submit"
+                        class="btn btn-primary btn-lg">
+                        Update real estate listing
+                      </button>
+                    </div>
+                </div>
+
+            </form>
+
+
+          </div><!--  // .col-md-8  -->
+      </div><!--  // .row  -->
+</div><!--  // .container  -->
+{% endblock %}
+
+
+{% block bottomjs %}
+<!-- Datepicker for date_available field @https://jqueryui.com/datepicker/#default -->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="/assets/js/datepicker.js"></script>
+<script>
+$(document).ready(function(){
+
+    // form validation
+    //$("#new-real-estate-listing-form").validate();
+
+    $("#show-images-section-btn").toggle(function(){
+        $("#edit-images-section").fadeIn(1500);
+        $("#show-images-section-btn").text("Click to hide image section");
+      }, function(){
+        $("#edit-images-section").fadeOut(1000);
+        $("#show-images-section-btn").text("Click to add or modify images");
+      }
+    );
+
+
+
+    // modify button text on submission
+    $("#edit-real-estate-listing-form").submit(function(){
+        $("#edit-real-estate-listing-form-btn").html("Sending data. Please wait. . .");
+    });
+
+
+    // sale categories array
+    sale = [
+        "Entertainment",
+        "Hospitality",
+        "Income Business",
+        "Industrial",
+        "Land",
+        "Medical",
+        "Multi-family",
+        "Office",
+        "Retail",
+        "Worship",
+        "Other"
+    ];
+
+    // lease categories array
+    lease = [
+        "Industrial",
+        "Medical",
+        "Office",
+        "Office Short Term",
+        "Retail",
+        "Other"
+    ];
+
+    // call function onload to populate drop-down
+    //populateSubtype();
+
+    // run function on change of drop-down
+    $("#re-edit-type").change(function(){
+        populateSubtype();
+    });
+
+
+    function populateSubtype(){
+      // get value of default type & store in variable
+      var type = $("#re-edit-type").val();
+
+      // check if value of type being passed
+      console.log(type);
+
+      // empty value of #subtype select
+      $("#re-edit-subtype").empty();
+
+      // loop through selected array
+      if(type == 'sale')
+      {
+        $.each(sale, function(index, value){
+            console.log(index + ': ' + value);
+            $("#re-edit-subtype").append( $('<option>').text(value).attr('value', value) );
+        });
+      }
+      else
+      {
+        $.each(lease, function(index, value){
+            //console.log(index + ': ' + value);
+            $("#re-edit-subtype").append( $('<option>').text(value).attr('value', value) );
+        });
+      }
+    }
+
+
+    // get meta-description length
+    getLength("meta-description-content");
+
+    function getLength(id){
+      var string = document.getElementById(id).innerHTML;
+      //alert(string);
+      var string_length = string.length;
+      string_length = string_length - 654;
+
+      console.log(string_length);
+
+      document.getElementById("display-meta-description-length").innerHTML="Current character length is " + string_length + ". Recommended length is 150 - 160 characters (inlcudes spaces).";
+    };
+
+
+
+
+
+
+    // populate county drop-down on blur of state selection
+    $("#add-listing-state-list").change(function(){
+        var state = $(this).val();
+        console.log("state = " + state);
+
+        $.ajax({
+            url: '/buy/get-county',
+            type: 'POST',
+            data: {
+              state: state
+             },
+            cache: false,
+            success: function(counties){
+
+              // empty content
+              $("#add-listing-county-list").empty();
+
+              // add 'all' choice
+              // $("#add-listing-county-list").append($('<option>').text("All counties"). attr('value', 'all'));
+
+              // loop through county_list array
+              $.each(counties, function(index, value){
+                  $('#add-listing-county-list').append( $('<option>').text(value).attr('value', value) );
+              });
+
+              console.log(counties);
+            },
+            error: function(){
+                alert("Ajax error fetching counties.");
+            }
+        });
+
+    });
+
+});
+</script>
+{% endblock %}

@@ -1,0 +1,512 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Buy or Lease Real Estate
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+
+{% block content %}
+<div class="page-wrapper">
+
+        <h1 class="text-center" style="margin-top:30px;">
+            {% if toptitle and realestateindex is null %}
+              {{ toptitle }}
+            {% else %}
+              Search {{ all_listings|length }} Real Estate Listings
+            {% endif %}
+        </h1>
+
+        <div class="row t1 search-div bg-f0f">
+
+            <form method="get" action="/buy/find-real-estate-for-sale"
+                name="search_for_real_estate" id="search_for_real_estate">
+
+                <div class="col-md-2">
+                    <h3>Type</h3>
+                    <select class="form-control" name="type" id="type">
+                        {% if type %}
+                        <option value="{{ type }}">{{ type }}</option>
+                        {% endif %}
+                        <option value="sale">Sale</option>
+                        <option value="lease">Lease</option>
+                    </select>
+                </div>
+
+
+                <div class="col-md-3">
+                    <h3>Category</h3>
+                      <select class="form-control" name="subtype" id="subtype">
+
+                      </select>
+                </div>
+
+
+                <div class="col-md-2">
+                    <h3>State</h3>
+                    <select class="form-control" name="state" id="buy-state">
+                        {% if state %}
+                        <option value="{{ state }}">{{ state }}</option>
+                        {% endif %}
+                        <option value="all">All States</option>
+                        {% for state in states %}
+                        <option value="{{ state.abbrev }}">{{ state.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+
+                <div class="col-md-2">
+                    <h3>County</h3>
+                    <div class="form-group">
+                        <select class="form-control" name="county" id="buy-counties-list">
+                            {% if county %}
+                            <option value="{{ county }}">{{ county }}</option>
+                            {% endif %}
+                            <option value="all">All counties</option>
+                            <!-- jquery appends here; Ajax code below -->
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="col-md-2">
+                    <h3>Zip</h3>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="zip"
+                          placeholder="5-digit zip code" maxlength="5"
+                          value="{% if zip %}{{ zip }}{% endif %}">
+                    </div>
+                </div>
+
+
+                <div class="col-md-1">
+                    <h3>&nbsp;</h3>
+                    <button id="btn-find-business" class="btn btn-buy btn-block"
+                      type="submit">
+                      Go
+                    </button>
+                </div>
+
+            </form>
+        </div><!-- // .row -->
+
+        <!-- - - - - - - - - - - - Listings - - - - - - - - - - - - - - - - -->
+
+        <div class="row" style="margin-top:20px;" >
+
+            <div class="col-md-3 col-sm-3">
+                {% include 'search-by-keyword-real-estate.html' %}
+            </div>
+
+            <div class="col-md-9 col-sm-9">
+
+              <h2 class="text-center">
+                  {% if subtitle %}
+                    {{ subtitle }}
+                  {% endif %}
+                  {% if listings|length > 0 %}
+                    <span class="badge" style="margin: -18px 0px 0px 0px;">
+                        {{ listings|length }}
+                    </span>
+                  {% endif %}
+              </h2>
+
+
+              {% if listings %}
+
+                <p style="color:#0000ff;" class="text-center">
+                  {% if type == 'sale' %}Search criteria:  Type: <span style="color:#0000ff;font-style:italic;">&quot;Sale&quot;;</span>  {% endif %}
+                  {% if type == 'lease' %}Search criteria:  Type: <span style="color:#0000ff;font-style:italic;">&quot;Lease&quot;;</span>  {% endif %}
+                  {% if subtype %}Category:  <span style="color:#0000ff;font-style:italic;">&quot;{{ subtype }}&quot;;</span>  {% endif %}
+                  {% if state %}State:  <span style="color:#0000ff;font-style:italic;">&quot;{{ state }}&quot;;</span>  {% endif %}
+                  {% if county %}County:  <span style="color:#0000ff;font-style:italic;">&quot;{{ county }}&quot;;</span>  {% endif %}
+                  {% if zip %}Zip:  <span style="color:#0000ff;font-style:italic;">&quot;{{ zip }}&quot;;</span>  {% endif %}
+                </p>
+
+                <!-- to remove the final comma:
+                resource: http://craftcms.stackexchange.com/questions/2898/remove-trailing-comma-from-an-output-loop -->
+                {% if keywords %}
+                <p style="color:#0000ff;" class="text-center">
+                  Keyword search:
+                  {% for keyword in keywords %}
+                    <span style="color:#0000ff;">&quot;{{ keyword }}&quot;</span>
+                    {%- if not loop.last -%}
+                    ,
+                    {% endif %}
+                  {% endfor %}
+                </p>
+                {% endif %}
+                <!-- - - - - - - - - - - - - - - - - - - - - -->
+
+                {% for listing in listings %}
+                <div class="listing-buy-a-biz box p2">
+
+                    <div class="business-listing">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <a href="/realty/view-listing-details?listing_id={{ listing.id }}&amp;broker_id={{ listing.broker_id}}&amp;listing_agent_id={{ listing.listing_agent_id }}">
+                                    <img class="img-responsive" src="/assets/images/uploaded_real_estate_photos/{% if listing.img01 %}{{ listing.img01 }}{% endif %}" alt="Real estate {% if listing.type == 'for_sale' %}for sale{% else %}for lease{% endif %}: {{ listing.address1 }} {{ listing.city }} {{ listing.state }}">
+                                </a>
+                                    <p style="font-size:14px;"><i style="vertical-align:0;" class="fa fa-camera fa-lg"></i>
+                                      <span style="display:inline-block; font-size: 120%; margin-top:5px;">
+                                        {% if listing.img01 and listing.img02 and listing.img03 and listing.img04 and listing.img05 and listing.img06 %}
+                                        6
+                                        {% elseif listing.img01 and listing.img02 and listing.img03 and listing.img04 and listing.img05 %}
+                                        5
+                                        {% elseif listing.img01 and listing.img02 and listing.img03 and listing.img04 %}
+                                        4
+                                        {% elseif listing.img01 and listing.img02 and listing.img03 %}
+                                        3
+                                        {% elseif listing.img01 and listing.img02 %}
+                                        2
+                                        {% else %}
+                                        1
+                                        {% endif %}
+                                      </span>
+                                    </p>
+                            </div>
+
+                            <div style="margin-left: 0px;" class="col-md-7">
+                                <h4 class="media-heading bold" style="margin-bottom:8px;">
+                                    <a href="/realty/view-listing-details?listing_id={{ listing.id }}&amp;broker_id={{ listing.broker_id}}&amp;listing_agent_id={{ listing.listing_agent_id }}">
+                                        {%  if listing.type == 'sale' %}For sale: {% else %}For lease: {% endif %} {{ (listing.ad_title|striptags)|raw }}
+                                    </a>
+                                </h4>
+                                <h5 style="margin-bottom: 5px;">
+                                    {% if listing.type == 'sale' %}
+                                      Asking Price:
+                                    {% elseif listing.type == 'lease' %}
+                                      Per month:
+                                    {% endif %}
+                                    <span class="font-normal">
+                                        ${{ listing.asking_price|number_format }}
+                                    </span>
+                                </h5>
+                                <h5 style="margin-bottom: 5px;">
+                                    Square feet:
+                                    <span class="font-normal">
+                                        {{ listing.square_feet|number_format }}
+                                    </span>
+                                    <span style="padding-left: 10px">
+                                        Acres:
+                                        <span class="font-normal">
+                                            {{ listing.acres|number_format }}
+                                        </span>
+                                    </span>
+                                </h5>
+                                <h5 style="margin-bottom: 5px;">
+                                    Broker:
+                                    <span class="font-normal">
+                                        {{ listing.company_name }}
+                                    </span>
+                                </h5>
+                                <h5 style="margin-bottom: 5px;">
+                                    Agent:
+                                    <span class="font-normal">
+                                        {{ listing.agent_first_name}}  {{ listing.agent_last_name }}
+                                    </span>
+                                </h5>
+                                <h5 style="margin-bottom: 5px;">
+                                    Description:
+                                    <span class="font-normal" style="line-height: 17px;">
+                                        {{ (listing.description|striptags|slice(0, 120))|raw }}
+                                    </span>
+                                </h5>
+                                <h5 style="margin-bottom: 5px;">
+                                    Address:
+                                    <span class="font-normal">
+                                        {{ listing.address }}
+                                    </span>
+                                </h5>
+                                <h5 style="margin-bottom: 5px;">
+                                    City:
+                                    <span class="font-normal">
+                                        {{ listing.city }}
+                                    </span>
+                                    <span style="padding-left: 10px">
+                                        State:
+                                        <span class="font-normal">
+                                            {{ listing.state }}
+                                        </span>
+                                    </span>
+                                    <span style="padding-left: 10px">
+                                        County:
+                                        <span class="font-normal">
+                                            {{ listing.county }}
+                                        </span>
+                                    </span>
+                                    <span style="padding-left: 10px">
+                                        Zip:
+                                        <span class="font-normal">
+                                            {{ listing.zip }}
+                                        </span>
+                                    </span>
+
+                                </h5>
+                                <h5 style="font-weight: normal; margin-bottom: 10px;">
+                                    <span class="bold">
+                                        Seller ID:
+                                    </span>
+                                    <span style="padding-left: 0px">
+                                        <span class="font-normal">
+                                            {{ listing.clients_id }}
+                                        </span>
+                                    </span>
+                                    <span class="bold" style="padding-left: 10px">
+                                        Date available:
+                                    </span>
+                                    <span style="padding-left: 0px">
+                                        <span class="font-normal">
+                                            {{ listing.date_available }}
+                                        </span>
+                                    </span>
+                                </h5>
+
+                                <a class="btn btn-buy btn-block" href="/realty/view-listing-details?listing_id={{ listing.id }}&amp;broker_id={{ listing.broker_id}}&amp;listing_agent_id={{ listing.listing_agent_id }}">
+                                  View Details
+                                </a>
+                            </div><!-- // .col-md-7  -->
+                        </div><!-- // .row  -->
+                    </div><!-- // #business-listing  -->
+
+                </div><!-- // .listing-buy-a-biz  -->
+                {% endfor %}
+
+                <!--  - - - - - - -  Load more  - - - - -   -->
+
+                <!-- <div id="results">{{ results|raw }}</div>
+                <div class="text-center">
+                    <button id="load-more-btn" class="btn btn-default"
+                        style="margin-bottom:20px;">
+                        load more
+                    </button>
+                </div> -->
+
+                <!--  - - - - - - - - - - - - - - - - - -  -->
+
+              {% else %}
+                <div class="alert alert-info text-center">
+                    <h4>No search results</h4>
+                    <p style="color:#0000ff;" class="text-center">
+                      {% if type == 'sale' %}Search criteria:  Type: <span style="color:#0000ff;font-style:italic;">&quot;Sale&quot;;</span>  {% endif %}
+                      {% if type == 'lease' %}Search criteria:  Type: <span style="color:#0000ff;font-style:italic;">&quot;Lease&quot;;</span>  {% endif %}
+                      {% if subtype %}Category:  <span style="color:#0000ff;font-style:italic;">&quot;{{ subtype }}&quot;;</span>  {% endif %}
+                      {% if state %}State:  <span style="color:#0000ff;font-style:italic;">&quot;{{ state }}&quot;;</span>  {% endif %}
+                      {% if county %}County:  <span style="color:#0000ff;font-style:italic;">&quot;{{ county }}&quot;;</span>  {% endif %}
+                      {% if zip %}Zip:  <span style="color:#0000ff;font-style:italic;">&quot;{{ zip }}&quot;;</span>  {% endif %}
+                    </p>
+
+
+
+                  {% if keywords %}
+                  <!-- to remove the final comma:
+                    resource: http://craftcms.stackexchange.com/questions/2898/remove-trailing-comma-from-an-output-loop -->
+                  <p>
+                    Keyword search:
+                    {% for keyword in keywords %}
+                      <span style="color:#0000ff;">&quot;{{ keyword }}&quot;</span>
+                      {%- if not loop.last -%}
+                      ,
+                      {% endif %}
+                    {% endfor %}
+                  </p>
+                  {% endif %}
+
+                </div><!--  // .alert  -->
+              {% endif %}
+
+        </div><!-- // .col-md-9   -->
+    </div><!-- // .row  -->
+</div><!--  // .page-wrapper  -->
+{% endblock %}
+
+{% block bottomjs %}
+<script>
+$(document).ready(function(){
+
+  // sale categories array
+  sale = [
+      "All categories",
+      "Entertainment",
+      "Hospitality",
+      "Income Business",
+      "Industrial",
+      "Land",
+      "Medical",
+      "Multi-family",
+      "Office",
+      "Retail",
+      "Worship",
+      "Other"
+  ];
+
+  // lease categories array
+  lease = [
+      "All categories",
+      "Industrial",
+      "Medical",
+      "Office",
+      "Office Short Term",
+      "Retail",
+      "Other"
+  ];
+
+    // call function onload to populate drop-down
+    populateSubtype();
+
+    // run function on change of drop-down
+    $("#type").change(function(){
+        populateSubtype();
+    });
+
+
+    function populateSubtype(){
+      // get value of default type & store in variable
+      var type = $("#type").val();
+
+      // check if value of type being passed
+      console.log(type);
+
+      // empty value of #subtype select
+      $("#subtype").empty();
+
+      // loop through selected array
+      if(type == 'sale')
+      {
+        $.each(sale, function(index, value){
+            console.log(index + ': ' + value);
+            $("#subtype").append( $('<option>').text(value).attr('value', value) );
+        });
+      }
+      else
+      {
+        $.each(lease, function(index, value){
+            //console.log(index + ': ' + value);
+            $("#subtype").append( $('<option>').text(value).attr('value', value) );
+        });
+      }
+    }
+
+
+
+    // $("#type-dropdown").change(function(){
+    //     var type = $(this).val();
+    //     console.log(type);
+    //
+    //     if(type == 'for_sale'){
+    //         $("#for-sale-category-dropdown").css({"display": "block"});
+    //         $("#for-lease-category-dropdown").css({"display": "none"});
+    //         $("#filler-category-dropdown").css({"display": "none"});
+    //     }
+        // if(type == 'for_lease'){
+        //     $("#for-lease-category-dropdown").css({"display": "block"});
+        //     $("#for-sale-category-dropdown").css({"display": "none"});
+        //     $("#filler-category-dropdown").css({"display": "none"});
+        // }
+
+    // });
+
+
+
+
+    // To populate county drop-down
+    $("#buy-state").change(function(){
+        var state = $(this).val();
+        console.log("state = " + state);
+
+        $.ajax({
+            url: '/buy/get-counties',
+            type: 'POST',
+            data: {
+              state: state
+             },
+            cache: false,
+            success: function(counties){
+
+              // empty content
+              $("#buy-counties-list").empty();
+
+              // add 'all' choice
+              //$("#buy-counties-list").append($('<option>').text("All counties"). attr('value', 'all'));
+
+              // loop through county_list array
+              $.each(counties, function(index, value){
+                  $('#buy-counties-list').append( $('<option>').text(value).attr('value', value) );
+              });
+
+              console.log(counties);
+            },
+            error: function(){
+                alert("Ajax error fetching counties.");
+            }
+        });
+
+    });
+
+
+    /* - - - - -  Load more  - - - - - */
+
+    // initialize variable to track user "load more" button clicks
+    var track_page = 1;
+
+    // run function with track_page argument
+    //load_contents(track_page);
+
+    // on load more button click...
+    $("#load-more-btn").click(function(e){
+
+        // increase value  of track_page by 1 for each click
+        track_page++;
+
+        // check if value passing
+        console.log(track_page);
+
+        // run method to load more content
+        load_contents(track_page);
+    });
+
+
+    function load_contents(track_page)
+    {
+        $.ajax({
+            url: '/buy/getAllListingsForLoadMore',
+            type: 'post',
+            data: {
+              page: track_page
+            },
+            dataType: 'html', // not 'json'
+            success: function(data){
+
+                // check for JSON formatted data returning from script
+                console.log(data);
+
+                // check if results true
+                if(data.length == 0)
+                {
+                    // display text & disable load more btn
+                    $("#load-more-btn").text("No more results").prop("disabled", true);
+                }
+
+                // append data into <div id="results"> above as {# {{ results|raw }}  #}
+                // See Buy Controller and indexAction()
+                $("#results").append(data);
+
+                // scroll page to button element
+                $("html, body").animate({scrollTop: $("#load-more-btn").offset(0).top}, 900);
+            },
+            error: function(){
+                alert("Ajax error fetching listings.");
+            }
+        });
+    }
+
+    /* - - - - - // Load more  - - - - - */
+
+
+
+});
+</script>
+{% endblock %}

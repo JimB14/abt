@@ -1,0 +1,351 @@
+{% extends 'base-admin.html' %}
+
+{% block title %}
+  Company profile | ABT
+{% endblock %}
+
+{% block css %}
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div id="dashboard-toggle" class="col-md-8" style="margin-top:-20px;margin-left:254px;">
+
+
+            <h2>{{ broker.company_name }}</h2>
+            <hr>
+
+            <form action="/admin/brokers/update-company-profile?broker_id={{ session.broker_id }}"
+                class="form-horizontal" method="post"
+                name="update-company-profile-form" id="update-company-profile-form"
+                enctype="multipart/form-data">
+
+                  <h3 style="margin-bottom: 15px;">Company information</h3>
+
+                  <div class="form-group">
+                      <label for="company_name" class="control-label col-sm-2">
+                        Company Name
+                      </label>
+                      <div class="col-sm-10">
+                          <input type="text" class="form-control required" name="company_name"
+                          id="company_name" placeholder="Company name" value="{{ broker.company_name }}" autofocus>
+                      </div>
+                  </div>
+
+
+                  <div class="form-group">
+                      <label for="type" class="control-label col-sm-2">
+                        Type
+                      </label>
+                      <div class="col-sm-10">
+                          <select name="type" id="type" class="form-control required">
+                            <option value="{{ broker.type }}">{{ broker.type }}</option>
+                            <option value="1">Business Broker</option>
+                            <option value="2">Commercial Real Estate Broker</option>
+                            <option value="3">Both</option>
+                          </select>
+                          <small>1 = business broker; 2 = commercial real estate broker; 3 = both</small>
+                      </div>
+                  </div>
+
+
+                  <div class="form-group">
+                      <label for="address1" class="control-label col-sm-2">
+                        Address
+                      </label>
+                      <div class="col-sm-10">
+                          <input type="text" name="address1" class="form-control required"
+                          id="address1" placeholder="Address"
+                          value="{{ broker.address1 }}" >
+                       </div>
+                  </div>
+
+
+
+                  <div class="form-group">
+                      <label for="address2" class="control-label col-sm-2">
+                        Address2
+                      </label>
+                      <div class="col-sm-10">
+                          <input type="text" name="address2" class="form-control"
+                          id="address2" placeholder="Address2"
+                          value="{{ broker.address2 }}" >
+                       </div>
+                  </div>
+
+
+
+                  <div class="form-group">
+                      <label for="city" class="control-label col-sm-2">
+                        City
+                      </label>
+                      <div class="col-sm-10">
+                          <input type="text" name="city" class="form-control required"
+                          id="city" placeholder="City" value="{{ broker.city }}" >
+                      </div>
+                  </div>
+
+
+
+                  <div class="form-group">
+                      <label for="state" class="control-label col-sm-2">
+                         State
+                       </label>
+                       <div class="col-sm-10">
+                           <select class="form-control required" name="state" id="state">
+                              <option value="{{ broker.state}}">{{ broker.state }}</option>
+                              <option value="">Select</option>
+                                {% for state in states %}
+                                    <option value="{{ state.abbrev}}">{{ state.name }}</option>
+                                {% endfor %}
+                           </select>
+                       </div>
+                  </div>
+
+
+
+                  <div class="form-group">
+                      <label for="zip" class="control-label col-sm-2">
+                        Zip
+                      </label>
+                      <div class="col-sm-10">
+                          <input type="text" name="zip" class="form-control required"
+                          id="zip" placeholder="Zip" value="{{ broker.zip }}" >
+                       </div>
+                  </div>
+
+
+
+                  <div class="form-group">
+                      <label for="telephone" class="control-label col-sm-2">
+                        Telephone
+                      </label>
+                      <div class="col-sm-10">
+                          <input type="text" name="telephone" class="form-control required"
+                          id="telephone" placeholder="Telephone" value="{{ broker.telephone }}" >
+                       </div>
+                  </div>
+
+
+
+                  <div class="form-group">
+                      <label for="fax" class="control-label col-sm-2">
+                        Fax
+                      </label>
+                      <div class="col-sm-10">
+                          <input type="text" class="form-control" name="fax"
+                          id="fax" placeholder="Fax" value="{{ broker.fax }}" >
+                      </div>
+                  </div>
+
+
+
+                  <div class="form-group">
+                      <label for="services" class="control-label col-sm-2">
+                        Services offered
+                      </label>
+                      <div class="col-sm-10">
+                          <textarea name="services" class="form-control required" id="services" placeholder="Services offered" rows="5">{{ broker.services|raw }}</textarea>
+                          <script>
+                              CKEDITOR.replace('services');
+                          </script>
+                      </div>
+                  </div>
+
+
+
+                  <div class="form-group">
+                      <label for="company_bio" class="control-label col-sm-2">
+                        Company biography
+                      </label>
+                      <div class="col-sm-10">
+                          <textarea name="company_bio" class="form-control required" id="company_bio" placeholder="Company Biography" rows="5">{{ broker.company_bio|raw }}</textarea>
+                          <script>
+                              CKEDITOR.replace('company_bio');
+                          </script>
+                      </div>
+                  </div>
+
+
+
+                  <div class="form-group">
+                      <label for="website" class="control-label col-sm-2">
+                        Website
+                      </label>
+                      <div class="col-sm-10">
+                          <input type="url" name="website" class="form-control required"
+                          id="website" placeholder="http://www.YourDomain.com"
+                          value="{{ broker.website }}" >
+                      </div>
+                  </div>
+
+
+
+
+                  <h3 style="margin-bottom: 15px;">Broker / Owner information</h3>
+
+                  <div class="form-group">
+                      <label for="first_name" class="control-label col-sm-2">
+                        First name
+                      </label>
+                      <div class="col-sm-10">
+                          <input type="text" name="first_name" class="form-control required"
+                          id="first_name" placeholder="First name"
+                          value="{{ broker.first_name }}" >
+                      </div>
+                  </div>
+
+
+                  <div class="form-group">
+                      <label for="last_name" class="control-label col-sm-2">
+                        Last name
+                      </label>
+                      <div class="col-sm-10">
+                          <input type="text" name="last_name" class="form-control required"
+                          id="last_name" placeholder="Last name"
+                          value="{{ broker.last_name }}" >
+                      </div>
+                  </div>
+
+
+                  <div class="form-group">
+                      <label for="broker_email" class="control-label col-sm-2">
+                        Email <br><small>(All leads sent or Cc here)</small>
+                      </label>
+                      <div class="col-sm-10" style="border-bottom: 1px solid #eee;">
+                          <input style="margin-bottom: 20px;" type="email"
+                          name="broker_email" class="form-control required" id="broker_email"
+                          placeholder="Broker email" value="{{ broker.broker_email }}">
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                      <label for="title" class="control-label col-sm-2">
+                        Title <br><small>(Displays on Co page)</small>
+                      </label>
+                      <div class="col-sm-10" style="border-bottom: 1px solid #eee;">
+                          <input style="margin-bottom: 20px;" type="text"
+                          name="title" class="form-control required" id="title"
+                          placeholder="Title" value="{{ broker.title }}">
+                      </div>
+                  </div>
+
+
+
+                  <div class="col-sm-offset-2 col-sm-10">
+                      <button type="submit" class="btn btn-primary btn-lg" name="action" value="update_company_profile">
+                        Update profile
+                      </button>
+                  </div>
+            </form>
+
+
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+            <div class="form-wrapper">
+                <h3 style="margin-bottom: 15px;">Broker image</h3>
+
+                <form action="/admin/brokers/update-company-broker-photo?broker_id={{ session.broker_id }}"
+                    class="form-horizontal" method="post"
+                    name="update-company-profile-form" id="update-company-profile-form"
+                    enctype="multipart/form-data">
+
+                    <div class="form-group">
+                        <label for="broker_photo" class="control-label col-sm-2">
+                          Upload your photo
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="file" name="broker_photo" id="broker_photo">
+                            <p class="help-block small">*Must be gif, jpg, jpeg or png under 2MB</p>
+                        </div>
+                    </div>
+
+
+                    <div style="margin-top: 15px; margin-bottom: 15px;">
+                        <label class="control-label col-sm-2" style="margin-left: -10px;">
+                          Current
+                        </label>
+                        <div class="col-sm-10" style="margin-bottom: 15px;border-bottom: 1px solid #eee;">
+                            <img style="margin-bottom: 20px;display:block;"  src="/assets/images/uploaded_profile_photos/{% if broker.broker_photo %}{{ broker.broker_photo}}{% else %}filler.png {% endif %}" height="130" alt="profile photo">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-offset-2 col-sm-10" >
+                        <!-- On submission, also pass user_id and category_id to index.php  -->
+                        <input type="hidden" name="broker_id" value="{{ broker.broker_id }}"> <!--  value = brokers.id and broker_agents.broker_id -->
+
+                        <button type="submit" class="btn btn-primary btn-lg" name="action" value="update_company_profile">
+                          Update broker image
+                        </button>
+                    </div>
+
+                </form>
+            </div><!-- // .form-wrapper  -->
+
+
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+              <div class="form-wrapper2">
+
+                    <h3 style="margin-bottom: 25px;">Company Logo</h3>
+
+                    <form action="/admin/brokers/update-company-logo?broker_id={{ session.broker_id }}"
+                        class="form-horizontal" method="post"
+                        name="update-company-profile-form" id="update-company-profile-form"
+                        enctype="multipart/form-data">
+
+
+                        <div class="form-group">
+                            <label for="company_logo" class="control-label col-sm-2">
+                              Company Logo
+                            </label>
+                            <div class="col-sm-10">
+                                <input type="file" name="company_logo" id="company_logo">
+                                <p class="help-block small">
+                                  *Must be gif, jpg, jpeg or png under 2MB
+                                </p>
+                            </div>
+                        </div>
+
+
+                        <div style="margin-top: 15px; margin-bottom: 15px;">
+                            <label class="control-label col-sm-2" style="margin-left: -10px;">
+                              Current
+                            </label>
+                            <div class="col-sm-10" style="margin-bottom: 15px;border-bottom: 1px solid #eee;">
+                                <img style="margin-bottom: 20px;display:block;"  src="/assets/images/uploaded_company_logos/{% if broker.company_logo %}{{ broker.company_logo }}{% else %}filler-logo.jpg{% endif %}" height="40" alt="company logo">
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-offset-2 col-sm-10" style="paddding-top: 30px; margin-bottom: 30px;">
+                            <button type="submit" class="btn btn-primary btn-lg" name="action" value="update_company_logo">
+                              Update company logo
+                            </button>
+                        </div>
+
+                    </form>
+              </div><!--  // .form-wrapper  -->
+
+
+        </div><!-- // .col -->
+    </div><!-- // .row -->
+</div><!-- // .container-fluid -->
+
+{% endblock %}
+
+
+{% block bottomjs %}
+<script>
+$(document).ready(function(){
+
+    $("#update-company-profile-form").validate();
+
+});
+</script>
+{% endblock %}

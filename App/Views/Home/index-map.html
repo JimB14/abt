@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map, #map2 {
+        height: 300px;
+        width:  600px;
+        margin: 10px 0px 10px 10px;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+      }
+      #floating-panel {
+        position: absolute;
+        top: 10px;
+        left: 25%;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+        text-align: center;
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
+      }
+    </style>
+  </head>
+  <!-- call javascript function initialize() onload -->
+  <body onload="initialize()">
+    <!-- <div id="floating-panel"><input type="button" value="Auto Rotate" onclick="autoRotate();"></div> -->
+    <div id="map"></div>
+    <div id="map2"></div>
+    <script>
+      // bring in lat/lng values & store in variables
+      var lat  = '45.518';
+      var lng = '-122.672';
+      // make map global variable
+      var map;
+
+      function initMap() {
+        // pass lat & lng values to LatLng method & store in new object
+        var myLatLng = new google.maps.LatLng(lat, lng);
+
+        // store map parameters in variable
+        var mapOptions = {
+          center: myLatLng, // required (center)
+          zoom: 18, // required
+          mapTypeId: 'satellite', // roadmap, satellite, hybrid, terrain
+          heading: 90,
+          tilt: 45
+        };
+
+        // create new Map object with passed parameters
+        map = new google.maps.Map(document.getElementById('map'),
+          mapOptions
+        );
+
+        // create marker
+        var marker = new google.maps.Marker({
+          position: myLatLng,
+          map: map,
+          title: 'Address here'
+        });
+
+        // alternative method to display marker
+        // marker.setMap(map);
+      }
+
+      // function rotate90() {
+      //   var heading = map.getHeading() || 0;
+      //   map.setHeading(heading + 90);
+      // }
+      //
+      // function autoRotate() {
+      //   // Determine if we're showing aerial imagery.
+      //   if (map.getTilt() !== 0) {
+      //     window.setInterval(rotate90, 3000);
+      //   }
+      // }
+
+
+      // bring in values & store in variables
+      var lat2  = '30.093969';
+      var lng2 = '-81.447834';
+
+      // called after DOM loads
+      function initialize(){
+        var myLatLng = new google.maps.LatLng(lat2, lng2);
+
+        // store map parameters in variable
+        var mapOptions = {
+          center: myLatLng,
+          zoom: 12,
+          mapTypeId: 'roadmap', // roadmap, satellite, hybrid, terrain
+          tilt: 45
+        };
+
+        // create map object & pass parameters (mapOptions)
+        var map = new google.maps.Map(document.getElementById("map2"),
+          mapOptions
+        );
+
+        // create marker
+        var marker = new google.maps.Marker({
+          position: myLatLng,
+          map: map,
+          title: 'Address here'
+        });
+
+        // alternative method to display marker
+        //marker.setMap(map);
+      }
+    </script>
+
+
+    <!-- callback calls initMap() -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAa0H9ZszDVlMQvgUio66v40nDbvuYc-L8&callback=initMap"
+      async defer>
+    </script>
+  </body>
+</html>

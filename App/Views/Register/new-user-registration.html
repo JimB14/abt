@@ -1,0 +1,304 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Registration
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-wrapper">
+    <div class="row">
+
+        <div class="col-md-12">
+            <h1>Broker registration</h1>
+            <hr style="margin-bottom: 10px;">
+        </div>
+
+        <div class="col-md-8" style="margin-bottom: 50px;">
+          <h3 class="bold">
+              Welcome {{ user.first_name }} {{ user.last_name}} to American Biz Trader
+          </h3>
+          <p>
+              After registration, be sure to upload a profile photo
+              from inside the Admin Panel. You can also upload your company logo
+              if it's not available to upload now.
+          </p>
+
+
+          <form method="post" id="new-business-broker-form" class="form-horizontal"
+            action="/register/broker-registration?id={{ user.id }}"
+            name="registration-form" enctype="multipart/form-data">
+
+              <div class="form-group has-feedback">
+                  <label for="first_name" class="control-label col-sm-3">
+                      First name
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="text" name="first_name" class="form-control"
+                      id="first_name" placeholder="First name"
+                      value="{{ user.first_name }}">
+                  </div>
+                  <span class="glyphicon form-control-feedback" id="first_name1"></span>
+              </div>
+
+
+
+              <div class="form-group has-feedback">
+                  <label for="last_name" class="control-label col-sm-3">
+                      Last name
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="text" name="last_name" class="form-control"
+                        id="last_name" placeholder="Last name"
+                        value="{{ user.last_name }}">
+                  </div>
+                  <span class="glyphicon form-control-feedback" id="last_name1"></span>
+              </div>
+
+
+              <div class="form-group has-feedback">
+                  <label for="title" class="control-label col-sm-3">
+                      Title
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="text" name="title" class="form-control"
+                      id="title" placeholder="Title" value="{{ user.title }}">
+                  </div>
+                  <span class="glyphicon form-control-feedback" id="title1"></span>
+              </div>
+
+
+
+              <div class="form-group has-feedback">
+                  <label for="broker_email" class="control-label col-sm-3">
+                      Email
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="broker_email" name="broker_email" class="form-control"
+                      id="email" placeholder="Email"
+                      value="{% if user.email %}{{ user.email }}{% endif %}">
+                  </div>
+                  <span class="glyphicon form-control-feedback" id="email1"></span>
+              </div>
+
+
+              <div class="form-group has-feedback">
+                  <label for="broker_cell" class="control-label col-sm-3">
+                      Cell
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="broker_cell" name="broker_cell" class="form-control"
+                      id="broker_cell" placeholder="Cell"
+                      value="" autofocus>
+                  </div>
+                  <span class="glyphicon form-control-feedback" id="broker_cell1"></span>
+              </div>
+
+
+              <div class="form-group has-feedback">
+                  <label for="company_name" class="control-label col-sm-3">
+                      Company Name
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="text" class="form-control" name="company_name"
+                      id="company_name" placeholder="Company name"
+                      value="">
+                  </div>
+                  <span class="glyphicon form-control-feedback" id="company_name1"></span>
+              </div>
+
+
+              <div class="form-group has-feedback">
+                  <label for="type" class="control-label col-sm-3">
+                    Type
+                  </label>
+                  <div class="col-sm-9">
+                      <select name="type" id="type" class="form-control required">
+                        <option value="">Select</option>
+                        <option value="1">Business Broker</option>
+                        <option value="2">Commercial Real Estate Broker</option>
+                        <option value="3">Both</option>
+                      </select>
+                  </div>
+                  <span class="glyphicon form-control-feedback" id="type1"></span>
+              </div>
+
+
+              <div class="form-group has-feedback">
+                  <label for="address1" class="control-label col-sm-3">Address </label>
+                  <div class="col-sm-9">
+                      <input type="text" name="address1" class="form-control"
+                      id="address1" placeholder="Address"
+                      value="">
+                  </div>
+                  <span class="glyphicon form-control-feedback" id="address11"></span>
+              </div>
+
+
+
+              <div class="form-group has-feedback">
+                  <label for="address2" class="control-label col-sm-3">
+                      Address2
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="text" name="address2" class="form-control"
+                      id="address2" placeholder="Address2"
+                      value="">
+                  </div>
+                  <span class="glyphicon form-control-feedback" id="address21"></span>
+              </div>
+
+
+
+              <div class="form-group has-feedback">
+                  <label for="city" class="control-label col-sm-3">
+                      City
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="text" name="city" class="form-control"
+                      id="city" placeholder="City"
+                      value="" >
+                  </div>
+                  <span class="glyphicon form-control-feedback" id="city1"></span>
+              </div>
+
+
+
+              <div class="form-group has-feedback">
+                  <label for="state" class="control-label col-sm-3">
+                      State
+                  </label>
+                  <div class="col-sm-9">
+                      <select class="form-control" name="state" id="state">
+                          <option value="">Select state</option>
+                          {% for state in states %}
+                          <option value="{{ state.abbrev }}">{{ state.name }}</option>
+                          {% endfor %}
+                      </select>
+                  </div>
+                  <span class="glyphicon form-control-feedback" id="state1"></span>
+              </div>
+
+
+
+              <div class="form-group has-feedback">
+                  <label for="zip" class="control-label col-sm-3">
+                      Zip
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="text" name="zip" class="form-control"
+                      id="zip" placeholder="Zip"
+                      value="">
+                  </div>
+                  <span class="glyphicon form-control-feedback" id="zip1"></span>
+              </div>
+
+
+
+              <div class="form-group has-feedback">
+                  <label for="telephone" class="control-label col-sm-3">
+                      Telephone
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="text" name="telephone" class="form-control"
+                      id="telephone" placeholder="Telephone"
+                      value="">
+                  </div>
+                  <span class="glyphicon form-control-feedback" id="telephone1"></span>
+              </div>
+
+
+
+              <div class="form-group has-feedback">
+                  <label for="fax" class="control-label col-sm-3">
+                      Fax
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="text" class="form-control" name="fax"
+                      id="fax" placeholder="Fax"
+                      value="">
+                  </div>
+                  <span class="glyphicon form-control-feedback" id="fax1"></span>
+              </div>
+
+
+
+              <div class="form-group has-feedback">
+                  <label for="company_logo" class="control-label col-sm-3">
+                      Company Logo
+                  </label>
+                  <div class="col-sm-9">
+                  <input type="file" name="company_logo" id="company_logo">
+                      <p class="help-block small">
+                          *Must be gif, jpg, jpeg or png under 2MB
+                      </p>
+                  </div>
+                  <span class="glyphicon form-control-feedback" id="company_logo1"></span>
+              </div>
+
+
+
+              <div class="form-group has-feedback">
+                  <label for="services" class="control-label col-sm-3">
+                      Services offered
+                  </label>
+                  <div class="col-sm-9">
+                      <textarea name="services" class="form-control" id="services" placeholder="Services offered"></textarea>
+                  </div>
+                  <span class="glyphicon form-control-feedback" id="services1"></span>
+              </div>
+
+
+
+              <div class="form-group has-feedback">
+                  <label for="company_bio" class="control-label col-sm-3">
+                      Company Biography
+                  </label>
+                  <div class="col-sm-9">
+                      <textarea name="company_bio" class="form-control" id="company_bio" placeholder="Company Biography"></textarea>
+                  </div>
+                  <span class="glyphicon form-control-feedback" id="company_bio1"></span>
+              </div>
+
+
+
+              <div class="form-group has-feedback">
+                  <label for="website" class="control-label col-sm-3">
+                      Website
+                      <br>
+                      <small>
+                        (must include &quot;http://&quot;)
+                      </small>
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="url" name="website" class="form-control"
+                      id="website" placeholder="http://www.YourDomain.com"
+                      value="" >
+                  </div>
+                  <span class="glyphicon form-control-feedback" id="website1"></span>
+              </div>
+
+              <div class="col-sm-offset-3 col-sm-9">
+                  <button type="submit" class="btn btn-primary btn-lg btn-block"
+                  name="action" value="new_registered_user_data_submission">
+                      Submit
+                  </button>
+              </div>
+          </form>
+
+        </div><!--  // .col  -->
+
+        <div class="col-md-4">
+            {% include 'franchise-sidebar.html' %}
+        </div><!-- // .col-md-4  -->
+
+    </div><!-- // .row  -->
+</div><!-- .page-wrapper -->
+
+{% endblock %}
+
+
+{% block bottomjs %}
+
+{% endblock %}

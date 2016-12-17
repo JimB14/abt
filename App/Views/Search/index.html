@@ -1,0 +1,366 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Search results
+{% endblock %}
+
+{% block css %}
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-wrapper">
+
+    <h1 class="text-center" style="margin-top:30px;">
+        Search Results
+    </h1>
+
+    <div class="row t1 search-div bg-f0f">
+
+        <form method="get" action="/buy/find-businesses-for-sale" name="search_for_biz" id="search_for_biz">
+
+            <div class="col-md-3">
+                <h3>Category</h3>
+                <select class="form-control p1" name="category" id="search-business-category" autofocus>
+                    {% if category_name %}
+                    <option value="{{ category_id }}">{{ category_name }}</option>
+                    {% endif %}
+                    <option value="all">All categories</option>
+                    {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <p id="result" class="text-size120 text-center"></p>
+            </div>
+
+
+
+            <div class="col-md-4">
+                <h3>Sub category</h3>
+                <select class="form-control" name="subcategory" id="search-subcategory-list" >
+                    {% if subcategory_name %}
+                    <option value="{{ subcategory_id }}">{{ subcategory_name }}</option>
+                    {% endif %}
+                    <option value="all">All sub categories</option>
+                    <!-- jquery appends here; Ajax code below -->
+                </select>
+            </div>
+
+
+
+            <div class="col-md-2">
+                <h3>State</h3>
+                <select class="form-control" name="state" id="search-state">
+                    {% if state %}
+                    <option>{{ state }}</option>
+                    {% endif %}
+                    <option value="all">All States</option>
+                    {% for state in states %}
+                    <option value="{{ state.abbrev }}">{{ state.name }}</option>
+                    {% endfor %}
+                </select>
+                <p id="result2" class="text-size120 text-center"></p>
+            </div>
+
+
+
+            <div class="col-md-2">
+                <h3>County</h3>
+                <div class="form-group">
+                    <select class="form-control" name="county" id="search-counties-list">
+                        {% if county %}
+                        <option>{{ county }}</option>
+                        {% endif %}
+                        <option value="all">All counties</option>
+                        <!-- jquery appends here; Ajax code below -->
+                    </select>
+                </div>
+            </div>
+
+
+
+
+            <div class="col-md-1">
+                <h3>&nbsp;</h3>
+                <button id="btn-find-business" class="btn btn-buy btn-block" type="submit">
+                  Go
+                </button>
+            </div>
+
+        </form>
+    </div><!-- // .row -->
+
+
+    <div class="row" style="margin-top:20px;" >
+
+        <div class="col-md-3 col-sm-3">
+            {% include 'search-by-keyword.html' %}
+        </div>
+
+        <div class="col-md-9 col-sm-9">
+
+          <h2 class="text-center">
+              Search Results
+              {% if searched_listings|length > 0 %}
+                <span class="badge" style="margin: -18px 0px 0px 0px;">
+                    {{ searched_listings|length }}
+                </span>
+              {% endif %}
+          </h2>
+
+          {% if searched_listings %}
+
+          <p style="color:#0000ff;" class="text-center">
+
+            {% if category_name %}Search criteria:  Category: <span style="color:#0000ff;font-style:italic;">&quot;{{ category_name }}&quot;;</span>  {% endif %}
+            {% if subcategory_name %}Sub category:  <span style="color:#0000ff;font-style:italic;">&quot;{{ subcategory_name }}&quot;;</span>  {% endif %}
+            {% if state %}State:  <span style="color:#0000ff;font-style:italic;">&quot;{{ state }}&quot;;</span>  {% endif %}
+            {% if county %}County:  <span style="color:#0000ff;font-style:italic;">&quot;{{ county }}&quot;;</span>  {% endif %}
+          </p>
+
+
+          <!-- to remove the final comma:
+            resource: http://craftcms.stackexchange.com/questions/2898/remove-trailing-comma-from-an-output-loop -->
+            {% if keywords %}
+            <p style="color:#0000ff;" class="text-center">
+              Keyword search:
+              {% for keyword in keywords %}
+                <span style="color:#0000ff;">&quot;{{ keyword }}&quot;</span>
+                {%- if not loop.last -%}
+                ,
+                {% endif %}
+              {% endfor %}
+            </p>
+            {% endif %}
+
+
+
+
+          {% for listing in searched_listings %}
+          <div class="listing-buy-a-biz box p2">
+
+              <div id="business-listing">
+                  <div class="row">
+                      <div class="col-md-5">
+                          <a href="/buy/view-listing-details?listing_id={{ listing.listing_id }}&amp;broker_id={{ listing.broker_id}}&amp;listing_agent_id={{ listing.listing_agent_id }}">
+                              <img class="img-responsive" src="/assets/images/uploaded_business_photos/{% if listing.img01 %}{{ listing.img01 }}{% endif %}" alt="image">
+                          </a>
+                              <p style="font-size:14px;"><i style="vertical-align:0;" class="fa fa-camera fa-lg"></i>
+                                <span style="display:inline-block; font-size: 120%; margin-top:5px;">
+                                  {% if listing.img01 and listing.img02 and listing.img03 and listing.img04 and listing.img05 and listing.img06 %}
+                                  6
+                                  {% elseif listing.img01 and listing.img02 and listing.img03 and listing.img04 and listing.img05 %}
+                                  5
+                                  {% elseif listing.img01 and listing.img02 and listing.img03 and listing.img04 %}
+                                  4
+                                  {% elseif listing.img01 and listing.img02 and listing.img03 %}
+                                  3
+                                  {% elseif listing.img01 and listing.img02 %}
+                                  2
+                                  {% else %}
+                                  1
+                                  {% endif %}
+                                </span>
+                              </p>
+                      </div>
+
+                      <div style="margin-left: 0px;" class="col-md-7">
+                          <h4 class="media-heading p1">
+                              <a href="/buy/view-listing-details?listing_id={{ listing.listing_id }}&amp;broker_id={{ listing.broker_id}}&amp;listing_agent_id={{ listing.listing_agent_id }}">
+                                  {{ listing.ad_title }}
+                              </a>
+                          </h4>
+                          <h5 style="margin-bottom: 10px;">
+                              Asking Price:
+                              <span class="font-normal">
+                                  ${{ listing.asking_price|number_format }}
+                              </span>
+                              <span style="padding-left: 10px">
+                                  Cash Flow:
+                                  <span class="font-normal">
+                                      ${{ listing.cash_flow|number_format }}
+                                  </span>
+                              </span>
+                          </h5>
+                          <h5>
+                              Broker:
+                              <span class="font-normal">
+                                  {{ listing.company_name }}
+                              </span>
+                          </h5>
+                          <h5>
+                              Agent:
+                              <span class="font-normal">
+                                  {{ listing.agent_first_name}}  {{ listing.agent_last_name }}
+                              </span>
+                          </h5>
+                          <h5 style="margin-bottom: 10px;">
+                              Description:
+                              <span class="font-normal">
+                                  {{ listing.biz_description | slice(0, 120) | raw }}
+                              </span>
+                          </h5>
+                          <h5 style="margin-bottom: 10px;">
+                              City:
+                              <span class="font-normal">
+                                  {% if listing.hide_city == 0 %}
+                                    {{ listing.city }}
+                                    {% else %}
+                                    Undisclosed
+                                  {% endif %}
+                              </span>
+                              <span style="padding-left: 10px">
+                                  State:
+                                  <span class="font-normal">
+                                      {{ listing.state }}
+                                  </span>
+                              </span>
+                              <span style="padding-left: 10px">
+                                  County:
+                                  <span class="font-normal">
+                                    {% if listing.hide_county == 0 %}
+                                      {{ listing.county }}
+                                      {% else %}
+                                      Undisclosed
+                                    {% endif %}
+                                  </span>
+                              </span>
+
+                          </h5>
+                          <h5 style="margin-bottom: 10px;">
+                              Seller ID:
+                              <span style="padding-left: 10px">
+                                  <span class="font-normal">
+                                      {{ listing.clients_id }}
+                                  </span>
+                              </span>
+                          </h5>
+
+                          <a class="btn btn-buy btn-block" <a href="/buy/view-listing-details?listing_id={{ listing.listing_id }}&amp;broker_id={{ listing.broker_id}}&amp;listing_agent_id={{ listing.listing_agent_id }}">
+                            View Details
+                          </a>
+                      </div>
+                  </div><!-- // .row  -->
+              </div><!-- // .business-listing -->
+
+          </div><!-- // .listing-buy-a-biz  -->
+          {% endfor %}
+
+        </div><!-- // . col-md-9 -->
+
+          {% else %}
+          <div class="alert alert-info text-center">
+              <h4>No search results</h4>
+              <p>
+                Search criteria:
+                {% if category_name %}Category: <span style="color:#0000ff;font-style:italic;">&quot;{{ category_name }}&quot;;</span>  {% endif %}
+                {% if subcategory_name %}Sub category:  <span style="color:#0000ff;font-style:italic;">&quot;{{ subcategory_name }}&quot;;</span>  {% endif %}
+                {% if state %}State:  <span style="color:#0000ff;font-style:italic;">&quot;{{ state }}&quot;;</span>  {% endif %}
+                {% if county %}County:  <span style="color:#0000ff;font-style:italic;">&quot;{{ county }}&quot;;</span>  {% endif %}
+              </p>
+              </p>
+
+
+              {% if keywords %}
+              <!-- to remove the final comma:
+                resource: http://craftcms.stackexchange.com/questions/2898/remove-trailing-comma-from-an-output-loop -->
+              <p>
+                Keyword search:
+                {% for keyword in keywords %}
+                  <span style="color:#0000ff;">&quot;{{ keyword }}&quot;</span>
+                  {%- if not loop.last -%}
+                  ,
+                  {% endif %}
+                {% endfor %}
+              </p>
+              {% endif %}
+
+          </div>
+          {% endif %}
+
+    </div><!-- // .row  -->
+</div><!--  // .page-wrapper  -->
+{% endblock %}
+
+{% block bottomjs %}
+<script>
+$(document).ready(function(){
+
+  // To populate sub category drop-down
+    $("#search-business-category").change(function(){
+        var category_id = $(this).val();
+        console.log("category_id = " + category_id);
+
+        $.ajax({
+            url: '/buy/get-sub-categories',
+            type: 'POST',
+            data: {
+              category_id: category_id
+            },
+            cache: false,
+            success: function(sub_categories){
+
+                // resource: Samir Talwar, http://stackoverflow.com/questions/5918144/how-can-i-use-json-data-to-populate-the-options-of-a-select-box
+
+                // empty any values from previous append (from Buy controller)
+                $('#search-subcategory-list').empty();
+
+                // add 'all' choice
+                $("#search-subcategory-list").append($('<option>').text("All sub categories"). attr('value', 'all'));
+
+                // loop through sub_categories array
+                $.each(sub_categories, function(index, value){
+                  $('#search-subcategory-list').append( $('<option>').text(value.sub_cat_name).attr('value', value.id));
+                });
+
+                console.log(sub_categories);
+            },
+            error: function(){
+                alert("Ajax error fetching subcategies.");
+            }
+        });
+
+    });
+
+
+    // To populate county drop-down
+    $("#search-state").change(function(){
+        var state = $(this).val();
+        console.log("state = " + state);
+
+        $.ajax({
+            url: '/buy/get-counties',
+            type: 'POST',
+            data: {
+              state: state
+             },
+            cache: false,
+            success: function(counties){
+
+              // empty content
+              $("#search-counties-list").empty();
+
+              // add 'all' choice
+              $("#search-counties-list").append($('<option>').text("All counties"). attr('value', 'all'));
+
+              // loop through county_list array
+              $.each(counties, function(index, value){
+                  $('#search-counties-list').append( $('<option>').text(value).attr('value', value) );
+              });
+
+              console.log(counties);
+            },
+            error: function(){
+                alert("Ajax error fetching counties.");
+            }
+        });
+
+    });
+
+
+});
+</script>
+{% endblock %}

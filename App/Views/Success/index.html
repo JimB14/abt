@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Success
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-wrapper">
+    <div class="row">
+
+        <div class="col-md-12">
+            <h1>Success </h1>
+            <hr>
+        </div>
+
+        <div class="col-md-8">
+
+            {% if first_name %}
+              <h3 style="margin-top: 0px">
+                Thanks {{ first_name }}! {{ message }}
+              </h3>
+              {% else %}
+              <h4 style="margin-top: 0px">
+                {{ message }}
+              </h4>
+            {% endif %}
+            <br><br><br><br>
+        </div>
+
+        <div class="col-md-4">
+            
+        </div><!-- // .col-md-4  -->
+    </div><!-- // .row  -->
+</div><!-- // .page-wrapper -->
+
+{% endblock %}

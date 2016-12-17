@@ -1,0 +1,130 @@
+{% for listing in listings %}
+<div class="listing-buy-a-biz box p2">
+    <div class="business-listing">
+        <div class="row">
+            <div class="col-md-5">
+                <a href="/buy/view-listing-details?listing_id={{ listing.listing_id }}&amp;broker_id={{ listing.broker_id}}&amp;listing_agent_id={{ listing.listing_agent_id }}">
+                    <img class="img-responsive" src="/assets/images/uploaded_business_photos/{% if listing.img01 %}{{ listing.img01 }}{% endif %}" alt="image">
+                </a>
+                    <p style="font-size:14px;"><i style="vertical-align:0;" class="fa fa-camera fa-lg"></i>
+                      <span style="display:inline-block; font-size: 120%; margin-top:5px;">
+                        {% if listing.img01 and listing.img02 and listing.img03 and listing.img04 and listing.img05 and listing.img06 %}
+                        6
+                        {% elseif listing.img01 and listing.img02 and listing.img03 and listing.img04 and listing.img05 %}
+                        5
+                        {% elseif listing.img01 and listing.img02 and listing.img03 and listing.img04 %}
+                        4
+                        {% elseif listing.img01 and listing.img02 and listing.img03 %}
+                        3
+                        {% elseif listing.img01 and listing.img02 %}
+                        2
+                        {% else %}
+                        1
+                        {% endif %}
+                      </span>
+                    </p>
+            </div>
+
+            <div style="margin-left: 0px;" class="col-md-7">
+                <h4 class="media-heading p1">
+                    <a href="/buy/view-listing-details?listing_id={{ listing.listing_id }}&amp;broker_id={{ listing.broker_id}}&amp;listing_agent_id={{ listing.listing_agent_id }}">
+                        {{ (listing.ad_title|striptags)|raw }}
+                    </a>
+                </h4>
+                <h5 style="margin-bottom: 10px;">
+                    Asking Price:
+                    <span class="font-normal">
+                        ${{ listing.asking_price|number_format }}
+                    </span>
+                    <span style="padding-left: 10px">
+                        Cash Flow:
+                        <span class="font-normal">
+                            ${{ listing.cash_flow|number_format }}
+                        </span>
+                    </span>
+                </h5>
+                <h5>
+                    Broker:
+                    <span class="font-normal">
+                        {{ listing.company_name }}
+                    </span>
+                </h5>
+                <h5>
+                    Agent:
+                    <span class="font-normal">
+                        {{ listing.agent_first_name}}  {{ listing.agent_last_name }}
+                    </span>
+                </h5>
+                <h5 style="margin-bottom: 10px;">
+                    Description:
+                    <span class="font-normal">
+                        {{ (listing.biz_description|striptags|slice(0, 120))|raw }}
+                    </span>
+                </h5>
+                <h5 style="margin-bottom: 10px;">
+                    City:
+                    <span class="font-normal">
+                        {% if listing.hide_city == 0 %}
+                          {{ listing.city }}
+                          {% else %}
+                          Undisclosed
+                        {% endif %}
+                    </span>
+                    <span style="padding-left: 10px">
+                        State:
+                        <span class="font-normal">
+                            {{ listing.state }}
+                        </span>
+                    </span>
+                    <span style="padding-left: 10px">
+                        County:
+                        <span class="font-normal">
+                          {% if listing.hide_county == 0 %}
+                            {{ listing.county }}
+                            {% else %}
+                            Undisclosed
+                          {% endif %}
+                        </span>
+                    </span>
+
+                </h5>
+                <h5 style="font-weight: normal; margin-bottom: 10px;">
+                    <span class="bold">
+                        Seller ID:
+                    </span>
+                    <span style="padding-left: 0px">
+                        <span class="font-normal">
+                            {{ listing.clients_id }}
+                        </span>
+                    </span>
+
+                    <span style="padding-left: 2px">
+                        {% if listing.seller_financing_available == 1 %}
+                          |
+                          <span class="buy-seller-financing bold red">
+                              Seller Financing
+                          </span>
+                        {% endif %}
+                    </span>
+                    <span style="padding-left: 2px">
+                        {% if listing.lender_prequalified == 1 %}
+                          |
+                          <span class="buy-lender-prequalified bold red">
+                            Lender Pre-qualified
+                          </span>
+                        {% endif %}
+                    </span>
+                </h5>
+
+                <a class="btn btn-buy btn-block" href="/buy/view-listing-details?listing_id={{ listing.listing_id }}&amp;broker_id={{ listing.broker_id}}&amp;listing_agent_id={{ listing.listing_agent_id }}">
+                  View Details
+                </a>
+            </div><!-- // .col-md-7  -->
+        </div><!-- // .row  -->
+    </div><!-- // #business-listing  -->
+</div><!-- // .listing-buy-a-biz  -->
+{% endfor %}
+
+
+{% block bottomjs %}
+{% endblock %}

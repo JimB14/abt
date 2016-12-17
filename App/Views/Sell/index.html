@@ -1,0 +1,423 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Sell
+{% endblock %}
+
+{% block css %}
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-wrapper">
+
+    <h1 style="margin-top:30px;" class="text-center">
+      Sell or Lease a Business
+    </h1>
+    <h2 style="margin-top:-10px;" class="text-center">
+      Business &amp; Real Estate Brokers Only
+    </h2>
+
+    <div class="row p6">
+        <div class="col-md-8 col-sm-12 p2">
+          <div class="listing-box" style="margin-bottom: 15px">
+
+            <div id="sell-carousel" class="carousel slide" data-ride="carousel">
+                <!-- Indicators -->
+                <!--
+                <ol class="carousel-indicators">
+                  <li data-target="#sell-carousel" data-slide-to="0" class="active"></li>
+                  <li data-target="#sell-carousel" data-slide-to="1"></li>
+                  <li data-target="#sell-carousel" data-slide-to="2"></li>
+                  <li data-target="#sell-carousel" data-slide-to="3"></li>
+                </ol>
+              -->
+
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner" role="listbox">
+                    <div class="item active">
+                      <img src="/assets/images/sell/carousel/1.jpg" alt="Sell your business on AmericanBizTrader">
+                      <div class="carousel-caption">
+                        ...
+                      </div>
+                    </div>
+                    <div class="item">
+                      <img src="/assets/images/sell/carousel/2.jpg" alt="Sell your business on AmericanBizTrader">
+                      <div class="carousel-caption">
+                        ...
+                      </div>
+                    </div>
+                    <div class="item">
+                      <img src="/assets/images/sell/carousel/3.jpg" alt="Sell your business on AmericanBizTrader">
+                      <div class="carousel-caption">
+                        ...
+                      </div>
+                    </div>
+                    <div class="item">
+                      <img src="/assets/images/sell/carousel/4.jpg" alt="Sell your business on AmericanBizTrader">
+                      <div class="carousel-caption">
+                        ...
+                      </div>
+                    </div>
+                    <div class="item">
+                      <img src="/assets/images/sell/carousel/5.jpg" alt="Sell your business on AmericanBizTrader">
+                      <div class="carousel-caption">
+                        ...
+                      </div>
+                    </div>
+                </div><!--  // .carousel-inner  -->
+
+                <!-- Controls -->
+                <a class="left carousel-control" href="#sell-carousel" role="button" data-slide="prev">
+                  <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                  <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#sell-carousel" role="button" data-slide="next">
+                  <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                  <span class="sr-only">Next</span>
+                </a>
+            </div><!-- // .sell-carousel  -->
+
+            <hr>
+
+
+            <!--  -  -  -  -  -  -  Key Metrics  -  -  -  -  -  -  -  -  -  -  -  -->
+
+            <div class="row">
+
+                <h3 class="listing-red ls1 text-center" style="margin-top:-10px;">
+                    Key metrics
+                </h3>
+
+
+                <div class="col-md-12">
+                    <h4>Asking price:
+                      <span class="bold">
+                        {% if listing.asking_price %}
+                          ${{ listing.asking_price|number_format(0) }}
+                        {% endif %}
+                        {% if listing.real_estate_included == 0 and listing.real_estate_value > 0 %}
+                        <sup> 1</sup>
+                        {% endif %}
+                      </span>
+                    </h4>
+                </div>
+
+                {% if listing.seller_financing_available == 1 %}
+                <div class="col-md-4">
+                    <h4 class="seller-financing bold" style="color:#ff0000;">
+                          *Seller Financing*
+                    </h4>
+                </div>
+                {% endif %}
+
+                {% if listing.lender_prequalified == 1 %}
+                <div class="col-md-4">
+                    <h4  class="lender-prequalified bold" style="color:#ff0000;">
+                          *Lender Pre-qualified*
+                    </h4>
+                </div>
+                {% endif %}
+
+            </div><!--  // .row  -->
+
+
+            <div class="row">
+
+                <div class="p-margins">
+                    <div class="col-md-4 col-sm-4">
+                        <p>Established: <span class="bold"> {% if listing.year_established %} {{ listing.year_established }} {% endif %} </span></p>
+                        <p>Gross income: <span class="bold"> {% if listing.gross_income %} ${{ listing.gross_income|number_format(0) }} {% endif %} </span></p>
+                        <p>Cash flow: <span class="bold"> {% if listing.cash_flow %} ${{ listing.cash_flow|number_format(0) }} {% endif %} </span></p>
+                        <p>Franchise: <span class="bold"> {% if listing.franchise == 1 %} Yes {% else %} No {% endif %} </span></p>
+                    </div>
+
+                    <div class="col-md-4 col-sm-4">
+                        <p>EBITDA: <span class="bold"> {% if listing.ebitda %} ${{ listing.ebitda|number_format(0) }} {% endif %} </span></p>
+                        <p>Employees: <span class="bold"> {% if listing.number_of_employees %} {{ listing.number_of_employees }} {% endif %} </span></p>
+                        <p>Square Feet: <span class="bold"> {% if listing.square_feet %} {{ listing.square_feet|number_format(0) }} {% endif %} </span></p>
+                        <p>Home Based: <span class="bold"> {% if listing.home_based == 1 %} Yes {% else %} No {% endif %} </span></p>
+                    </div>
+
+                    <div class="col-md-4 col-sm-4">
+                        <p>
+                          FFE:
+                          <span class="bold">
+                            {% if listing.ffe_value %} ${{ listing.ffe_value|number_format(0) }} {% endif %}
+                            <span style="font-weight:normal;">
+                              {% if listing.ffe_value and listing.ffe_value > 0 and listing.ffe_included == 1 %} (included) {% endif %}
+                            </span>
+                          </span>
+                        </p>
+
+                        <p>
+                          Inventory:
+                          <span class="bold">
+                            {% if listing.inventory_value %} ${{ listing.inventory_value|number_format(0) }} {% endif %}
+                            <span style="font-weight:normal;">
+                              {% if listing.inventory_value and listing.inventory_value > 0 and listing.inventory_included == 1 %} (included) {% endif %}
+                            </span>
+                          </span>
+                        </p>
+                        <p>
+                          Real estate:
+                          <span class="bold">
+                            {% if listing.real_estate_value %} ${{ listing.real_estate_value|number_format(0) }} {% endif %}
+                            <span class="font-normal">
+                              {% if listing.real_estate_value > 0 and listing.real_estate_included == 1 %}
+                                (included)
+                              {% elseif listing.real_estate_included == 0 and listing.real_estate_for_sale == 1 %}
+                                  (available)
+                              {% endif %}
+                            </span>
+                          </span>
+                        </p>
+                        <p>Relocatable: <span class="bold"> {% if listing.relocatable == 1 %} Yes {% else %} No {% endif %} </span></p>
+                    </div>
+                </div>
+            </div><!--  // . row  -->
+            {% if listing.real_estate_included == 0 and listing.real_estate_value > 0 and listing.real_estate_for_sale == 1 %}
+              <p class="key-metrics-footnote">
+                <sup>1</sup>
+                Real estate value (${{ listing.real_estate_value|number_format(0) }})
+                NOT included in Asking price (${{ listing.asking_price|number_format(0) }}) but is available for purchase
+              </p>
+            {% endif %}
+            {% if listing.real_estate_included == 1 and listing.real_estate_value > 0 %}
+              <p class="key-metrics-footnote">
+                <sup>1</sup>Real estate value (${{ listing.real_estate_value|number_format(0) }}) IS included in Asking price
+              </p>
+            {% endif %}
+        </div><!--  // .listing-box  -->
+
+
+          <!--  -  -  -  -  -  -  Listing Data  -  -  -  -  -  -  -  -  -  -  -  -->
+
+          <div class="listing-box">
+              <h3>Business description</h3>
+              <div class="box-for-text">
+                  <p>{% if listing.biz_description %} {{ listing.biz_description|raw }} {% endif %}</p>
+              </div>
+
+              <h3>Facilities description</h3>
+              <div class="box-for-text">
+                  <p>{% if listing.real_estate_description %} {{ listing.real_estate_description }} {% endif %}</p>
+              </div>
+
+              <h3>Financing description</h3>
+              <div class="box-for-text">
+                  <p>{% if listing.seller_financing_description %} {{ listing.seller_financing_description }} {% endif %}</p>
+              </div>
+
+              <h3>Competition</h3>
+              <div class="box-for-text">
+                  <p>{% if listing.competition %} {{ listing.competition }} {% endif %}</p>
+              </div>
+
+              <h3>Growth</h3>
+              <div class="box-for-text">
+                  <p>{% if listing.growth_opportunities %} {{ listing.growth_opportunities }} {% endif %}</p>
+              </div>
+
+              <h3>Support</h3>
+              <div class="box-for-text">
+                  <p>{% if listing.support %} {{ listing.support }} {% endif %}</p>
+              </div>
+
+              <h3>Reason for selling</h3>
+              <div class="box-for-text">
+                  <p>{% if listing.reason_selling %} {{ listing.reason_selling }} {% endif %}</p>
+              </div>
+
+              <h3>Business website</h3>
+              <div class="box-for-text">
+                  <p>{% if listing.biz_website %} <a href="#">{{ listing.biz_website }}</a> {% endif %}</p>
+              </div>
+
+              <h3>Keywords</h3>
+              <div class="box-for-text p2">
+                  <p>{% if listing.keywords %} {{ listing.keywords|raw }} {% endif %}</p>
+              </div>
+
+              <div class="box-general">
+                  <p class="bold text-center text-uppercase">disclaimer</p>
+                  <p style="font-size: 93%;">
+                      American Biz Trader has not made any independent investigation, verification or audit of the information
+                      contained in this advertisement and makes no representations or warranties, express or implied, regarding the accuracy
+                      or completeness of the information contained herein or linked to and assumes no responsibility to its accuracy or completeness.
+                      When buying or selling a business American Biz Trader encourages you to seek the advice of a professional business broker.
+                      American Biz Trader has no monetary interest in the sale of the business. American Biz Trader does not warrant the Right of
+                      Use of any photography, logos or graphics.
+                  </p>
+              </div>
+          </div>
+
+        </div><!-- // .col-md-8  -->
+
+
+        <div class="col-md-4 col-sm-12">
+
+          <div class="box-for-text">
+            <div class="sell-sidebar">
+                <h2>Get started now!</h2>
+                <h3><a href="/register">Register</a></h3>
+            </div><!-- // .sell-sidebar  -->
+          </div>
+
+          <div class="box-for-text">
+            <div class="sell-sidebar">
+                <h2>Sell or Lease Your Business Today</h2>
+                <h3><a href="/find-a-business-expert">Hire an Expert</a></h3>
+            </div><!-- // .sell-sidebar  -->
+          </div>
+
+          <div class="box-for-text">
+            <div class="sell-sidebar">
+                <h2>Business Brokers</h2>
+                <h3>Only $9.95/month</h3>
+                <ul>
+                  <li>Cancel anytime</li>
+                  <li>Unlimited listings</li>
+                  <li>Showcase quality ads</li>
+                  <li>Up to 6 images</li>
+                  <li>
+                    <a style="color:#0000ff;" href="/buy/agent-profile/237&amp;broker_id=109">
+                      Free broker profile
+                    </a>
+                  </li>
+                  <li>
+                    <a style="color:#0000ff;" href="/buy/all-broker-listings/109">
+                      Free company profile
+                    </a>
+                  </li>
+                  <li>Multi-state profiles</li>
+                  <li>Unlimited counties</li>
+                  <li>Add your agents</li>
+                  <li>Post Businesses</li>
+                  <li>Post Real Estate</li>
+                  <li>Ad Manager Friendly</li>
+                </ul>
+                <h3><a href="/register">Register Now</a></h3>
+            </div><!-- // .sell-sidebar  -->
+          </div>
+
+          <div class="box-for-text">
+            <div class="sell-sidebar">
+                <h2>Sell or Lease Your Business Today</h2>
+                <h3><a href="/find-a-business-expert">Hire an Expert</a></h3>
+            </div><!-- // .sell-sidebar  -->
+          </div>
+
+          <!-- <div class="box-for-text">
+            <div class="sell-sidebar">
+                <h2>Sell by Owner</h2>
+                <h3>Only $24.95/month</h3>
+                <ul>
+                  <li>Cancel anytime</li>
+                  <li>Showcase quality</li>
+                  <li>Up to 6 images</li>
+                  <li>No commissions</li>
+                  <li>Confidential</li>
+                </ul>
+                <h3><a href="/register">Register Now</a></h3>
+            </div>
+          </div> -->
+
+          <div class="box-for-text">
+            <div class="sell-sidebar">
+                <h2>Real Estate Brokers</h2>
+                <h4 class="text-center">Commercial Only</h4>
+                <h3>Only $9.95/month</h3>
+                <ul>
+                  <li>Cancel anytime</li>
+                  <li>Unlimited listings</li>
+                  <li>Showcase quality ads</li>
+                  <li>Up to 6 images</li>
+                  <li>
+                    <a style="color:#0000ff;" href="/buy/agent-profile/243&amp;broker_id=109">
+                      Free broker profile
+                    </a>
+                  </li>
+                  <li>
+                    <a style="color:#0000ff;" href="/buy/all-broker-listings/109">
+                      Free company profile
+                    </a>
+                  </li>
+                  <li>Multi-state profiles</li>
+                  <li>Unlimited counties</li>
+                  <li>Add your agents</li>
+                  <li>Post Businesses</li>
+                  <li>Post Real Estate</li>
+                  <li>Ad Manager Friendly</li>
+                </ul>
+                <h3><a href="/register">Register Now</a></h3>
+            </div><!-- // .sell-sidebar  -->
+          </div>
+
+          <div class="box-for-text">
+            <div class="sell-sidebar">
+                <h3>Mobile Ready</h3>
+                <img src="/assets/images/sell/mobile_ready.jpg">
+            </div><!-- // .sell-sidebar  -->
+          </div>
+
+          <div class="box-for-text">
+            <div class="sell-sidebar">
+                <h3>Search Engine Optimized</h3>
+                <img src="/assets/images/sell/seo.png">
+            </div><!-- // .sell-sidebar  -->
+          </div>
+
+          <div class="box-for-text">
+            <div class="sell-sidebar">
+                <h3><a href="/register">Register Now</a></h3>
+            </div><!-- // .sell-sidebar  -->
+          </div>
+
+
+        </div><!--  // .col-md-4  -->
+
+    </div><!-- // .row -->
+</div><!--  // .page-wrapper  -->
+
+
+{% endblock %}
+
+{% block bottomjs %}
+<script>
+$(document).ready(function(){
+    /*  - - - - - - -  Gallery  - - - - - - -  */
+
+    $("#biz-listing-image-gallery a").click(function(evt){
+         evt.preventDefault();
+
+         var imgPath = $(this).attr("href");
+         //console.log(imgPath);
+
+        var oldImage = $("#photo img");  // holds img element inside photo div
+        var newImage = $('<img class="img-responsive center-block" src="' + imgPath + '">');  // creates new img tag
+        newImage.hide(); // hide tag to prevent displaying image
+        $("#photo").prepend(newImage);  // place value of newImage at the beginning of #photo div, e.g. <div id="photo"><img src="imgPath"></div>
+        newImage.fadeIn(); // fade in new image
+        oldImage.fadeOut(0, function(){
+            $(this).remove();
+        }); // end fadeOut
+
+    }); // end click
+    $("#biz-listing-image-gallery a:first").click();
+
+
+
+    $("#broker_contact_form").validate();
+
+    $('#contact-submit-btn').click(function(){
+        $(this).html('Sending information. Please wait . . .');
+    });
+
+
+
+});
+</script>
+{% endblock %}

@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Experts | ABT
+{% endblock %}
+
+{% block content %}
+
+<div class="page-wrapper">
+    <div class="row">
+
+        <div class="box" style="margin-top:28px;">
+            <div class="col-md-7">
+
+                <h2 class="bold" style="color:#666; margin-bottom:33px;">
+                  Find a Business Expert . . .
+                </h2>
+                <p class="p2">
+                  Selling or leasing a business can be a daunting experience, even
+                  for an industry professional.
+                </p>
+                <p>
+                  Our nationwide directory of professional Brokers can
+                  save you time and money.
+                </p>
+                <h2 class="bold text-right" style="color: #666;">
+                  . . . and build your team
+                </h2>
+
+            </div><!-- // .col-md-7  -->
+
+
+            <div class="col-md-5">
+                <img class="img-responsive" src="/assets/images/a_find-an-expert_600x338.jpg"
+                alt="AmericanBizTrader helps you find a business expert">
+
+            </div><!-- // .col-md-5  -->
+
+        </div><!-- // .box  -->
+
+
+        <div id="wrap-choose-expert">
+
+            <form method="get" action="/search/find-expert" name="find_expert_form" id="find_expert_form">
+
+              <div class="col-md-4">
+                  <h3>Expert</h3>
+                  <select class="form-control p1" name="expert_category" id="expert_category" autofocus>
+                      <option value="">{% if expert_type %}{{ expert_type }}{% else %}Select Expert{% endif %}</option>
+                      <option value="1">Business only Broker</option>
+                      <option value="2">Commercial Real Estate only Broker (Buy or Lease)</option>
+                      <option value="3">Business &amp; Commercial Real Estate Broker</option>
+                  </select>
+              </div><!-- // .col-md-3  -->
+
+              <div class="col-md-2">
+                  <h3>State</h3>
+                  <select class="form-control" name="state" id="expert-state">
+                      <option value="all">All States</option>
+                      {% for state in states %}
+                          <option value="{{ state.abbrev }}">{{ state.name }}</option>
+                      {% endfor %}
+                  </select>
+                  <p id="result2" class="text-size120 text-center"></p>
+              </div>
+
+              <div class="col-md-3">
+                  <h3>County</h3>
+                  <div class="form-group">
+                      <select class="form-control" name="county" id="expert-counties-list">
+                          <option value="all">All counties</option>
+                          <!-- jquery appends here; Ajax code below -->
+                      </select>
+                  </div>
+              </div>
+
+
+              <div class="col-md-3">
+                  <h3>&nbsp;</h3>
+                  <button id="btn-find-business" class="btn btn-primary btn-block"
+                  type="submit" name="action" value="find_expert">
+                  Find Expert
+                </button>
+              </div>
+
+            </form>
+
+        </div><!--  // .bg-f0f -->
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        {% if experts is empty %}
+
+            {% if agents %}
+            <h1 class="text-center bold text-capitalize" style="color: #666;">
+              {{ pagetitle }}
+              <span class="badge" style="margin-top:-20px;margin-left:5px;">
+                {{ agents|length }}
+              </span>
+            </h1>
+            {% endif %}
+
+
+            <div class="col-md-12">
+
+                {% for agent in agents %}
+                <div class="broker-agent-box">
+
+                    <div class="col-md-2 p1">
+                        <img id="expert-company-logo" class="img-responsive center-block"
+                        src="/assets/images/uploaded_company_logos/{{ agent.company_logo }}" alt="{{ agent.company_name  }}">
+                    </div>
+
+                    <div class="col-md-8 col-sm-8 text-center">
+                        <h2 style="font-size: 28px;font-weight: bold;">
+                          <a href="/buy/all-broker-listings/{{ agent.broker_id }}" title="See All Our Listings">
+                              {{ agent.company_name }}
+                          </a>
+                        </h2>
+                        <h2 style="margin-top: 0px;">{{ agent.agent_first_name}} {{ agent.agent_last_name|raw }}</h2>
+                        <h4>
+                          {% if agent.type == 1 %}
+                            Business Broker
+                          {% elseif agent.type == 2 %}
+                            Commercial Real Estate Broker
+                          {% elseif agent.type == 3 %}
+                            Business &amp; Commercial Real Estate Broker
+                          {% endif %}
+                        </h4>
+                        <h3 style="color: #8d8d8d;margin-top:0px;">
+                            Serving
+                            {% if agent.state_serv01 %}  {{ agent.state_serv01 }} {% endif %}
+                            {% if agent.state_serv02 %}, {{ agent.state_serv02 }} {% endif %}
+                            {% if agent.state_serv03 %}, {{ agent.state_serv03 }} {% endif %}
+                            {% if agent.state_serv04 %}, {{ agent.state_serv04 }} {% endif %}
+                            {% if agent.state_serv05 %}, {{ agent.state_serv05 }} {% endif %}
+                        </h3>
+                        <p>
+                            {% if agent.agent_address1 %} {{ agent.agent_address1 }} {% endif %}
+                            {% if agent.agent_address2 %}, {{ agent.agent_address2 }} {% endif %}
+                            {% if agent.agent_city %},  {{ agent.agent_city }} {% endif %}
+                            {% if agent.agent_state %}, {{ agent.agent_state }} {% endif %}
+                            {% if agent.agent_zip %}  {{ agent.agent_zip }} {% endif %}
+                        </p>
+                        <a class="btn btn-buy p1"
+                        href="/buy/agent-profile/{{ agent.agent_id }}&amp;broker_id={{ agent.broker_id }}">
+                        See my Profile &amp; Listings
+                      </a>
+                    </div>
+
+                    <div class="col-md-2 col-sm-2">
+                        <img id="expert-image" class="center-block img-responsive"
+                        src="/assets/images/uploaded_profile_photos/{% if agent.profile_photo %}{{ agent.profile_photo }}{% else %}silhouette_man.png{% endif %}" alt="{{ agent.agent_first_name}} {{ agent.agent_last_name|raw }} of {{ agent.company_name }}">
+                    </div>
+
+                </div>
+                {% endfor %}
+            {% endif %}
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
+
+            <!-- if search results exist -->
+            {% if experts %}
+
+              <h1 class="text-center bold text-capitalize" style="color: #666;">
+                {% if pagetitle %}
+                  {{ pagetitle }}
+                {% endif %}
+                <span class="badge" style="margin-top:-20px;margin-left:5px;">
+                  {{ experts|length }}
+                </span>
+              </h1>
+
+              <p style="color:#0000ff;" class="text-center">
+                {% if expert_type %}Search criteria:  Expert:  <span style="color:#0000ff;font-style:italic;">&quot;{{ expert_type }}&quot;;</span>  {% endif %}
+                {% if statesearched %}State:  <span style="color:#0000ff;font-style:italic;">&quot;{{ statesearched }}&quot;;</span>  {% endif %}
+                {% if countysearched %}County:  <span style="color:#0000ff;font-style:italic;">&quot;{{ countysearched }}&quot;;</span>  {% endif %}
+              </p>
+
+              {% for agent in experts %}
+              <div class="broker-agent-box">
+
+                  <div class="col-md-2 p1">
+                      <img id="expert-company-logo" class="img-responsive center-block"
+                      src="/assets/images/uploaded_company_logos/{{ agent.company_logo }}" alt="{{ agent.company_name  }}">
+                  </div>
+
+                  <div class="col-md-8 col-sm-8 text-center">
+                      <h2 style="font-size: 28px;font-weight: bold;">{{ agent.company_name }}</h2>
+                      <h2 style="margin-top: 0px;">{{ agent.agent_first_name}} {{ agent.agent_last_name }}</h2>
+                      <h4>
+                        {% if agent.type == 1 %}
+                          Business Broker
+                        {% elseif agent.type == 2 %}
+                          Commercial Real Estate Broker
+                        {% elseif agent.type == 3 %}
+                          Business &amp; Commercial Real Estate Broker
+                        {% endif %}
+                      </h4>
+                      <h3 style="color: #8d8d8d;margin-top:0px;">
+                          Serving
+                          {% if agent.state_serv01 %}  {{ agent.state_serv01 }} {% endif %}
+                          {% if agent.state_serv02 %}, {{ agent.state_serv02 }} {% endif %}
+                          {% if agent.state_serv03 %}, {{ agent.state_serv03 }} {% endif %}
+                          {% if agent.state_serv04 %}, {{ agent.state_serv04 }} {% endif %}
+                          {% if agent.state_serv05 %}, {{ agent.state_serv05 }} {% endif %}
+                      </h3>
+                      <p>
+                          {% if agent.agent_address1 %} {{ agent.agent_address1 }} {% endif %}
+                          {% if agent.agent_address2 %}, {{ agent.agent_address2 }} {% endif %}
+                          {% if agent.agent_city %},  {{ agent.agent_city }} {% endif %}
+                          {% if agent.agent_state %}, {{ agent.agent_state }} {% endif %}
+                          {% if agent.agent_zip %}  {{ agent.agent_zip }} {% endif %}
+                      </p>
+                      <a class="btn btn-buy p1"
+                      href="/buy/agent-profile/{{ agent.agent_id }}&amp;broker_id={{ agent.broker_id }}">
+                      See my Profile &amp; Listings
+                    </a>
+                  </div>
+
+                  <div class="col-md-2 col-sm-2">
+                      <img id="expert-image" class="center-block img-responsive"
+                      src="/assets/images/uploaded_profile_photos/{% if agent.profile_photo %}{{ agent.profile_photo }}{% else %}silhouette_man.png{% endif %}" alt="{{ agent.company_name }}">
+                  </div>
+
+              </div><!-- // .box  -->
+              {% endfor %}
+            {% endif %}
+
+            {% if experts is empty and agents is empty %}
+              <div class="alert alert-info text-center">
+                  No results.
+                  <p style="color:#0000ff;" class="text-center">
+                    {% if expert_type %}Search criteria:  Expert:  <span style="color:#0000ff;font-style:italic;">&quot;{{ expert_type }}&quot;;</span>  {% endif %}
+                    {% if statesearched %}State:  <span style="color:#0000ff;font-style:italic;">&quot;{{ statesearched }}&quot;;</span>  {% endif %}
+                    {% if countysearched %}County:  <span style="color:#0000ff;font-style:italic;">&quot;{{ countysearched }}&quot;;</span>  {% endif %}
+                  </p>
+              </div>
+            {% endif %}
+
+            </div><!-- //. col-md-12  -->
+
+    </div><!-- // .row  -->
+</div><!-- // .page-wrapper  -->
+{% endblock %}
+
+
+{% block bottomjs %}
+<script>
+$(document).ready(function(){
+
+    // To populate county drop-down
+    $("#expert-state").change(function(){
+        var state = $(this).val();
+        console.log("state = " + state);
+
+        $.ajax({
+            url: '/buy/get-counties',
+            type: 'POST',
+            data: {
+              state: state
+             },
+            cache: false,
+            success: function(counties){
+
+              // empty content
+              $("#expert-counties-list").empty();
+
+              // loop through county_list array
+              $.each(counties, function(index, value){
+                  $('#expert-counties-list').append( $('<option>').text(value).attr('value', value) );
+              });
+
+              console.log(counties);
+            },
+            error: function(){
+                alert("Error occurred during Ajax request.");
+            }
+        });
+
+    });
+
+});
+</script>
+{% endblock %}

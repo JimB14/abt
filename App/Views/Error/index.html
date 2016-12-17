@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Error | ABT
+{% endblock %}
+
+{% block css %}
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-wrapper" style="min-height: 400px;">
+
+      <div style="margin-top:30px;">
+          {% if errorMessage %}
+            <div class="alert alert-danger">
+                <p class="text-center">{{ errorMessage }}</p>
+            </div>
+          {% endif %}
+      </div>
+
+
+
+</div><!--  // .page-wrapper  -->
+{% endblock %}
+
+{% block bottomjs %}
+
+
+{% endblock %}

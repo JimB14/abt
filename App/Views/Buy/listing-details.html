@@ -1,0 +1,362 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Listing details
+{% endblock %}
+
+{% block metadescription %}
+  Business for sale: {{ 'now'|date('Y-m-d') }} in {{ listing.state }}; {% if listing.hide_city == '0' %}{{ listing.city }}{% endif%} {% if listing.hide_county == '0' %}{{ listing.county }} County; {% endif%}{{ (listing.ad_title|striptags)|raw }}: {{ listing.keywords }}
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+
+{% block content %}
+<div class="page-wrapper">
+        <div class="row">
+            <div class="col-md-12" style="padding-top:15px;">
+                <h2 style="color: #bdbdbd; margin: 5px 0px 20px 0px;" class="text-center">
+                  {{ broker.company_name|raw }} presents
+                </h2>
+                <h3 style="margin-top: -10px; margin-bottom: -7px;">
+                  {{ (listing.ad_title|striptags)|raw }}
+                </h3>
+                <h5>
+                    {% if listing.hide_city == 0 %} {{ listing.city }}, {% else %} (city not disclosed) {% endif %}
+                    {% if listing.state %} {{ listing.state }} {% endif %}
+                    {% if listing.hide_county == 0 and listing.hide_county != '' %} | {{ listing.county }} County {% else %} (county not disclosed) {% endif %}
+                    {% if listing.hide_zip == 0 %} | {{ listing.zip }} {% endif %}
+                </h5>
+            </div><!--  // .col-md-12  -->
+        </div><!--  // .row  -->
+
+        <div class="row p6">
+            <div class="col-md-8 col-sm-12 p2">
+                <div class="listing-box" style="margin-bottom: 15px">
+
+                  {% if listing.listing_status == 'sold' %}
+                    <h1 class="text-center bold" style="color:#ff0000">*SOLD!*</h1>
+                  {% endif %}
+
+                    {% if img_width > 300 and img_width < 400 %}
+                      <div class="col-md-6 col-center-block">
+                    {% elseif img_width > 400 and img_width < 500 %}
+                      <div class="col-md-7 col-center-block">
+                    {% elseif img_width > 500 and img_width < 600  %}
+                      <div class="col-md-8 col-center-block">
+                    {% elseif img_width > 600 and img_width < 700 %}
+                      <div class="col-md-10 col-center-block">
+                    {% else %}
+                      <div class="col-md-12 col-center-block">
+                    {% endif %}
+                      <div class="img-responsive p2" id="photo"></div>
+                    </div>
+
+                    <div class="row">
+
+                        <div id="biz-listing-image-gallery" class="text-center">
+
+                            {% if listing.img01 and listing.img01 != '' %}
+                            <a href="/assets/images/uploaded_business_photos/{{ listing.img01 }}" class="">
+                                <img src="/assets/images/uploaded_business_photos/{{ listing.img01 }}"
+                                alt="{{ broker.company_name }}|{{ listing.ad_title|raw }}" >
+                            </a>
+                            {% endif %}
+
+
+                            {% if listing.img02 and listing.img02 != '' %}
+                            <a href="/assets/images/uploaded_business_photos/{{ listing.img02 }}" class="">
+                                <img src="/assets/images/uploaded_business_photos/{{ listing.img02 }}"
+                                alt="{{ broker.company_name }}|{{ listing.ad_title|raw }}" >
+                            </a>
+                            {% endif %}
+
+
+                            {% if listing.img03 and listing.img03 != '' %}
+                            <a href="/assets/images/uploaded_business_photos/{{ listing.img03 }}" class="">
+                                <img src="/assets/images/uploaded_business_photos/{{ listing.img03 }}"
+                                alt="{{ broker.company_name }}|{{ listing.ad_title|raw }}" >
+                            </a>
+                            {% endif %}
+
+
+                            {% if listing.img04 and listing.img04 != '' %}
+                            <a href="/assets/images/uploaded_business_photos/{{ listing.img04 }}" class="">
+                                <img src="/assets/images/uploaded_business_photos/{{ listing.img04 }}"
+                                alt="{{ broker.company_name }}|{{ listing.ad_title|raw }}" >
+                            </a>
+                            {% endif %}
+
+
+                            {% if listing.img05 and listing.img05 != '' %}
+                            <a href="/assets/images/uploaded_business_photos/{{ listing.img05 }}" class="">
+                                <img src="/assets/images/uploaded_business_photos/{{ listing.img05 }}"
+                                alt="{{ broker.company_name }}|{{ listing.ad_title|raw }}" >
+                            </a>
+                            {% endif %}
+
+
+                            {% if listing.img06 and listing.img06 != '' %}
+                            <a href="/assets/images/uploaded_business_photos/{{ listing.img06 }}" class="">
+                                <img src="/assets/images/uploaded_business_photos/{{ listing.img06 }}"
+                                alt="{{ broker.company_name }}|{{ listing.ad_title|raw }}" >
+                            </a>
+                            {% endif %}
+
+
+                        </div><!-- // #biz-listing-image-gallery  -->
+
+                        <hr>
+
+                    </div><!--  // .row  -->
+
+
+                    <!--  -  -  -  -  -  -  Key Metrics  -  -  -  -  -  -  -  -  -  -  -  -->
+
+                    <div class="row">
+
+                        <h3 class="listing-red ls1 text-center" style="margin-top:-5px;">
+                            Key metrics
+                        </h3>
+
+                        <div class="col-md-12">
+                            <h4 style="margin: -10px 0px 10px 0px;">
+                              Asking price:
+                              <span class="bold">
+                                {% if listing.asking_price %}
+                                  ${{ listing.asking_price|number_format(0) }}
+                                {% endif %}
+                                {% if listing.real_estate_included == 0 and listing.real_estate_value > 0 %}
+                                <sup> 1</sup>
+                                {% endif %}
+                              </span>
+                            </h4>
+                        </div>
+
+                        {% if listing.seller_financing_available == 1 %}
+                        <div class="col-md-4">
+                            <h4 class="seller-financing bold" style="color:#ff0000; margin-top:0px;">
+                                  *Seller Financing*
+                            </h4>
+                        </div>
+                        {% endif %}
+
+                        {% if listing.lender_prequalified == 1 %}
+                        <div class="col-md-4">
+                            <h4  class="lender-prequalified bold" style="color:#ff0000; margin-top:0px;">
+                                  *Lender Pre-qualified*
+                            </h4>
+                        </div>
+                        {% endif %}
+
+                    </div><!--  // .row  -->
+
+
+                    <div class="row">
+
+                        <div class="p-margins">
+                            <div class="col-md-4 col-sm-4">
+                                <p>Established: <span class="bold"> {% if listing.year_established %} {{ listing.year_established }} {% endif %} </span></p>
+                                <p>Gross income: <span class="bold"> {% if listing.gross_income %} ${{ listing.gross_income|number_format(0) }} {% endif %} </span></p>
+                                <p>Cash flow: <span class="bold"> {% if listing.cash_flow %} ${{ listing.cash_flow|number_format(0) }} {% endif %} </span></p>
+                                <p>Franchise: <span class="bold"> {% if listing.franchise == 1 %} Yes {% else %} No {% endif %} </span></p>
+                            </div>
+
+                            <div class="col-md-4 col-sm-4">
+                                <p>EBITDA: <span class="bold"> {% if listing.ebitda %} ${{ listing.ebitda|number_format(0) }} {% endif %} </span></p>
+                                <p>Employees: <span class="bold"> {% if listing.number_of_employees %} {{ listing.number_of_employees }} {% endif %} </span></p>
+                                <p>Square Feet: <span class="bold"> {% if listing.square_feet %} {{ listing.square_feet|number_format(0) }} {% endif %} </span></p>
+                                <p>Home Based: <span class="bold"> {% if listing.home_based == 1 %} Yes {% else %} No {% endif %} </span></p>
+                            </div>
+
+                            <div class="col-md-4 col-sm-4">
+                                <p>
+                                  FFE:
+                                  <span class="bold">
+                                    {% if listing.ffe_value %} ${{ listing.ffe_value|number_format(0) }} {% endif %}
+                                    <span style="font-weight:normal;">
+                                      {% if listing.ffe_value and listing.ffe_value > 0 and listing.ffe_included == 1 %} (included) {% endif %}
+                                    </span>
+                                  </span>
+                                </p>
+
+                                <p>
+                                  Inventory:
+                                  <span class="bold">
+                                    {% if listing.inventory_value %} ${{ listing.inventory_value|number_format(0) }} {% endif %}
+                                    <span style="font-weight:normal;">
+                                      {% if listing.inventory_value and listing.inventory_value > 0 and listing.inventory_included == 1 %} (included) {% endif %}
+                                    </span>
+                                  </span>
+                                </p>
+                                <p>
+                                  Real estate:
+                                  <span class="bold">
+                                    {% if listing.real_estate_value %} ${{ listing.real_estate_value|number_format(0) }} {% endif %}
+                                    <span class="font-normal">
+                                      {% if listing.real_estate_value > 0 and listing.real_estate_included == 1 %}
+                                        (included)
+                                      {% elseif listing.real_estate_included == 0 and listing.real_estate_for_sale == 1 %}
+                                          (available)
+                                      {% endif %}
+                                    </span>
+                                  </span>
+                                </p>
+                                <p>Relocatable: <span class="bold"> {% if listing.relocatable == 1 %} Yes {% else %} No {% endif %} </span></p>
+                            </div>
+                        </div>
+                    </div><!--  // . row  -->
+                    {% if listing.real_estate_included == 0 and listing.real_estate_value > 0 and listing.real_estate_for_sale == 1 %}
+                      <p class="key-metrics-footnote">
+                        <sup>1</sup>
+                        Real estate value (${{ listing.real_estate_value|number_format(0) }})
+                        NOT included in Asking price (${{ listing.asking_price|number_format(0) }}) but is available for purchase
+                      </p>
+                    {% endif %}
+                    {% if listing.real_estate_included == 1 and listing.real_estate_value > 0 %}
+                      <p class="key-metrics-footnote">
+                        <sup>1</sup>Real estate value (${{ listing.real_estate_value|number_format(0) }}) IS included in Asking price
+                      </p>
+                    {% endif %}
+                </div><!--  // .listing-box  -->
+
+
+                <!--  -  -  -  -  -  -  Listing Data  -  -  -  -  -  -  -  -  -  -  -  -->
+
+                <div class="listing-box">
+                    <h3>Business description</h3>
+                    <div class="box-for-text">
+                        <p>{% if listing.biz_description %} {{ listing.biz_description|raw }} {% endif %}</p>
+                    </div>
+
+                    {% if listing.real_estate_description %}
+                      <h3>Facilities description</h3>
+                      <div class="box-for-text">
+                          <p>{% if listing.real_estate_description %} {{ listing.real_estate_description | raw }} {% endif %}</p>
+                      </div>
+                    {% endif %}
+
+                    {% if listing.seller_financing_description %}
+                      <h3>Financing description</h3>
+                      <div class="box-for-text">
+                          <p>{% if listing.seller_financing_description %} {{ listing.seller_financing_description | raw }} {% endif %}</p>
+                      </div>
+                    {% endif %}
+
+                    {% if listing.competition %}
+                      <h3>Competition</h3>
+                      <div class="box-for-text">
+                          <p>{% if listing.competition %} {{ (listing.competition|striptags) | raw }} {% endif %}</p>
+                      </div>
+                    {% endif %}
+
+                    {% if listing.growth_opportunities %}
+                      <h3>Growth</h3>
+                      <div class="box-for-text">
+                          <p>{% if listing.growth_opportunities %} {{ listing.growth_opportunities | raw }} {% endif %}</p>
+                      </div>
+                    {% endif %}
+
+                    {% if listing.support %}
+                      <h3>Support</h3>
+                      <div class="box-for-text">
+                          <p>{% if listing.support %} {{ listing.support | raw }} {% endif %}</p>
+                      </div>
+                    {% endif %}
+
+                    {% if listing.reason_selling %}
+                      <h3>Reason for selling</h3>
+                      <div class="box-for-text">
+                          <p>{% if listing.reason_selling %} {{ listing.reason_selling | raw }} {% endif %}</p>
+                      </div>
+                    {% endif %}
+
+                    {% if listing.biz_website %}
+                      <h3>Business website</h3>
+                      <div class="box-for-text">
+                          <p>{% if listing.biz_website %} <a href="http://{{ listing.biz_website }}">{{ listing.biz_website }}</a> {% endif %}</p>
+                      </div>
+                    {% endif %}
+
+                    {% if listing.keywords %}
+                      <h3>Keywords</h3>
+                      <div class="box-for-text p2">
+                          <p>{% if listing.keywords %} {{ listing.keywords | raw }} {% endif %}</p>
+                      </div>
+                    {% endif %}
+
+                    <div class="box-general">
+                        <p class="bold text-center text-uppercase">disclaimer</p>
+                        <p style="font-size: 93%;">
+                            American Biz Trader has not made any independent investigation, verification or audit of the information
+                            contained in this advertisement and makes no representations or warranties, express or implied, regarding the accuracy
+                            or completeness of the information contained herein or linked to and assumes no responsibility to its accuracy or completeness.
+                            When buying or selling a business American Biz Trader encourages you to seek the advice of a professional business broker.
+                            American Biz Trader has no monetary interest in the sale of the business. American Biz Trader does not warrant the Right of
+                            Use of any photography, logos or graphics.
+                        </p>
+                    </div>
+
+                </div><!-- // .listing-box  -->
+            </div><!-- // .col-md-8  -->
+
+
+
+<!--  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
+
+            <div class="col-md-4 col-sm-12">
+                {% include 'Buy/sidebar-right.html' %}
+            </div><!--  // .col-md-4  -->
+
+
+        </div><!-- // .row -->
+</div><!--  // .page-wrapper  -->
+
+
+{% endblock %}
+
+{% block bottomjs %}
+<script>
+$(document).ready(function(){
+
+    /*  - - - - - - -  Gallery  - - - - - - -  */
+    $("#biz-listing-image-gallery a").click(function(evt){
+         evt.preventDefault();
+
+         var imgPath = $(this).attr("href");
+         //console.log(imgPath);
+
+        var oldImage = $("#photo img");  // holds img element inside photo div
+        var newImage = $('<img class="img-responsive center-block" src="' + imgPath + '">');  // creates new img tag
+        newImage.hide(); // hide tag to prevent displaying image
+        $("#photo").prepend(newImage);  // place value of newImage at the beginning of #photo div, e.g. <div id="photo"><img src="imgPath"></div>
+        newImage.fadeIn(); // fade in new image
+        oldImage.fadeOut(0, function(){
+            $(this).remove();
+        }); // end fadeOut
+
+    }); // end click
+    $("#biz-listing-image-gallery a:first").click();
+
+
+
+    $("#broker_contact_form").validate();
+
+    $('#contact-submit-btn').click(function(){
+        $(this).html('Sending information. Please wait . . .');
+    });
+
+
+    $(".seller-financing").click(function(){
+        $(this).toggleClass( "bold" );
+    });
+    $(".lender-prequalified").click(function(){
+        $(this).toggleClass( "bold" );
+    });
+
+
+
+});
+</script>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block browsertitle %}
+  Contact
+{% endblock %}
+
+{% block content %}
+
+<div class="page-wrapper">
+    <div class="row">
+
+        <div class="col-md-12">
+            <h1>Contact Us</h1>
+            <hr>
+        </div>
+
+        <div class="col-md-8">
+
+            {% if session.contacterror %}
+              {% include 'Error/errormessage.html' %}
+            {% endif %}
+
+              <form name="contactform" id="contactform" class="form-horizontal"
+              action="contact/submit-contact" method="post" novalidate>
+
+                  <div class="form-group">
+                      <label for="first_name" class="col-sm-2 control-label">
+                        First name
+                      </label>
+                      <div class="col-sm-10">
+                          <input type="text" class="form-control required"
+                          name="first_name" id="first_name"
+                          placeholder="First name" autofocus>
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                      <label for="last_name" class="col-sm-2 control-label">
+                        Last name
+                      </label>
+                      <div class="col-sm-10">
+                          <input type="text" class="form-control required"
+                          name="last_name" id="last_name" placeholder="Last name">
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                      <label for="telephone" class="col-sm-2 control-label">
+                        Telephone
+                      </label>
+                      <div class="col-sm-10">
+                          <input type="text" class="form-control required"
+                          name="telephone" id="telephone" placeholder="Telephone">
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                      <label for="email" class="col-sm-2 control-label">
+                        Email
+                      </label>
+                      <div class="col-sm-10">
+                          <input type="email" class="form-control required email"
+                          name="email" id="email" placeholder="user@example.com">
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                      <label for="message" class="col-sm-2 control-label">
+                        Message
+                      </label>
+                      <div class="col-sm-10">
+                          <textarea class="form-control" name="message" id="message" rows="5" placeholder="How can we help?">{% if message %}{{ message }}{% endif %}</textarea>
+                      </div>
+                  </div>
+
+                  <hr>
+
+                  <div class="form-group">
+                      <div class="col-sm-offset-2 col-sm-10">
+                          <button type="submit" class="btn btn-primary">
+                            Submit
+                          </button>
+                      </div>
+                  </div>
+
+              </form>
+
+          </div>
+
+          <div class="col-md-4">
+
+          </div><!-- // .col-md-4  -->
+
+    </div><!-- // .row  -->
+</div><!-- // .page-wrapper  -->
+{% endblock %}
+
+
+{% block bottomjs %}
+
+<script>
+$(document).ready(function(){
+  $("#contactform").validate();
+});
+</script>
+
+
+{% endblock %}

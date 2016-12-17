@@ -1,0 +1,924 @@
+{% extends 'base-admin.html' %}
+
+{% block title %}
+  Edit Listing | ABT
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div id="dashboard-toggle" class="col-md-8" style="margin-top:-20px;margin-left:254px;">
+
+          <h2>Edit listing (ad)</h2>
+          <hr>
+
+          <form class="form-horizontal" method="post"
+            action="/admin/brokers/update-listing?id={{ listing.listing_id }}&amp;broker_id={{ listing.broker_id }}"
+            name="update-listing-data-form" id="update-listing-data-form"
+            enctype="multipart/form-data">
+
+
+            <h3 class="subheading">Listing agent information</h3>
+
+            <div class="form-group">
+                <label for="listing_agent_id" class="control-label col-sm-3">Listing agent (ID)</label>
+                <div class="col-sm-9">
+                    <select class="form-control p1" name="listing_agent_id" id="listing_agent_id" autofocus>
+                        <option value="{{ listing.listing_agent_id}}">{{ listing.listing_agent_id }}</option>
+                        {% for agent in agents %}
+                        <option value="{{ agent.id }}">{{ agent.agent_last_name}},  {{ agent.agent_first_name }} (ID = {{ agent.agent_id }})</option>
+                        {% endfor %}
+                    </select>
+                        <span class="glyphicon form-control-feedback" id="listing_agent_id1"></span>
+                </div>
+            </div>
+            <hr>
+
+            <h3 class="subheading">Business information</h3>
+
+            <div class="form-group">
+                <label for="category" class="control-label col-sm-3">Category (ID)</label>
+                <div class="col-sm-9">
+                    <select class="form-control p1" name="category" id="edit-listing-business-category">
+                        <option value="{{ listing.category_id }}">{{ listing.category_id }}</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}  (ID = {{ category.id }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+
+
+           <div class="form-group">
+                <label for="subcategory-list" class="control-label col-sm-3">Subcategory (ID)</label>
+                <div class="col-sm-9">
+                    <select class="form-control" name="subcategory" id="edit-listing-subcategory-list" >
+                        <option value="{{ listing.subcategory_id }}">{{ listing.subcategory_id }}</option>
+                        <!-- jquery appends here; Ajax code below -->
+                    </select>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="clients_id" class="control-label col-sm-3">Your company ID</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" name="clients_id" id="clients_id"
+                    placeholder="Your company listing ID or reference"
+                    value="{{ listing.clients_id }}" >
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="business_name" class="control-label col-sm-3">Business name</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" name="business_name"
+                    id="business_name" placeholder="Business name or reference"
+                    value="{{ listing.business_name }}" >
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="ad_title" class="control-label col-sm-3">Ad title</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" name="ad_title"
+                    id="ad_title" placeholder="Ad title"
+                    value="{{ listing.ad_title }}" >
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="franchise" class="control-label col-sm-3">
+                  Franchise
+                </label>
+                <div class="col-sm-9">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="franchise"
+                            id="franchise" value="1"
+                            {% if listing.franchise == 1 %}
+                            checked
+                            {% endif %}>
+                            <span>
+                              Yes, business is a franchise
+                              (check or check or uncheck to change)
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="home_based" class="control-label col-sm-3">
+                  Home-based
+                </label>
+                <div class="col-sm-9">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="home_based"
+                            id="home_based" value="1"
+                            {% if listing.home_based == 1 %}
+                            checked
+                            {% endif %}>
+                            <span>
+                              Yes, business operated in home
+                              (check or check or uncheck to change)
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="relocatable" class="control-label col-sm-3">
+                  Relocatable
+                </label>
+                <div class="col-sm-9">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="relocatable"
+                            id="relocatable" value="1"
+                            {% if listing.relocatable == 1 %}
+                            checked
+                            {% endif %}>
+                            <span>
+                              Yes, business can be relocated
+                              (check or check or uncheck to change)
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="listing_status" class="control-label col-sm-3">Listing status</label>
+                <div class="col-sm-9">
+                    <select name="listing_status" id="listing_status" class="form-control">
+                        <option value="active">Active</option>
+                        <option value="sold">Sold</option>
+                    </select>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="listing_status" class="control-label col-sm-3">Display status</label>
+                <div class="col-sm-9">
+                    <select name="display" id="display" class="form-control">
+                        <option value="{{ listing.display }}"> {{ listing.display }}</option>
+                        <option value="1">Show</option>
+                        <option value="0">Hide</option>
+                    </select>
+                    <small>1 = show, 0 = hide. To change status select Hide or Show & click "Update listing" button below.</small>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="year_established" class="control-label col-sm-3"> Year established </label>
+                <div class="col-sm-9">
+                    <input type="text" name="year_established" class="form-control"
+                    id="year_established" placeholder="Year established"
+                    value="{{ listing.year_established }}" >
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="number_of_employees" class="control-label col-sm-3">Number of employees </label>
+                <div class="col-sm-9">
+                    <input type="text" name="number_of_employees" class="form-control"
+                    id="number_of_employees" placeholder="Number of employees"
+                    value="{{ listing.number_of_employees }}" >
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="country" class="control-label col-sm-3">Country</label>
+                <div class="col-sm-9">
+                    <select name="country" id="country" class="form-control">
+                        <option value="{{ listing.country }}"> {{ listing.country }}</option>
+                        <option value="US">US</option>
+                        <option value="Canada">Canada</option>
+                    </select>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="county" class="control-label col-sm-3">County </label>
+                <div class="col-sm-9">
+                    <input type="text" name="county" class="form-control"
+                    id="county" placeholder="County"
+                    value="{{ listing.county }}">
+                 </div>
+            </div>
+
+
+            <div class="form-group" style="margin-top: -15px; margin-left: 3px;">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="hide_county"
+                            id="hide_county" value="1"
+                            {% if listing.hide_county == 1 %} checked
+                            {% endif %}>
+                            <span>
+                              Select to prevent county from displaying in
+                              ad (uncheck to display county)
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="city" class="control-label col-sm-3">City </label>
+                <div class="col-sm-9">
+                    <input type="text" name="city" class="form-control"
+                    id="city" placeholder="City"
+                    value="{{ listing.city }}" >
+                </div>
+            </div>
+
+
+            <div class="form-group"  style="margin-top: -15px; margin-left: 3px;">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="hide_city"
+                            id="hide_city" value="1"
+                            {% if listing.hide_city == 1 %} checked
+                            {% endif %}>
+                            <span>
+                              Select to prevent city from displaying in ad
+                              (uncheck to display city)
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="state" class="control-label col-sm-3"> State </label>
+                <div class="col-sm-9">
+                    <select class="form-control" name="state" id="state">
+                        <option value="{{ listing.state }}"> {{ listing.state }}</option>
+                        {% for state in states %}
+                            <option value="{{ state.abbrev }}">{{ state.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="zip" class="control-label col-sm-3">Zip </label>
+                <div class="col-sm-9">
+                    <input type="text" name="zip" class="form-control"
+                    id="zip" placeholder="Zip" value="{{ listing.zip }}" >
+                 </div>
+            </div>
+
+
+            <div class="form-group" style="margin-top: -15px; margin-left: 3px;">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="hide_zip"
+                            id="hide_zip" value="1"
+                            {% if listing.hide_zip == 1 %} checked
+                            {% endif %}>
+                            <span>
+                              Select to prevent zip from displaying in ad (uncheck to display zip)
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="biz_description" class="control-label col-sm-3">
+                  Description
+                </label>
+                <div class="col-sm-9">
+                    <textarea name="biz_description" class="form-control" id="biz_description-edit" placeholder="Business description" rows="12">{{ listing.biz_description|raw }}</textarea>
+                    <script>
+                      CKEDITOR.replace( 'biz_description-edit' );
+                    </script>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="square_feet" class="control-label col-sm-3">
+                  Square feet
+                </label>
+                <div class="col-sm-9">
+                    <input type="number" name="square_feet" class="form-control"
+                    id="square_feet" placeholder="Square feet"
+                    value="{{ listing.square_feet }}" >
+                 </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="reason_selling" class="control-label col-sm-3">
+                  Reason for selling
+                </label>
+                <div class="col-sm-9">
+                    <textarea name="reason_selling" class="form-control"id="reason_selling" placeholder="Reason for selling" >{{ listing.reason_selling }}</textarea>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="growth_opportunities" class="control-label col-sm-3">
+                  Growth opportunities
+                </label>
+                <div class="col-sm-9">
+                    <textarea name="growth_opportunities" class="form-control"id="growth_opportunities" placeholder="Describe growth opportunities" >{{ listing.growth_opportunities }}</textarea>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="support" class="control-label col-sm-3">
+                  Support
+                </label>
+                <div class="col-sm-9">
+                    <textarea name="support" class="form-control" id="support"placeholder="Describe support" >{{ listing.support }}</textarea>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="competition" class="control-label col-sm-3">
+                  Competition
+                </label>
+                <div class="col-sm-9">
+                    <textarea name="competition" class="form-control" id="competition" placeholder="Describe competitive environment" >{{ listing.competition }}</textarea>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="keywords" class="control-label col-sm-3">
+                  Keywords
+                </label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" name="keywords"
+                    id="keywords" placeholder="Comma separated keywords"
+                    value="{{ listing.keywords }}">
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="biz_website" class="control-label col-sm-3">
+                  Website
+                </label>
+                <div class="col-sm-9">
+                    <input type="text" name="biz_website" class="form-control"
+                    id="biz_website" placeholder="domainName.com or www.domainName.com"
+                    value="{{ listing.website }}">
+                </div>
+            </div>
+            <hr>
+
+
+
+
+<!-- - - - - - - - - - - - - - - - - -  Edit financial data - - - - - - - -  -->
+
+
+            <h3 class="subheading" style="margin-top:40px;">
+              Financial information
+            </h3>
+
+
+            <div class="form-group">
+                <label for="asking_price" class="control-label col-sm-3">
+                  Asking price
+                </label>
+                <div class="col-sm-9">
+                    <input type="number" name="asking_price" class="form-control"
+                    id="asking_price" placeholder="Asking price"
+                    value="{{ listing.asking_price }}" >
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="gross_income" class="control-label col-sm-3">
+                  Gross income
+                </label>
+                <div class="col-sm-9">
+                    <input type="number" name="gross_income" class="form-control"
+                    id="gross_income" placeholder="Gross income"
+                    value="{{ listing.gross_income }}" >
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="cash_flow" class="control-label col-sm-3">
+                  Cash flow
+                </label>
+                <div class="col-sm-9">
+                    <input type="number" name="cash_flow" class="form-control"
+                    id="cash_flow" placeholder="Cash flow"
+                    value="{{ listing.cash_flow }}" >
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="ebitda" class="control-label col-sm-3">
+                  EBITDA
+                </label>
+                <div class="col-sm-9">
+                    <input type="number" name="ebitda" class="form-control"
+                    id="ebitda" placeholder="Earnings before interest, taxes, depreciation and amortization "
+                    value="{{ listing.ebitda }}>" >
+                </div>
+            </div>
+
+
+
+            <div class="form-group" id="inventory-value">
+                <label for="inventory_value" class="control-label col-sm-3">
+                  Inventory value
+                </label>
+                <div class="col-sm-9">
+                    <input type="number" name="inventory_value" class="form-control"
+                    id="inventory_value" placeholder="Inventory value "
+                    value="{{ listing.inventory_value }}" >
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="inventory_included" class="control-label col-sm-3">
+                  Inventory included
+                </label>
+                <div class="col-sm-9">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="inventory_included"
+                            id="inventory_included" value="1"
+                            {% if listing.inventory_included == "1" %} checked
+                            {% endif %}>
+                            <span>
+                              Yes, inventory is included in asking price
+                              (check or uncheck to change)
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="form-group" id="ffe-value">
+                <label for="ffe_value" class="control-label col-sm-3">
+                  FFE value
+                </label>
+                <div class="col-sm-9">
+                    <input type="number" name="ffe_value" class="form-control"
+                    id="ffe_value" placeholder="Furniture, fixtures and equipment value "
+                    value="{{ listing.ffe_value }}" >
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="ffe_included" class="control-label col-sm-3">
+                  FFE included
+                </label>
+                <div class="col-sm-9">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="ffe_included"
+                            id="ffe_included" value="1"
+                            {% if listing.ffe_included == "1" %} checked
+                            {% endif %}>
+                            <span>
+                              Yes, furniture, fixtures and equipment are included
+                              in asking price (check or uncheck to change)
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="form-group" id="real-estate-value">
+                <label for="real_estate_value" class="control-label col-sm-3">
+                  Real estate value
+                </label>
+                <div class="col-sm-9">
+                    <input type="number" name="real_estate_value" class="form-control"
+                    id="real_estate_value" placeholder="Real estate value"
+                    value="{{ listing.real_estate_value }}" >
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="real_estate_included" class="control-label col-sm-3">
+                  Real estate included
+                </label>
+                <div class="col-sm-9">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="real_estate_included"
+                              id="real_estate_included" value="1"
+                              {% if listing.real_estate_included == "1" %} checked
+                              {% endif %}>
+                            <span>
+                              Yes, real estate is included in asking price
+                              (check or uncheck to change)
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="real_estate_for_sale" class="control-label col-sm-3">
+                  Real estate for sale
+                </label>
+                <div class="col-sm-9">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="real_estate_for_sale"
+                              id="real_estate_for_sale" value="1"
+                              {% if listing.real_estate_for_sale == "1" %} checked
+                              {% endif %}>
+                            <span>
+                              Yes, real estate not included in asking price but
+                              real estate is for sale (check or uncheck to change)
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="form-group" id="real-estate-description">
+                <label for="real_estate_description" class="control-label col-sm-3">
+                  Facilities description
+                </label>
+                <div class="col-sm-9">
+                    <textarea name="real_estate_description" class="form-control"id="real_estate_description" placeholder="List real estate" >{{ listing.real_estate_description }}</textarea>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="seller_financing_available" class="control-label col-sm-3">
+                  Seller financing
+                </label>
+                <div class="col-sm-9">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="seller_financing_available"
+                            id="seller_financing_available" value="1"
+                            {% if listing.seller_financing_available == "1" %} checked
+                            {% endif %}>
+                            <span>
+                              Yes, seller financing is available
+                              (check or uncheck to change)
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="form-group" id="seller-financing-description">
+                <label for="seller_financing_description" class="control-label col-sm-3">
+                  Financing description
+                </label>
+                <div class="col-sm-9">
+                    <textarea name="seller_financing_description" class="form-control" id="seller_financing_description" placeholder="Describe seller financing" >{{ listing.seller_financing_description }}</textarea>
+                </div>
+                    <span class="glyphicon form-control-feedback" id="seller_financing_description1"></span>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="lender_prequalified" class="control-label col-sm-3">
+                  Lender pre-qualified
+                </label>
+                <div class="col-sm-9">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="lender_prequalified"
+                            id="lender_prequalified" value="1"
+                            {% if listing.lender_prequalified == 1 %}
+                            checked
+                            {% endif %}>
+                            <span>
+                              Yes, business prequalified by a lender
+                              (check or check or uncheck to change)
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="col-sm-offset-3 col-sm-9">
+                <button id="update-listing-data-btn" type="submit" class="btn btn-primary btn-lg">
+                  Update Listing
+                </button>
+            </div>
+
+          </form>
+
+
+
+<!-- - - - - - - - - - - - -   Edit image data - - - - - - - - - - - - - - -  -->
+
+          <div class="form-wrapper">
+
+              <h1 class="text-capitalize" style="margin-bottom:15px;margin-top: 25px">
+                Update Images
+              </h1>
+              <h4 class="subheading" style="margin-bottom:20px;">
+                Download from over <i>40 million</i> high resolution photos
+                <br>
+                <a style="display:block;margin-left:20px;margin-bottom:-5px;" href="http://www.bigstockphoto.com" target="_blank">
+                  <img src="/assets/images/bigstock-logo.png" width="100" title="Search images" alt="AmericanBizTrader">
+                </a>
+                <span class="small"> (we recommend images 750px wide)
+                </span>
+              </h4>
+
+              <form class="form-horizontal" method="post"
+                action="/admin/brokers/edit-listing-images?id={{ listing.listing_id }}&amp;broker_id={{ listing.broker_id }}"
+                name="edit-image-data-form" id="edit-image-data-form"
+                enctype="multipart/form-data">
+
+                <div class="form-group" id="upload-business-photos">
+                   <label class="control-label col-sm-3">
+                     Upload images
+                   </label>
+                   <div class="col-sm-9">
+                         <p><input type="file" name="img01" id="img01"></p>
+                         <p class="help-block small" style="margin-top:-7px;">
+                           **Must be gif, jpg, jpeg or png under 2MB each
+                         </p>
+                         <p style="margin-top: 14px;">
+                           <img src="/assets/images/uploaded_business_photos/{{ listing.img01 }}" alt="{{ broker_company_name }}"  height="90">
+                         </p>
+                         <p style="margin-top: -5px;">
+                           <span style="padding-right:10px;">
+                             Current image 1:
+                           </span>
+                           {% if listing.img01 %}{{ listing.img01 }} {% else %} No image {% endif %}
+                         </p>
+                         <!-- <a class="btn btn-danger btn-sm"
+                            href="/admin/brokers/delete-listing-image?id={{ listing.listing_id}}&amp;image={{ listing.img01 }}&amp;broker_id={{ listing.broker_id }}"
+                            onclick="return confirm('Are you sure you want to delete image 1?')">
+                            delete image
+                         </a> -->
+                         <hr/>
+
+                         <p><input type="file" name="img02" id="img02"></p>
+                         <p class="help-block small" style="margin-top:-7px;">
+                           **Must be gif, jpg, jpeg or png under 2MB each
+                         </p>
+                         <p style="margin-top: 14px;">
+                           <img src="/assets/images/uploaded_business_photos/{{ listing.img02 }}"
+                           alt="{{ broker_company_name }}" height="90">
+                         </p>
+                         <p style="margin-top: -5px;">
+                            <span style="padding-right:10px;">
+                              Current image 2:
+                            </span>
+                            {% if listing.img02 %}{{ listing.img02 }} {% else %} No image {% endif %}
+                         </p>
+                         <a class="btn btn-danger btn-sm"
+                            href="/admin/brokers/delete-listing-image?id={{ listing.listing_id}}&amp;image={{ listing.img02 }}&amp;broker_id={{ listing.broker_id }}"
+                            onclick="return confirm('Are you sure you want to delete image 2?')">
+                            delete image
+                         </a>
+                         <hr/>
+
+                         <p><input type="file" name="img03" id="img03"></p>
+                         <p class="help-block small" style="margin-top:-7px;">
+                           **Must be gif, jpg, jpeg or png under 2MB each
+                         </p>
+                         <p style="margin-top: 14px;">
+                           <img src="/assets/images/uploaded_business_photos/{{ listing.img03 }}"
+                              alt="{{ broker_company_name }}"  height="90">
+                         </p>
+                         <p style="margin-top: -5px;">
+                           <span style="padding-right:10px;">
+                             Current image 3:
+                           </span>
+                           {% if listing.img03 %}{{ listing.img03 }} {% else %} No image {% endif %}
+                         </p>
+                         <a class="btn btn-danger btn-sm"
+                            href="/admin/brokers/delete-listing-image?id={{ listing.listing_id}}&amp;image={{ listing.img03 }}&amp;broker_id={{ listing.broker_id }}"
+                            onclick="return confirm('Are you sure you want to delete image 3?')">
+                            delete image
+                         </a>
+                         <hr/>
+
+                         <p><input type="file" name="img04" id="img04"></p>
+                         <p class="help-block small" style="margin-top:-7px;">
+                           **Must be gif, jpg, jpeg or png under 2MB each
+                         </p>
+                         <p style="margin-top: 14px;">
+                           <img src="/assets/images/uploaded_business_photos/{{ listing.img04 }}"
+                           alt="{{ broker_company_name }}"  height="90">
+                         </p>
+                         <p style="margin-top: -5px;">
+                           <span style="padding-right:10px;">
+                             Current image 4:
+                           </span>
+                           {% if listing.img04 %}{{ listing.img04 }} {% else %} No image {% endif %}
+                         </p>
+                         <a class="btn btn-danger btn-sm"
+                            href="/admin/brokers/delete-listing-image?id={{ listing.listing_id}}&amp;image={{ listing.img04 }}&amp;broker_id={{ listing.broker_id }}"
+                            onclick="return confirm('Are you sure you want to delete image 4?')">
+                            delete image
+                         </a>
+                         <hr/>
+
+                         <p><input type="file" name="img05" id="img05"></p>
+                         <p class="help-block small" style="margin-top:-7px;">
+                           **Must be gif, jpg, jpeg or png under 2MB each
+                         </p>
+                         <p style="margin-top: 14px;">
+                           <img src="/assets/images/uploaded_business_photos/{{ listing.img05 }}"
+                           alt="{{ broker_company_name }}"  height="90">
+                         </p>
+                         <p style="margin-top: -5px;">
+                           <span style="padding-right:10px;">
+                             Current image 5:
+                           </span>
+                           {% if listing.img05 %}{{ listing.img05 }} {% else %} No image {% endif %}
+                         </p>
+                         <a class="btn btn-danger btn-sm"
+                            href="/admin/brokers/delete-listing-image?id={{ listing.listing_id}}&amp;image={{ listing.img05 }}&amp;broker_id={{ listing.broker_id }}"
+                            onclick="return confirm('Are you sure you want to delete image 5?')">
+                            delete image
+                         </a>
+                         <hr/>
+
+                         <p><input type="file" name="img06" id="img06"></p>
+                         <p class="help-block small" style="margin-top:-7px;">
+                           **Must be gif, jpg, jpeg or png under 2MB each
+                         </p>
+                         <p style="margin-top: 14px;">
+                           <img src="/assets/images/uploaded_business_photos/{{ listing.img06 }}"
+                           alt="{{ broker_company_name }}"  height="90">
+                         </p>
+                         <p style="margin-top: -5px;">
+                           <span style="padding-right:10px;">
+                             Current image 6:
+                           </span>
+                           {% if listing.img06 %}{{ listing.img06 }} {% else %} No image {% endif %}
+                         </p>
+                         <a class="btn btn-danger btn-sm"
+                            href="/admin/brokers/delete-listing-image?id={{ listing.listing_id}}&amp;image={{ listing.img06 }}&amp;broker_id={{ listing.broker_id }}"
+                            onclick="return confirm('Are you sure you want to delete image 6?')">
+                            delete image
+                         </a>
+                         <hr/>
+
+                    </div>
+                </div>
+
+                <div class="col-sm-offset-3 col-sm-9">
+                      <button id="update-listing-image-btn" type="submit"
+                        class="btn btn-primary btn-lg" name="action"
+                        value="update_listing_images">
+                        Update image(s)
+                      </button>
+                </div>
+
+              </form>
+
+          </div><!--  // .form-wrapper  -->
+
+        </div><!--  // col-md-12  -->
+    </div><!--  // .row  -->
+</div><!-- // .container-fluid  -->
+{% endblock %}
+
+
+{% block bottomjs %}
+<script>
+$(document).ready(function(){
+
+    // modify button text on form submit
+    $("#update-listing-data-form").submit(function(){
+
+        $("#update-listing-data-btn").html("Sending information. Please wait . . . ");
+
+    });
+
+    // modify button text on form submit
+    $("#edit-image-data-form").submit(function(){
+
+        $("#update-listing-image-btn").html("Sending information. Please wait . . . ");
+
+    });
+
+    // To populate sub category drop-down
+    $("#edit-listing-business-category").change(function(){
+        var category_id = $(this).val();
+        console.log(category_id);
+
+        $.ajax({
+            url: '/buy/get-sub-categories',
+            type: 'POST',
+            data: { category_id: category_id },
+            cache: false,
+            success: function(sub_categories){
+                // resource: Samir Talwar, http://stackoverflow.com/questions/5918144/how-can-i-use-json-data-to-populate-the-options-of-a-select-box
+
+                // empty any values from previous append (from Main controller)
+                $('#edit-listing-subcategory-list').empty();
+
+                // loop through sub_categories array
+                $.each(sub_categories, function(index, value){
+                  $('#edit-listing-subcategory-list').append( $('<option>').text(value.sub_cat_name).attr('value', value.id));
+                });
+
+                console.log(sub_categories);
+            },
+            error: function(){
+                alert("Error during Ajax request.");
+            }
+        });
+    });
+
+
+    // Display fields with CSS display: none;
+    $("#inventory-value").show();
+    $("#inventory-description").show();
+
+    $("#ffe-value").show();
+    $("#ffe-description").show();
+
+    $("#real-estate-value").show();
+    $("#real-estate-description").show();
+
+    $("#seller-financing-description").show();
+
+
+});
+</script>
+{% endblock %}

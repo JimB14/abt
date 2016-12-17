@@ -1,0 +1,212 @@
+{% extends 'base-admin.html' %}
+
+{% block title %}
+  My Account | ABT
+{% endblock %}
+
+{% block css %}
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div id="dashboard-toggle" class="col-md-8" style="margin-top:-20px;margin-left:254px;">
+
+          <h2>My account</h2>
+          <hr>
+                <form class="form-horizontal">
+
+                    <h3 style="margin-bottom: 15px;">Account information</h3>
+
+                    <div class="form-group">
+                        <label for="regDate" class="control-label col-sm-3">Registration date</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="regDate" id="regDate" placeholder="Registration date" value="{{ user.regDate|date("Y-m-d")}}" >
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="first_name" class="control-label col-sm-3"> First name </label>
+                        <div class="col-sm-9">
+                            <input type="text" name="first_name" class="form-control" id="first_name" placeholder="First name" value="{{ user.first_name }}" >
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="last_name" class="control-label col-sm-3">Last name </label>
+                        <div class="col-sm-9">
+                            <input type="text" name="last_name" class="form-control" id="last_name" placeholder="Last name" value="{{ user.last_name }}" >
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="email" class="control-label col-sm-3">Login email </label>
+                        <div class="col-sm-9">
+                            <input type="email" name="email" class="form-control" id="email" placeholder="Email" value="{{ user.email }}" >
+                         </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="company_name" class="control-label col-sm-3">Company Name</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="company_name" id="company_name" placeholder="Company name" value="{{ company_name }}" >
+                        </div>
+                    </div>
+
+                   <hr>
+
+
+                    <h3 style="margin-bottom: 15px;">Payment information</h3>
+
+                    <div class="form-group">
+                        <label for="last_payment_date" class="control-label col-sm-3">Last payment</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="last_payment_date" id="last_payment_date" placeholder="Last payment" value="" >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="next_payment_amount" class="control-label col-sm-3">Amount</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="next_payment_amount" id="next_payment_amount" placeholder="Next payment amount" value="" >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="next_payment_due_date" class="control-label col-sm-3">Next payment</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="next_payment_due_date" id="next_payment_due_date" placeholder="Next payment due date" value="" >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="next_payment_amount" class="control-label col-sm-3">Amount</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="next_payment_amount" id="next_payment_amount" placeholder="Next payment amount" value="" >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="next_payment_subscription_period" class="control-label col-sm-3">Subscription period</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="next_payment_subscription_period" id="next_payment_subscription_period" placeholder="Next payment subscription period" value="" >
+                        </div>
+                    </div>
+                </form>
+
+                <hr>
+
+
+                <h3 style="margin-bottom: 15px;">Change password</h3>
+
+                <form style="border-bottom: 1px solid #eee; margin-bottom:20px;"
+                class="form-horizontal required" method="post"
+                action="/admin/brokers/change-password?user_id={{ user.id }}" id="change-password-form">
+
+                   <div class="form-group">
+                       <label for="current_password" class="control-label col-sm-3">Current password</label>
+                       <div class="col-sm-9">
+                           <input type="text" class="form-control required" name="current_password" id="current_password" placeholder="Current password">
+                       </div>
+                   </div>
+
+                   <div class="form-group">
+                       <label for="confirm_password" class="control-label col-sm-3">Confirm password</label>
+                       <div class="col-sm-9">
+                           <input type="text" class="form-control required" name="confirm_password" id="confirm_password" placeholder="Confirm password">
+                       </div>
+                   </div>
+
+                   <div class="form-group">
+                       <label for="new_password" class="control-label col-sm-3">New password</label>
+                       <div class="col-sm-9">
+                           <input type="text" class="form-control required" name="new_password" id="new_password" placeholder="New password - at least 6 characters">
+                       </div>
+                   </div>
+
+                   <div class="form-group">
+                       <label for="confirm_new_password" class="control-label col-sm-3">Confirm new password</label>
+                       <div class="col-sm-9">
+                           <input type="text" class="form-control required" name="confirm_new_password" id="confirm_new_password" placeholder="Confirm new password">
+                       </div>
+                   </div>
+
+                   <div class="form-group">
+                       <div class="col-sm-offset-3 col-sm-9">
+                          <button type="submit" class="btn btn-primary btn-lg" id="change-password-btn">Change password</button>
+                       </div>
+                   </div>
+                </form>
+
+
+
+                <h3 style="margin-bottom: 15px;">Change login email</h3>
+
+                <form class="form-horizontal" method="post" action="/admin/brokers/change-login-email?user_id={{ user.id }}" id="change-login-email-form">
+
+                   <div class="form-group">
+                       <label for="current_login_email" class="control-label col-sm-3">Current login email</label>
+                       <div class="col-sm-9">
+                           <input type="email" class="form-control required" name="current_login_email" id="current_login_email" placeholder="Current login email" value="{{ user.email }}">
+                       </div>
+                   </div>
+
+                   <div class="form-group">
+                       <label for="new_login_email" class="control-label col-sm-3">New login email</label>
+                       <div class="col-sm-9">
+                           <input type="email" class="form-control required" name="new_login_email" id="new_login_email" placeholder="New login email">
+                       </div>
+                   </div>
+
+                   <div class="form-group">
+                       <label for="confirm_new_login_email" class="control-label col-sm-3">Confirm new login email</label>
+                       <div class="col-sm-9">
+                           <input type="email" class="form-control required" name="confirm_new_login_email" id="confirm_new_login_email" placeholder="Confirm new login email">
+                       </div>
+                   </div>
+
+                   <div class="form-group">
+                       <label for="password" class="control-label col-sm-3">Current password</label>
+                       <div class="col-sm-9">
+                           <input type="password" class="form-control required" name="password" id="password" placeholder="Current password">
+                       </div>
+                   </div>
+
+                   <div class="form-group">
+                       <div class="col-sm-offset-3 col-sm-9">
+                          <button type="submit" class="btn btn-primary btn-lg" id="change-login-email-btn">Change login email</button>
+                       </div>
+                   </div>
+
+                </form>
+
+
+        </div><!--  // col  -->
+    </div><!--  // .row  -->
+</div><!-- // .container-fluid  -->
+
+
+{% endblock %}
+
+
+{% block bottomjs %}
+<script>
+$(document).ready(function(){
+
+    $("#change-password-form").validate();
+    $("#change-login-email-form").validate();
+
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,313 @@
+<div class="p3">
+    <h3 style="margin-top:0;">
+        {% if agent.first_name and agent.last_name %}
+            Contact
+            {{ agent.first_name }}  {{ agent.last_name }}
+        {% endif %}
+    </h3>
+    <form method="post"
+      action="/buy/contact-broker?listing_id={{ listing.listing_id }}&amp;broker_id={{ broker.broker_id }}&amp;agent_id={{ agent.id }}&amp;"
+      name="broker_contact_form" id="broker_contact_form">
+
+        <div class="form-group has-feedback">
+            <label class="control-label">
+              First name
+            </label>
+            <sup>
+              <span class="red glyphicon glyphicon-asterisk"></span>
+            </sup>
+            <input type="text" name="first_name" class="form-control required"
+            id="first_name" placeholder="First name" value="">
+            <i class="form-control-feedback"></i>
+        </div>
+
+        <div class="form-group has-feedback">
+            <label class="control-label">
+              Last name
+            </label>
+            <sup>
+              <span class="red glyphicon glyphicon-asterisk"></span>
+            </sup>
+            <input type="text" name="last_name" class="form-control required"
+            id="last_name" placeholder="Last name" value="">
+            <i class="form-control-feedback"></i>
+        </div>
+
+        <div class="form-group has-feedback">
+            <label class="control-label">
+              Telephone
+            </label>
+            <sup>
+              <span class="red glyphicon glyphicon-asterisk"></span>
+            </sup>
+            <input type="text" name="telephone" class="form-control required"
+            id="telephone" placeholder="Telephone" value="">
+            <i class="form-control-feedback"></i>
+        </div>
+
+        <div class="form-group has-feedback">
+            <label class="control-label">
+              Email address
+            </label>
+            <sup>
+              <span class="red glyphicon glyphicon-asterisk"></span>
+            </sup>
+            <input type="email" name="email" class="form-control required"
+            id="email" placeholder="Email" value="">
+            <i class="form-control-feedback"></i>
+        </div>
+
+        {% if realtylistingdetailspage != 'active' %} <!-- then ok to display -->
+          <div class="form-group has-feedback">
+              <label class="control-label">
+                Amount to invest
+              </label>
+              <sup>
+                <span class="red glyphicon glyphicon-asterisk"></span>
+              </sup>
+              <input type="number" name="investment" class="form-control required"
+              id="investment" placeholder="Amount to invest" value="">
+              <i class="form-control-feedback"></i>
+          </div>
+        {% endif %}
+
+        <div class="form-group has-feedback">
+            <label class="control-label">
+              Purchase time frame
+            </label>
+            <sup>
+              <span class="red glyphicon glyphicon-asterisk"></span>
+            </sup>
+            <select class="form-control required" name="time_frame" id="time_frame">
+                <option value="now">Now</option>
+                <option value="3-6 months">3 - 6 months</option>
+                <option value="7-12 months">7 - 12 months</option>
+                <option value="1-2 years">1 - 2 years</option>
+                <option value="more than 2 years">More than 2 years</option>
+            </select>
+        </div>
+
+
+        <div class="form-group">
+            <label for="message">Message</label>
+            <!-- textarea tags must be on same line to avoid text indentation and other peculiar behavior  -->
+            <textarea id="message" class="form-control required" style="text-align: left;" name="message" rows="2">I am interested. Please send me a confidentiality agreement.</textarea>
+        </div>
+
+
+        <button id="contact-submit-btn" type="submit" class="btn btn-buy btn-lg btn-block">
+            {% if agent.first_name and agent.last_name %}
+                Submit to
+                {{ agent.first_name }}  {{ agent.last_name }}
+                {% else %}
+                Submit
+            {% endif %}
+        </button>
+    </form>
+
+</div>
+
+
+
+<hr>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <div class="my-listings">
+      <div class="media p3">
+
+          <div class="media-left">
+              <a id="broker-agent-profile-details" href="/buy/agent-profile/{{ agent_id }}&amp;broker_id={{ broker.broker_id }}">
+                  <img class="media-object" src="/assets/images/uploaded_profile_photos/{{ agent.profile_photo }}" width="110" alt="{{ agent.first_name }} {{ agent.last_name }}">
+              </a>
+          </div>
+          <div class="media-body">
+              <h4 class="media-heading bold">
+                  Listing Broker
+              </h4>
+              <p>
+                  <a id="broker-agent-profile-details" href="/buy/agent-profile/{{ agent_id }}&amp;broker_id={{ broker.broker_id }}">
+                      {{ agent.first_name }}  {{ agent.last_name }}
+                  </a>
+              </p>
+              <p style="font-size:90%;">
+                {% if agent.type == 1 %}
+                  Business Broker
+                {% elseif agent.type == 2 %}
+                  Commercial Real Estate Broker
+                {% elseif agent.type == 3 %}
+                  Business &amp; Commercial Real Estate Broker
+                {% endif %}
+              </p>
+              <p>
+                  <a href="/buy/all-broker-listings/{{ broker.broker_id }}" title="Company page">
+                      {{ broker.company_name }}
+                  </a>
+              </p>
+              <p>
+                  <a href="tel:{% if agent.agent_telephone %} {{ agent.agent_telephone }} {% endif %}">
+                      {% if agent.agent_telephone %}
+                        {{ agent.agent_telephone }}
+                      {% endif %}
+                  </a>
+              </p>
+              <p>
+                  <a id="broker-agent-profile-details" href="/buy/agent-profile/{{ agent_id }}&amp;broker_id={{ broker.broker_id }}">
+                      My profile
+                  </a>
+              </p>
+          </div>
+      </div>
+
+      {% if agent_listings %}
+      <h4 class="bold">My listings</h4>
+
+      <table class="table table-hover table-responsive table-condensed">
+          <thead>
+              <tr>
+                  <th>Business</th>
+                  <th>State</th>
+                  <th>Asking</th>
+              </tr>
+          </thead>
+
+          <tbody>
+              {% for listing in agent_listings %}
+              <tr>
+                  <td>
+                      <a href="/buy/view-listing-details?listing_id={{ listing.listing_id }}&amp;broker_id={{ broker.broker_id}}&amp;listing_agent_id={{ listing.listing_agent_id}}">
+                        {% if listing.ad_title %} {{ listing.ad_title|raw }} {% endif %}
+                      </a>
+                  </td>
+                  <td>
+                      {% if listing.state %} {{ listing.state }} {% endif %}
+                  </td>
+                  <td>
+                      {% if listing.asking_price %} {{ listing.asking_price|number_format(0) }} {% endif %}
+                  </td>
+              </tr>
+              {% endfor %}
+
+          </tbody>
+      </table>
+
+    {% if agent_realty_listings %}
+      <table class="table table-hover table-responsive table-condensed">
+          <thead>
+              <tr>
+                  <th>Real Estate</th>
+                  <th>City</th>
+                  <th>State</th>
+                  <th>Asking</th>
+              </tr>
+          </thead>
+
+          <tbody>
+              {% for listing in agent_realty_listings %}
+              <tr>
+                  <td>
+                      <a href="/realty/view-listing-details?listing_id={{ listing.id }}&amp;broker_id={{ broker.broker_id}}&amp;listing_agent_id={{ listing.listing_agent_id}}">
+                        {% if listing.ad_title %} {{ listing.ad_title|raw }} {% endif %}
+                      </a>
+                  </td>
+                  <td>
+                      {% if listing.city %} {{ listing.city }} {% endif %}
+                  </td>
+                  <td>
+                      {% if listing.state %} {{ listing.state }} {% endif %}
+                  </td>
+                  <td>
+                      {% if listing.asking_price %} {{ listing.asking_price|number_format(0) }} {% endif %}
+                  </td>
+              </tr>
+              {% endfor %}
+
+          </tbody>
+      </table>
+    {% endif %}
+  </div>
+
+   <hr>
+   {% endif %}
+
+
+{% if broker_listings %}
+  <div id="all-broker-listings">
+
+      <h4 class="bold" style="line-height:29px; ">
+        Recent listings: {{ broker.company_name }}
+        <!-- {% if broker_listings|length > 0 %}
+          <span class="badge" style="margin: -18px 0px 0px 0px;">
+              {{ broker_listings|length }}
+          </span>
+        {% endif %} -->
+      </h4>
+      <table class="table table-hover table-responsive table-condensed">
+          <thead>
+              <tr>
+                  <th>Business</th>
+                  <!--<th>City</th>-->
+                  <th>State</th>
+                  <th>Asking</th>
+              </tr>
+          </thead>
+
+          <tbody>
+
+              {% for item in broker_listings %}
+              <tr>
+                  <td>
+                      <a href="/buy/view-listing-details?listing_id={{ item.listing_id }}&amp;broker_id={{ item.broker_id}}&amp;listing_agent_id={{ item.listing_agent_id}}">
+                      {{ item.ad_title|raw }}
+                      </a>
+                  </td>
+                  <td> {% if item.state %} {{ item.state }} {% endif %} </td>
+                  <td> {% if item.asking_price %} {{ item.asking_price|number_format(0) }} {% endif %} </td>
+              </tr>
+              {% endfor %}
+
+          </tbody>
+      </table>
+
+      <table class="table table-hover table-responsive table-condensed">
+          <thead>
+              <tr>
+                  <th>Real Estate</th>
+                  <th>City</th>
+                  <th>State</th>
+                  <th>Asking</th>
+              </tr>
+          </thead>
+
+          <tbody>
+              {% for listing in broker_realty_listings %}
+              <tr>
+                  <td>
+                      <a href="/realty/view-listing-details?listing_id={{ listing.id }}&amp;broker_id={{ broker.broker_id}}&amp;listing_agent_id={{ listing.listing_agent_id}}">
+                        {% if listing.ad_title %} {{ listing.ad_title|raw }} {% endif %}
+                      </a>
+                  </td>
+                  <td>
+                      {% if listing.city %} {{ listing.city }} {% endif %}
+                  </td>
+                  <td>
+                      {% if listing.state %} {{ listing.state }} {% endif %}
+                  </td>
+                  <td>
+                      {% if listing.asking_price %} {{ listing.asking_price|number_format(0) }} {% endif %}
+                  </td>
+              </tr>
+              {% endfor %}
+
+          </tbody>
+      </table>
+
+  </div>
+{% endif %}
+
+   <div>
+
+       <a class="btn btn-buy btn-block" href="/buy/all-broker-listings/{{ broker.broker_id }}">
+          See all {% if broker.company_name|length < 30 %}{{ broker.company_name }} listings {% else %} Company listings {% endif %}
+       </a>
+
+   </div>

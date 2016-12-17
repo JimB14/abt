@@ -1,0 +1,72 @@
+<nav class="navbar" data-spy="affix" data-offset-top="250">
+    <div class="container-fluid">
+        <!--<div class="container">-->
+            <div class="navbar-header">
+
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                <a class="navbar-brand" href="/">
+                    <img class="img-responsive" style="display:inline;" src="/assets/images/star_71x59.png" alt="American Biz Trader logo" height="49">
+                    <span class="abt-blue business-name">
+                        American Biz Trader
+                    </span>
+                </a>
+
+            </div><!-- // .navbar-header  -->
+
+            <div class="header-row">
+                <div class="collapse navbar-collapse" id="myNavbar">
+
+                    <ul class="nav navbar-nav">
+                        <li class=""><a href="/buy-a-business">Buy</a></li>
+                        <li class=""><a href="/sell-a-business">Sell</a></li>
+                        <li class=""><a href="/buy-lease-commercial-real-estate">Real Estate</a></li>
+                        <li class=""><a href="/find-a-business-expert">Experts</a></li>
+                        <li><a href="/testimonials">Testimonials</a></li>
+                        <!--<li class=""><a href="/contact">Contact</a></li>-->
+                        {% if session.user %}
+                        <li><a href="/testimonials/add-testimonial">Add testimonial</a></li>
+                        <li><a><span style="color:#ff0000;">Welcome {{ session.full_name }}!</span></a></li>
+                        {% endif %}
+                        {% if session.user == false %}
+                        <li class=""><a href="/register">Register</a></li>
+                        {% endif %}
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+
+                        {% if session.user == true and session.access_level == 2 %}
+                            <li class=dropdown>
+                                <a href=# class=dropdown-toggle id=drop1 data-toggle=dropdown role=button aria-haspopup=true aria-expanded=false>
+                                  Admin
+                                  <span class=caret></span>
+                                </a>
+                                <ul class=dropdown-menu aria-labelledby=drop1>
+                                  <li><a href=/admin/brokers/index?user_id={{ session.user_id }}>Admin Panel</a></li>
+                                  <!-- <li role=separator class=divider></li>
+                                  <li><a href=#>Expert Admin</a></li>
+                                  <li role=separator class=divider></li>
+                                  <li><a href=#>Franchisor Admin</a></li>
+                                  <li role=separator class=divider></li>
+                                  <li><a href=#>FSBO Admin</a></li> -->
+                                </ul>
+                            </li>
+                        {% endif %}
+
+                        {% if session.user %}
+                            <li><a href="/logout"><span class="glyphicon glyphicon-lock"></span> Logout</a></li>
+                        {% endif %}
+                        {% if session.user == false %}
+                            <li class=""><a href="/login"><span class="glyphicon glyphicon-lock"></span> Login</a></li>
+                        {% endif %}
+                    </ul>
+
+                </div>
+            </div><!--  // . header-row  -->
+        <!--</div>--><!-- // .container -->
+    </div><!-- // .container-fluid -->
+</nav>

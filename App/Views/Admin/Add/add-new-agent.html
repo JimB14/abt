@@ -1,0 +1,602 @@
+{% extends 'base-admin.html' %}
+
+{% block title %}
+  Add agent | ABT
+{% endblock %}
+
+{% block css %}
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div id="dashboard-toggle" class="col-md-8" style="margin-top:-20px;margin-left:254px;">
+
+          <h2>Add new agent</h2>
+          <hr>
+
+          <form method="post" action="/admin/brokers/post-new-agent?broker_id={{ session.broker_id }}"
+          id="add-an-agent-form" class="form-horizontal" name="add-an-agent-form"
+          enctype="multipart/form-data">
+
+                <h3 style="margin-bottom: 15px;">
+                  Agent information
+                </h3>
+
+                <div class="form-group">
+                    <label for="first_name" class="control-label col-sm-2">
+                      First name
+                    </label>
+                    <div class="col-sm-10">
+                        <input type="text" name="first_name" class="form-control required"
+                        id="first_name" placeholder="First name" value="" autofocus>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="last_name" class="control-label col-sm-2">
+                      Last name
+                    </label>
+                    <div class="col-sm-10">
+                        <input type="text" name="last_name" class="form-control required"
+                        id="last_name" placeholder="Last name" value="">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="status" class="control-label col-sm-2">
+                      Status
+                    </label>
+                    <div class="col-sm-10">
+                        <select name="status" id="status" class="form-control required">
+                          <option value="agent">Agent</option>
+                          <option value="broker">Broker/Owner</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="type" class="control-label col-sm-2">
+                      Type
+                    </label>
+                    <div class="col-sm-10">
+                        <select name="type" id="type" class="form-control required">
+                          <option value="">Select</option>
+                          <option value="1">Sells businesses only</option>
+                          <option value="2">Sells commercial real estate only</option>
+                          <option value="3">Sells both</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="about_me" class="control-label col-sm-2">
+                      About me
+                    </label>
+                    <div class="col-sm-10">
+                        <textarea name="about_me" class="form-control" required id="about_me" placeholder="Describe professional qualifications" rows="10"></textarea>
+                        <script>
+                          CKEDITOR.replace('about_me');
+                        </script>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="profile_photo" class="control-label col-sm-2">
+                      Upload agent photo
+                    </label>
+                    <div class="col-sm-10">
+                        <input type="file" name="profile_photo" id="profile_photo">
+                        <p class="help-block small">
+                          *Must be gif, jpg, jpeg or png under 2MB
+                        </p>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="cell" class="control-label col-sm-2">
+                      Cell
+                    </label>
+                    <div class="col-sm-10">
+                        <input type="text" name="cell" class="form-control"
+                        id="cell" placeholder="Cell" value="">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="agent_email" class="control-label col-sm-2">
+                      Email
+                    </label>
+                    <div class="col-sm-10">
+                        <input type="email" name="agent_email"
+                        class="form-control required" id="agent_email"
+                        placeholder="Email" value="">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="agent_telephone" class="control-label col-sm-2">
+                      Telephone (Office)
+                    </label>
+                    <div class="col-sm-10">
+                        <input type="text" name="agent_telephone"
+                        class="form-control required" id="agent_telephone"
+                        placeholder="Telephone" value="">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="agent_address1" class="control-label col-sm-2">
+                      Address1
+                    </label>
+                    <div class="col-sm-10">
+                        <input type="text" name="agent_address1" class="form-control required"
+                        id="agent_address1" placeholder="Address1" value="">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="agent_address2" class="control-label col-sm-2">
+                      Address2
+                    </label>
+                    <div class="col-sm-10">
+                        <input type="text" name="agent_address2" class="form-control" id="agent_address2" placeholder="Address2" value="">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="agent_city" class="control-label col-sm-2">
+                      City
+                    </label>
+                    <div class="col-sm-10">
+                        <input type="text" name="agent_city" class="form-control required"
+                        id="agent_city" placeholder="City" value="">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="agent_state" class="control-label col-sm-2">
+                      State
+                    </label>
+                    <div class="col-sm-10">
+                        <select class="form-control required" name="agent_state" id="agent_state">
+                            <option value="">Select</option>
+                            {% for state in states %}
+                                <option value="{{ state.abbrev}}">{{ state.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="agent_zip" class="control-label col-sm-2">
+                      Zip
+                    </label>
+                    <div class="col-sm-10">
+                        <input type="text" name="agent_zip" class="form-control required"
+                        id="agent_zip" placeholder="Zip" value="">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="affiliations" class="control-label col-sm-2">
+                      Awards, Affiliations, Licensing, Certifications
+                    </label>
+                    <div class="col-sm-10">
+                        <textarea name="affiliations" class="form-control required" id="affiliations" placeholder="List affiliations, memberships to professional organizations" rows="10"></textarea>
+                        <script>
+                            CKEDITOR.replace('affiliations');
+                        </script>
+                    </div>
+                </div>
+
+
+
+                <h4 style="margin: 20px 0px 15px 0px;" class="bold">
+                  States and Counties served
+                </h4>
+
+                <div class="form-group">
+                    <label for="state01" class="control-label col-sm-2">
+                      Select state
+                    </label>
+                    <div class="col-sm-10">
+                        <select class="form-control  required" name="state01" id="add-new-agent-state01">
+                          <option value="">Select</option>
+                          {% for state in states %}
+                              <option value="{{ state.abbrev}}">{{ state.name }}</option>
+                          {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="counties_serv01" class="control-label col-sm-2">
+                      Select counties <small> (Ctrl + click for multiple select)</small>
+                    </label>
+                    <div class="col-sm-10">
+                        <select class="form-control" name="counties_serv01[]" id="add-new-agent-counties-serv01" multiple >
+                            <option value="">Select county</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="form-group" style="margin-top: 0px; margin-left: 3px;">
+                    <div class="checkbox col-sm-offset-2 col-sm-10">
+                        <label>
+                            <input type="checkbox" name="show02" id="show02" value="show02">
+                            Add 2nd state
+                        </label>
+                    </div>
+                </div>
+
+
+                <div id="state-county02">
+                    <div class="form-group">
+                        <label for="state02" class="control-label col-sm-2">
+                          Select state 2
+                        </label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="state02" id="add-new-agent-state02">
+                              <option value="">Select</option>
+                                {% for state in states %}
+                                    <option value="{{ state.abbrev}}">{{ state.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="counties_serv02" class="control-label col-sm-2">
+                          Select counties <small> (Ctrl + click for multiple select)</small>
+                        </label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="counties_serv02[]" id="add-new-agent-counties-serv02" multiple >
+                                <option value="">Select county</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group" style="margin-top: 0px; margin-left: 3px;">
+                        <div class="checkbox col-sm-offset-2 col-sm-10">
+                            <label>
+                                <input type="checkbox" name="show03" id="show03" value="show03">
+                                Add 3rd state
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div id="state-county03">
+                    <div class="form-group">
+                        <label for="state03" class="control-label col-sm-2">
+                          Select state 3
+                        </label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="state03" id="add-new-agent-state03">
+                                <option value="">Select</option>
+                                {% for state in states %}
+                                    <option value="{{ state.abbrev}}">{{ state.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="counties_serv03" class="control-label col-sm-2">
+                          Select counties <small> (Ctrl + click for multiple select)</small>
+                        </label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="counties_serv03[]" id="add-new-agent-counties-serv03" multiple >
+                                <option value="">Select county</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group" style="margin-top: 0px; margin-left: 3px;">
+                        <div class="checkbox col-sm-offset-2 col-sm-10">
+                            <label>
+                                <input type="checkbox" name="show04" id="show04" value="show04">
+                                Add 4th state
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div id="state-county04">
+                    <div class="form-group">
+                        <label for="state04" class="control-label col-sm-2">
+                          Select state 4
+                        </label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="state04" id="add-new-agent-state04">
+                              <option value="">Select</option>
+                                {% for state in states %}
+                                    <option value="{{ state.abbrev}}">{{ state.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="counties_serv04" class="control-label col-sm-2">
+                          Select counties <small> (Ctrl + click for multiple select)</small>
+                        </label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="counties_serv04[]" id="add-new-agent-counties-serv04" multiple >
+                                <option value="">Select county</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group" style="margin-top: 0px; margin-left: 3px;">
+                        <div class="checkbox col-sm-offset-2 col-sm-10">
+                            <label>
+                                <input type="checkbox" name="show05" id="show05" value="show05">
+                                Add 5th state
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div id="state-county05">
+                    <div class="form-group">
+                        <label for="state05" class="control-label col-sm-2">
+                          Select state 5
+                        </label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="state05" id="add-new-agent-state05">
+                                <option value="">Select</option>
+                                {% for state in states %}
+                                    <option value="{{ state.abbrev}}">{{ state.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="counties_serv05" class="control-label col-sm-2">
+                          Select counties <small> (Ctrl + click for multiple select)</small>
+                        </label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="counties_serv05[]" id="add-new-agent-counties-serv05" multiple >
+                                <option value="">Select county</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-offset-2 col-sm-10">
+                  <hr>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10" style="paddding-top: 30px;">
+                        <button type="submit" class="btn btn-primary btn-lg" id="submit-new-agent-btn" name="action" value="submit_new_agent_data">Add agent</button>
+                    </div>
+                </div>
+          </form>
+
+        </div><!--  // .col-md-9  -->
+    </div><!--  // .row  -->
+</div><!--  // .container  -->
+
+
+
+{% endblock %}
+
+
+{% block bottomjs %}
+<script>
+$(document).ready(function(){
+
+    $("#add-an-agent-form").validate();
+
+    // Change html on button on form submission
+    $("#add-an-agent-form").submit(function(){
+        $("#submit-new-agent-btn").html("Sending information, please wait . . .");
+    });
+
+
+    // To populate county drop-down for Views/Admin/Add/add-new-agent.html.php
+    $("#add-new-agent-state01").change(function(){
+        var state01 = $(this).val();
+        console.log(state01);
+
+        $.ajax({
+            url: '/buy/get-counties',
+            type: 'POST',
+            data: { state: state01},
+            cache: false,
+            success: function(county_list){
+
+              // empty content
+              $("#add-new-agent-counties-serv01").empty();
+
+              // loop through county_list array
+              $.each(county_list, function(index, value){
+                  $('#add-new-agent-counties-serv01').append( $('<option>').text(value).attr('value', value) );
+              });
+
+              console.log(county_list);
+            },
+            error: function(){
+                alert("Error occurred during Ajax request.");
+            }
+        });
+    });
+
+
+    // To populate county drop-down for @admin/brokers/admin/add-an-agent-form.html.php
+    $("#add-new-agent-state02").change(function(){
+        var state02 = $(this).val();
+        console.log(state02);
+
+        $.ajax({
+            url: '/buy/get-counties',
+            type: 'POST',
+            data: { state: state02},
+            cache: false,
+            success: function(county_list){
+
+              // empty content
+              $("#add-new-agent-counties-serv02").empty();
+
+              // loop through county_list array
+              $.each(county_list, function(index, value){
+                  $('#add-new-agent-counties-serv02').append( $('<option>').text(value).attr('value', value) );
+              });
+
+              console.log(county_list);
+            },
+            error: function(){
+                alert("Error occurred during Ajax request.");
+            }
+        });
+    });
+
+    // To populate county drop-down for @admin/brokers/admin/add-an-agent-form.html.php
+    $("#add-new-agent-state03").change(function(){
+        var state03 = $(this).val();
+        console.log(state03);
+
+        $.ajax({
+            url: '/buy/get-counties',
+            type: 'POST',
+            data: { state: state03},
+            cache: false,
+            success: function(county_list){
+
+              // empty content
+              $("#add-new-agent-counties-serv03").empty();
+
+              // loop through county_list array
+              $.each(county_list, function(index, value){
+                  $('#add-new-agent-counties-serv03').append( $('<option>').text(value).attr('value', value) );
+              });
+
+              console.log(county_list);
+            },
+            error: function(){
+                alert("Error occurred during Ajax request.");
+            }
+        });
+    });
+
+    // To populate county drop-down for @admin/brokers/admin/add-an-agent-form.html.php
+    $("#add-new-agent-state04").change(function(){
+        var state04 = $(this).val();
+        console.log(state04);
+
+        $.ajax({
+            url: '/buy/get-counties',
+            type: 'POST',
+            data: { state: state04},
+            cache: false,
+            success: function(county_list){
+
+              // empty content
+              $("#add-new-agent-counties-serv04").empty();
+
+              // loop through county_list array
+              $.each(county_list, function(index, value){
+                  $('#add-new-agent-counties-serv04').append( $('<option>').text(value).attr('value', value) );
+              });
+
+              console.log(county_list);
+            },
+            error: function(){
+                alert("Error occurred during Ajax request.");
+            }
+        });
+    });
+
+
+    // To populate county drop-down for @admin/brokers/admin/add-an-agent-form.html.php
+    $("#add-new-agent-state05").change(function(){
+        var state05 = $(this).val();
+        console.log(state05);
+
+        $.ajax({
+            url: '/buy/get-counties',
+            type: 'POST',
+            data: { state: state05},
+            cache: false,
+            success: function(county_list){
+
+              // empty content
+              $("#add-new-agent-counties-serv05").empty();
+
+              // loop through county_list array
+              $.each(county_list, function(index, value){
+                  $('#add-new-agent-counties-serv05').append( $('<option>').text(value).attr('value', value) );
+              });
+
+              console.log(county_list);
+            },
+            error: function(){
+                alert("Error occurred during Ajax request.");
+            }
+        });
+    });
+
+
+    // Show / hide div
+    $("#show02").click(function(){
+
+        $("#state-county02").toggle(500);
+    });
+
+    // Show / hide div
+    $("#show03").click(function(){
+
+        $("#state-county03").toggle(500);
+    });
+
+    // Show / hide div
+    $("#show04").click(function(){
+
+        $("#state-county04").toggle(500);
+    });
+
+    // Show / hide div
+    $("#show05").click(function(){
+
+        $("#state-county05").toggle(500);
+    });
+
+
+});
+</script>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block browsertitle %}
+  Add testimonial
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-wrapper">
+    <div class="row">
+
+        <div class="col-md-12">
+            <h1>Add Testimonial</h1>
+            <hr>
+        </div>
+
+        <div class="col-md-8">
+
+              {% if session.addtestimonialerror %}
+                {% include 'errormessage.php' %}
+              {% endif %}
+
+              <form method="post" name="testimonialform" class="form-horizontal" id="testimonialform" action="/testimonials/submit-testimonial">
+
+                  <div class="form-group">
+                      <label for="title"  class="col-sm-3 control-label">Title</label>
+                      <div class="col-sm-9">
+                          <input type="text" class="form-control required" id="title" name="title" placeholder="title" autofocus>
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                      <label for="testimonial"  class="col-sm-3 control-label">Testimonial</label>
+                      <div class="col-sm-9">
+                          <textarea class="form-control required" id="testimonial" name="testimonial" placeholder="testimonial"></textarea>
+                      </div>
+                  </div>
+
+                  <hr>
+
+                  <div class="form-group">
+                      <div class="col-sm-offset-3 col-sm-9">
+                          <button type="submit" class="btn btn-primary">Submit Testimonial</button>
+                      </div>
+                  </div>
+
+              </form>
+        </div>
+
+        <div class="col-md-4">
+            {% include 'franchise-sidebar.html' %}
+            <br><br>
+        </div>
+
+    </div><!-- // .row  -->
+</div><!-- // .page-wrapper  -->
+
+{% endblock %}
+
+{% block bottomjs %}
+  <script>
+  $(document).ready(function(){
+    //$("#testimonialform").validate();
+  });
+  </script>
+{% endblock %}
