@@ -51,7 +51,7 @@ class Payflow extends \Core\Model
 
 
     /**
-     * [payflow description]
+     * receives & validates PP credentials, sets submitURL, checks if curl_init() exists
      * @param  [type] $vendor   [description]
      * @param  [type] $user     [description]
      * @param  [type] $partner  [description]
@@ -65,27 +65,31 @@ class Payflow extends \Core\Model
         $this->partner = $partner;
         $this->password = $password;
 
+        // validate VENDOR
         if (strlen($this->vendor) == 0)
         {
             $this->set_errors('Vendor not found');
             return;
         }
+        // validate USER
         if (strlen($this->user) == 0)
         {
             $this->set_errors('User not found');
             return false;
         }
+        // validate PARTNER
         if (strlen($this->partner) == 0)
         {
             $this->set_errors('Partner not found');
             return false;
         }
+        // VALIDATE PWD
         if (strlen($this->password) == 0)
         {
             $this->set_errors('Password not found');
             return false;
         }
-
+        // set submiturl for test or live
         if ($this->test_mode == 1)
         {
             $this->submiturl = 'https://pilot-payflowpro.paypal.com';
@@ -98,6 +102,7 @@ class Payflow extends \Core\Model
         // check for CURL
         if (!function_exists('curl_init'))
         {
+            // return error message if curl_init() not found
             $this->set_errors('Curl function not found.');
             return;
         }
@@ -107,7 +112,7 @@ class Payflow extends \Core\Model
   /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
     /**
-     * Recurring billing sale transaction
+     * Recurring billing sale transaction; accepts 9 parameters (one is an array)
      * @param  string   $vendor       PP credential
      * @param  string   $user         PP credential
      * @param  string   $partner      PayPal or merchant
@@ -126,29 +131,32 @@ class Payflow extends \Core\Model
         $this->partner = $partner;
         $this->password = $password;
 
-        // data validation
+        // validate card number (ACCT)
         if ($this->validate_card_number($card_number) == false)
         {
             $this->set_errors('Card Number not valid');
             return;
         }
+        // validate EXPDATE
         if ($this->validate_card_expire($card_expire) == false)
         {
             $this->set_errors('Card Expiration Date not valid');
             return;
         }
+        // validate AMT
         if (!is_numeric($amount) || $amount <= 0)
         {
             $this->set_errors('Amount is not valid');
             return;
         }
+        // validate currency (if currency drop-down used)
         if (!in_array($currency, $this->currencies_allowed))
         {
             $this->set_errors('Currency not allowed');
             return;
         }
 
-        // set URL
+        // set submit URL (endpoint)
         if ($this->test_mode == 1)
         {
             $this->submiturl = 'https://pilot-payflowpro.paypal.com';
@@ -158,14 +166,14 @@ class Payflow extends \Core\Model
             $this->submiturl = 'https://payflowpro.paypal.com';
         }
 
-        // build hash - request_id used in headers - see line #
+        // create request_id for use in headers - see line #210
         $tempstr = $card_number . $amount . date('YmdGis') . "1";
         $request_id = md5($tempstr);
 
-        // alternative $request_id
+        // alternative $request_id creation method
         // $request_id = date('YmdGis'); // must be unique ID
 
-        // body
+        // build query string for recurring billing to pass to PP
         $plist  = 'USER=' . $this->user . '&';
         $plist .= 'VENDOR=' . $this->vendor . '&';
         $plist .= 'PARTNER=' . $this->partner . '&';
@@ -174,9 +182,7 @@ class Payflow extends \Core\Model
         $plist .= 'TRXTYPE=' . 'R' . '&'; //  R = Recurring, S = Sale transaction, A = Authorisation, C = Credit, D = Delayed Capture, V = Void
         $plist .= 'ACCT=' . $card_number . '&';
         $plist .= 'EXPDATE=' . $card_expire . '&';
-        //$plist .= 'NAME=' . $card_name . '&';
         $plist .= 'AMT=' . $amount . '&';
-        // extra data
         $plist .= 'CURRENCY=' . $currency . '&';
         $plist .= 'COMMENT1=' . $data_array['COMMENT1'] . '&';
         $plist .= 'FIRSTNAME=' . $data_array['FIRSTNAME'] . '&';

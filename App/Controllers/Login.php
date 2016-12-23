@@ -76,7 +76,7 @@ use \App\Models\State;
         // exit();
 
         // check if returning user; if true log in
-        if( ($user) && ($user->first_login == 0) )
+        if( ($user) && ($user->first_login == 0) && ($user->current == 1) )
         {
             // log returning user in
             // create unique id & store in SESSION variable
@@ -121,7 +121,7 @@ use \App\Models\State;
         {
             // get states for drop-down
             $states = State::getStates();
-            
+
             // send for payment
             View::renderTemplate('Paypal/index.html', [
                 'user'   => $user,

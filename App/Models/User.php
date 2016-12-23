@@ -77,7 +77,8 @@ class User extends \Core\Model
             exit();
         }
 
-        //check if data passing
+        // test
+        // check if data passing
         // echo '<pre>';
         // print_r($_REQUEST);
         // echo '</pre>';
@@ -120,6 +121,7 @@ class User extends \Core\Model
         // hash password
         $pass = password_hash($password, PASSWORD_DEFAULT);
 
+        // test
         // echo $first_name . '<br>';
         // echo $last_name . '<br>';
         // echo $email . '<br>';
@@ -161,6 +163,7 @@ class User extends \Core\Model
                     'token'   => $token
                 ];
 
+                // test
                 // echo '<pre>';
                 // print_r($results);
                 // echo '</pre>';
@@ -224,7 +227,7 @@ class User extends \Core\Model
 
 
     /**
-     * updates value in users.current after successful payment 
+     * updates value in users.current after successful payment
      *
      * @param  integer $user_id  The user ID
      *

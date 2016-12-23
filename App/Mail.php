@@ -72,10 +72,11 @@ class Mail
 
         // "Cc" addresses
         //$mail->addCC('jim.burns@webmediapartners.com', 'Jim');
-        $mail->addCC('jim.burns14@gmail.com');
+        //$mail->addCC('jim.burns14@gmail.com');
 
         // "Bcc" address
-        //$mail->addBCC('jim.burns14@gmail.com');
+        $mail->addBCC('jim.burns14@gmail.com');
+        $mail->addBCC('dave.didion@americangymtrader.com');
         //$mail->addBCC('jim.burns@webmediapartners.com');
 
         // add different "Reply to" email address
@@ -354,6 +355,7 @@ class Mail
         //$mail->addCC('jim.burns@webmediapartners.com');
         //$mail->addAddress('dave.didion@americangymtrader.com', 'Dave');
         $mail->addBCC('sales@americanbiztrader.com');
+        $mail->addBCC('jim.burns14@gmail.com');
         $mail->isHTML(true);
 
         // Subject & body
@@ -459,6 +461,7 @@ class Mail
 
         // "Bcc" address
         $mail->addBCC('jim.burns14@gmail.com');
+        $mail->addBCC('dave.didion@americangymtrader.com');
         //$mail->addBCC('jim.burns@webmediapartners.com');
 
         // add different "Reply to" email address
@@ -553,11 +556,12 @@ class Mail
          * Send email
          */
         $mail->setFrom('noreply@americanbiztrader.com', 'AmericanBizTrader');
-        //$mail->addAddress($listing_inquiry['broker_email']);
-        //$mail->addCC($listing_inquiry['agent_email']);
-        $mail->addAddress('jim.burns14@gmail.com');
-        $mail->addCC('dave.didion@americangymtrader.com');
+        $mail->addAddress($listing_inquiry['broker_email']);
+        $mail->addCC($listing_inquiry['agent_email']);
+        //$mail->addAddress('jim.burns14@gmail.com');
+        //$mail->addCC('dave.didion@americangymtrader.com');
         $mail->addBCC('jim.burns@webmediapartners.com');
+        $mail->addBCC('dave.didion@americangymtrader.com');
 
         $mail->isHTML(true);
 
@@ -643,10 +647,12 @@ class Mail
          * Send email
          */
         $mail->setFrom('noreplyh@americanbiztrader.com', 'AmericanBizTrader');
-        //$mail->addAddress($listing_inquiry['broker_email']);
-        $mail->addAddress('jim.burns14@gmail.com');
+        $mail->addAddress($listing_inquiry['broker_email']);
+        //$mail->addAddress('jim.burns14@gmail.com');
         //$mail->addCC('dave.didion@americangymtrader.com');
         $mail->addBCC('noreplyh@americanbiztrader.com');
+        $mail->addBCC('jim.burns14@gmail.com');
+        $mail->addBCC('dave.didion@americangymtrader.com');
 
         $mail->isHTML(true);
 
@@ -725,11 +731,13 @@ class Mail
          * Send email
          */
         $mail->setFrom('noreplyh@americanbiztrader.com', 'AmericanBizTrader');
-        //$mail->addAddress($listing_inquiry['agent_email']);
-        //$mail->addCC($listing_inquiry['broker_email']);
-        $mail->addAddress('jim.burns14@gmail.com');
+        $mail->addAddress($listing_inquiry['agent_email']);
+        $mail->addCC($listing_inquiry['broker_email']);
+        //$mail->addAddress('jim.burns14@gmail.com');
         //$mail->addCC('dave.didion@americangymtrader.com');
         $mail->addBCC('sales@americanbiztrader.com');
+        $mail->addBCC('jim.burns14@gmail.com');
+        $mail->addBCC('dave.didion@americangymtrader.com');
 
         $mail->isHTML(true);
 
