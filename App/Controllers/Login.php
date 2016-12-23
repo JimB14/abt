@@ -104,29 +104,26 @@ use \App\Models\State;
             exit();
         }
 
-        // check if first login of new user (first_login == 1); if true, special page
-        if( ($user) && ($user->first_login == 1) )
+        // check if user has ever logged in and is current
+        if( ($user) && ($user->first_login == 1 && $user->current == 1) )
         {
-            // send user to PayPal
-            include 'Library/process-credit-card.php';
-            exit();
-
-            // if (paypal == 'success')
-            // {
-            //    continue with code below
-            // }
-            // else
-            // {
-            //    echo 'Error. Please complete your PayPal payment.';
-            //    header("Location: /login ");
-            //    exit();
-            // }
-
             // get states for drop-down
             $states = State::getStates();
 
             // first time logging in (users.first_login === 1)
             View::renderTemplate('Register/new-user-registration.html', [
+                'user'   => $user,
+                'states' => $states
+            ]);
+            exit();
+        }
+        elseif ( ($user) && ($user->first_login == 1 && $user->current == 0) )
+        {
+            // get states for drop-down
+            $states = State::getStates();
+            
+            // send for payment
+            View::renderTemplate('Paypal/index.html', [
                 'user'   => $user,
                 'states' => $states
             ]);

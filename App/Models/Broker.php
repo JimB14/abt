@@ -8,6 +8,7 @@ use \App\Config;
 
 class Broker extends \Core\Model
 {
+
     public static function getBrokerDetails($broker_id)
     {
         try

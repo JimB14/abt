@@ -117,7 +117,9 @@
                               {{ agent.company_name }}
                           </a>
                         </h2>
-                        <h2 style="margin-top: 0px;">{{ agent.agent_first_name}} {{ agent.agent_last_name|raw }}</h2>
+                        <h2 style="margin-top: 0px;">
+                            {{ agent.agent_first_name}} {{ (agent.agent_last_name|striptags)|raw }}
+                        </h2>
                         <h4>
                           {% if agent.type == 1 %}
                             Business Broker

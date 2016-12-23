@@ -223,6 +223,42 @@ class User extends \Core\Model
 
 
 
+    /**
+     * updates value in users.current after successful payment 
+     *
+     * @param  integer $user_id  The user ID
+     *
+     * @return boolean
+     */
+    public static function updateCurrent($user_id)
+    {
+        // establish db connection
+        $db = static::getDB();
+
+        try
+        {
+            $sql = "UPDATE users SET
+                    current = :current
+                    WHERE id = :id";
+            $stmt = $db->prepare($sql);
+            $parameters = [
+                ':id'      => $user_id,
+                ':current' => 1
+            ];
+            $result = $stmt->execute($parameters);
+
+            // return to Paypal Controller
+            return $result;
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
+    }
+
+
+
 
     /**
      * validates user credentials

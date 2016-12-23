@@ -17,20 +17,39 @@
 
         <div class="col-md-8">
 
-            {% if first_name %}
+            {% if first_name and subscribe_success == 'false' %}
               <h3 style="margin-top: 0px">
                 Thanks {{ first_name }}! {{ message }}
               </h3>
-              {% else %}
+              {% elseif message %}
               <h4 style="margin-top: 0px">
                 {{ message }}
               </h4>
-            {% endif %}
             <br><br><br><br>
+            {% endif %}
+
+            {% if subscribe_success == 'true' %}
+              <h3 style="margin-top: 0px">
+                Congratulations {{ first_name }} {{ last_name}}!
+              </h3>
+              <h4 style="margin-top: 15px">
+                {{ subscribe_msg1 }}
+              </h4>
+              <p style="margin-top: 15px">
+                {{ subscribe_msg2 }}
+              </p>
+              <p style="margin-top: 15px">
+                {{ subscribe_msg3 }}
+              </p>
+              <h4 style="margin-top: 20px; font-weight:bold;">
+                {{ subscribe_msg4 }}
+              </h4>
+              <br><br><br><br>
+            {% endif %}
         </div>
 
         <div class="col-md-4">
-            
+
         </div><!-- // .col-md-4  -->
     </div><!-- // .row  -->
 </div><!-- // .page-wrapper -->

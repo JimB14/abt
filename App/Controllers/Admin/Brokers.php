@@ -638,7 +638,7 @@ class Brokers extends \Core\Controller
 
 
         // get listings for this agent
-        $listings = Listing::getAllAgentListings($agent_id);
+        $listings = Listing::getAllAgentListings($agent_id, $limit = null);
 
         // test
         // echo "<pre>";

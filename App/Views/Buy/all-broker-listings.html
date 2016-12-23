@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="col-md-9" id="agent-contact-data" >
-                        <h4 class="media-heading" style="margin-bottom:10px;">{{ broker.first_name}} {{ broker.last_name }}, {{ broker.title }}</h4>
+                        <h4 class="media-heading" style="margin-bottom:10px;">{{ broker.first_name }} {{ (broker.last_name|striptags)|raw }}, {{ broker.title }}</h4>
                         <p>
                             {% if broker.address1 and broker.address1 != '' %} {{broker.address1 }} {% endif %}
                             {% if broker.address2 and broker.address2 != '' %} {{broker.address2 }} {% endif %}
