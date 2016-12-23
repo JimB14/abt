@@ -10,7 +10,6 @@
         "phpmailer/phpmailer": "~5.2",
         "monolog/monolog": "^1.19",
         "twig/twig": "~1.0",
-        "paypal/rest-api-sdk-php": "*",
         "angelleye/paypal-php-library": "2.0.*"
     },
     "autoload": {
