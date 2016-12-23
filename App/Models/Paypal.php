@@ -146,14 +146,16 @@ class Paypal extends \Core\Model
                     PPREF         = :PPREF,
                     PROFILEID     = :PROFILEID,
                     CORRELATIONID = :CORRELATIONID,
-                    TRANSTIME     = :TRANSTIME";
+                    TRANSTIME     = :TRANSTIME,
+                    AMT           = :AMT";
             $parameters = [
                 ':user_id'        => $user_id,
                 ':TRXPNREF'       => $data_array['TRXPNREF'],
                 ':PPREF'          => $data_array['PPREF'],
                 ':PROFILEID'      => $data_array['PROFILEID'],
                 ':CORRELATIONID'  => $data_array['CORRELATIONID'],
-                ':TRANSTIME'      => $data_array['TRANSTIME']
+                ':TRANSTIME'      => $data_array['TRANSTIME'],
+                ':AMT'            => $data_array['AMT']
             ];
             $stmt = $db->prepare($sql);
             $result = $stmt->execute($parameters);
@@ -162,6 +164,42 @@ class Paypal extends \Core\Model
             return $result;
         }
         catch (PDOException $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
+    }
+
+
+
+    /**
+     * gets transaction data from paypal_log
+     *
+     * @param  int $user->id    The user ID
+     * @return object           The transaction records
+     */
+    public static function getTransactionData($user_id)
+    {
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            $sql = "SELECT * FROM paypal_log
+                    WHERE user_id = :user_id
+                    ORDER BY TRANSTIME DESC";
+            $parameters = [
+                ':user_id'  => $user_id
+            ];
+            $stmt = $db->prepare($sql);
+            $stmt->execute($parameters);
+
+            $results = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+            // return results to Admin/Brokers Controlller
+            return $results;
+        }
+        catch(PDOException $e)
         {
             echo $e->getMessage();
             exit();

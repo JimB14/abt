@@ -232,6 +232,33 @@ class BrokerAgent extends \Core\Model
 
 
 
+    public static function getCountOfAgents($broker_id)
+    {
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            $sql = "SELECT * FROM broker_agents
+                    WHERE broker_id = :broker_id";
+            $parameters = [
+                ':broker_id' => $broker_id
+            ];
+            $stmt = $db->prepare($sql);
+            $stmt->execute($parameters);
+            $agent_count = $stmt->rowCount();
+
+            return $agent_count;
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
+    }
+
+
+
 
     public static function getNamesOfAllBrokerAgents($broker_id, $orderby)
     {

@@ -63,7 +63,7 @@
                   </label>
                   <div class="col-sm-9">
                       <input type="text" name="title" class="form-control"
-                      id="title" placeholder="Title" value="{{ user.title }}">
+                      id="title" placeholder="Title" value="{{ user.title }}" autofocus>
                   </div>
                   <span class="glyphicon form-control-feedback" id="title1"></span>
               </div>
@@ -90,7 +90,7 @@
                   <div class="col-sm-9">
                       <input type="broker_cell" name="broker_cell" class="form-control"
                       id="broker_cell" placeholder="Cell"
-                      value="" autofocus>
+                      value="">
                   </div>
                   <span class="glyphicon form-control-feedback" id="broker_cell1"></span>
               </div>
@@ -290,14 +290,12 @@
         </div><!--  // .col  -->
 
         <div class="col-md-4">
-            {% include 'franchise-sidebar.html' %}
+            {# % include 'franchise-sidebar.html' % #}
         </div><!-- // .col-md-4  -->
 
     </div><!-- // .row  -->
 </div><!-- .page-wrapper -->
-
 {% endblock %}
-
 
 {% block bottomjs %}
 

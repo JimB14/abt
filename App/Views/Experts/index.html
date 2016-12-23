@@ -9,83 +9,81 @@
 <div class="page-wrapper">
     <div class="row">
 
-        <div class="box" style="margin-top:28px;">
-            <div class="col-md-7">
-
-                <h2 class="bold" style="color:#666; margin-bottom:33px;">
-                  Find a Business Expert . . .
-                </h2>
-                <p class="p2">
-                  Selling or leasing a business can be a daunting experience, even
-                  for an industry professional.
-                </p>
-                <p>
-                  Our nationwide directory of professional Brokers can
-                  save you time and money.
-                </p>
-                <h2 class="bold text-right" style="color: #666;">
-                  . . . and build your team
-                </h2>
-
-            </div><!-- // .col-md-7  -->
-
-
-            <div class="col-md-5">
-                <img class="img-responsive" src="/assets/images/a_find-an-expert_600x338.jpg"
-                alt="AmericanBizTrader helps you find a business expert">
-
-            </div><!-- // .col-md-5  -->
-
-        </div><!-- // .box  -->
+      <div class="col-md-12">
+          <div class="box" style="margin-top:28px;">
+              <div class="col-md-7">
+                  <h2 class="bold" style="color:#666; margin-bottom:33px;">
+                    Find a Business Expert . . .
+                  </h2>
+                  <p class="p2">
+                    Selling or leasing a business can be a daunting experience, even
+                    for an industry professional.
+                  </p>
+                  <p>
+                    Our nationwide directory of professional Brokers can
+                    save you time and money.
+                  </p>
+                  <h2 class="bold text-right" style="color: #666;">
+                    . . . and build your team
+                  </h2>
+              </div><!-- // .col-md-7  -->
 
 
+              <div class="col-md-5">
+                  <img class="img-responsive" src="/assets/images/a_find-an-expert_600x338.jpg"
+                  alt="AmericanBizTrader helps you find a business expert">
+              </div><!-- // .col-md-5  -->
+
+          </div><!-- // .box  -->
+      </div><!--  // .col-md-12  -->
+
+      <div class="col-md-12">
         <div id="wrap-choose-expert">
-
+          
             <form method="get" action="/search/find-expert" name="find_expert_form" id="find_expert_form">
+                <div class="col-md-4">
+                    <h3>Expert</h3>
+                    <select class="form-control p1" name="expert_category" id="expert_category" autofocus>
+                        <option value="">{% if expert_type %}{{ expert_type }}{% else %}Select Expert{% endif %}</option>
+                        <option value="1">Business only Broker</option>
+                        <option value="2">Commercial Real Estate only Broker (Buy or Lease)</option>
+                        <option value="3">Business &amp; Commercial Real Estate Broker</option>
+                    </select>
+                </div><!-- // .col-md-3  -->
 
-              <div class="col-md-4">
-                  <h3>Expert</h3>
-                  <select class="form-control p1" name="expert_category" id="expert_category" autofocus>
-                      <option value="">{% if expert_type %}{{ expert_type }}{% else %}Select Expert{% endif %}</option>
-                      <option value="1">Business only Broker</option>
-                      <option value="2">Commercial Real Estate only Broker (Buy or Lease)</option>
-                      <option value="3">Business &amp; Commercial Real Estate Broker</option>
-                  </select>
-              </div><!-- // .col-md-3  -->
+                <div class="col-md-2">
+                    <h3>State</h3>
+                    <select class="form-control" name="state" id="expert-state">
+                        <option value="all">All States</option>
+                        {% for state in states %}
+                            <option value="{{ state.abbrev }}">{{ state.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <p id="result2" class="text-size120 text-center"></p>
+                </div>
 
-              <div class="col-md-2">
-                  <h3>State</h3>
-                  <select class="form-control" name="state" id="expert-state">
-                      <option value="all">All States</option>
-                      {% for state in states %}
-                          <option value="{{ state.abbrev }}">{{ state.name }}</option>
-                      {% endfor %}
-                  </select>
-                  <p id="result2" class="text-size120 text-center"></p>
-              </div>
-
-              <div class="col-md-3">
-                  <h3>County</h3>
-                  <div class="form-group">
-                      <select class="form-control" name="county" id="expert-counties-list">
-                          <option value="all">All counties</option>
-                          <!-- jquery appends here; Ajax code below -->
-                      </select>
-                  </div>
-              </div>
+                <div class="col-md-3">
+                    <h3>County</h3>
+                    <div class="form-group">
+                        <select class="form-control" name="county" id="expert-counties-list">
+                            <option value="all">All counties</option>
+                            <!-- jquery appends here; Ajax code below -->
+                        </select>
+                    </div>
+                </div>
 
 
-              <div class="col-md-3">
-                  <h3>&nbsp;</h3>
-                  <button id="btn-find-business" class="btn btn-primary btn-block"
-                  type="submit" name="action" value="find_expert">
-                  Find Expert
-                </button>
-              </div>
-
+                <div class="col-md-3">
+                    <h3>&nbsp;</h3>
+                    <button id="btn-find-business" class="btn btn-primary btn-block"
+                    type="submit" name="action" value="find_expert">
+                    Find Expert
+                  </button>
+                </div>
             </form>
 
-        </div><!--  // .bg-f0f -->
+        </div><!--  // #wrap-choose-expert -->
+      </div>
 
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 

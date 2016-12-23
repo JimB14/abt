@@ -10,6 +10,7 @@ use \App\Models\BrokerAgent;
 use \App\Models\Category;
 use \App\Models\State;
 use \App\Models\Realtylisting;
+use \App\Models\Paypal;
 
 /**
  * Admin controller
@@ -98,11 +99,32 @@ class Brokers extends \Core\Controller
         // get user data
         $user = User::getUser($_SESSION['user_id']);
 
+        // get number of agents
+        $agent_count = BrokerAgent::getCountofAgents($broker_id);
+
+        // get paypal_log data
+        $data = Paypal::getTransactionData($user->id);
+
+        $last_trx = $data[0]->TRANSTIME;
+        $amount = $data[0]->AMT;
+        $profileid = $data[0]->PROFILEID;
+
+        // test
+        // echo $amount;
+        // echo '<pre>';
+        // print_r($data);
+        // echo '</pre>';
+        // exit();
+
         // render view
         View::renderTemplate('Admin/Show/my-account.html', [
-            'agents'       => $agents,
-            'company_name' => $company_name,
-            'user'         => $user
+            'agents'        => $agents,
+            'company_name'  => $company_name,
+            'user'          => $user,
+            'last_trx'      => $last_trx,
+            'amount'        => $amount,
+            'profileid'     => $profileid,
+            'agent_count'   => $agent_count
         ]);
     }
 
@@ -116,6 +138,9 @@ class Brokers extends \Core\Controller
 
         // get broker data from broker model
         $broker = Broker::getBrokerDetails($broker_id);
+
+        // get user data
+        $user = User::getUser($broker->user_id);
 
         // test
         // echo "<pre>";
@@ -136,10 +161,10 @@ class Brokers extends \Core\Controller
 
         // render view & pass $broker object
         View::renderTemplate('Admin/Show/company-profile.html', [
-            'broker' => $broker,
-            'states' => $states,
-            'agents' => $agents
-
+            'broker'  => $broker,
+            'states'  => $states,
+            'agents'  => $agents,
+            'user'    => $user
         ]);
     }
 

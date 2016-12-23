@@ -42,6 +42,7 @@ class Subscribe extends \Core\Controller
         // process the payment; get back response
         $response = Paypal::processPayment($user_id);
 
+        // if successful 
         if($response)
         {
           // store PP response data in array

@@ -40,26 +40,35 @@
 
 
                     <div class="form-group">
-                        <label for="last_name" class="control-label col-sm-3">Last name </label>
+                        <label for="last_name" class="control-label col-sm-3"
+                        >Last name
+                      </label>
                         <div class="col-sm-9">
-                            <input type="text" name="last_name" class="form-control" id="last_name" placeholder="Last name" value="{{ user.last_name }}" >
+                            <input type="text" name="last_name" class="form-control"
+                              id="last_name" placeholder="Last name" value="{{ user.last_name }}" >
                         </div>
                     </div>
 
 
 
                     <div class="form-group">
-                        <label for="email" class="control-label col-sm-3">Login email </label>
+                        <label for="email" class="control-label col-sm-3">
+                          Login email
+                        </label>
                         <div class="col-sm-9">
-                            <input type="email" name="email" class="form-control" id="email" placeholder="Email" value="{{ user.email }}" >
+                            <input type="email" name="email" class="form-control"
+                              id="email" placeholder="Email" value="{{ user.email }}" >
                          </div>
                     </div>
 
 
                     <div class="form-group">
-                        <label for="company_name" class="control-label col-sm-3">Company Name</label>
+                        <label for="company_name" class="control-label col-sm-3">
+                          Company Name
+                        </label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="company_name" id="company_name" placeholder="Company name" value="{{ company_name }}" >
+                            <input type="text" class="form-control" name="company_name"
+                              id="company_name" placeholder="Company name" value="{{ company_name }}" >
                         </div>
                     </div>
 
@@ -69,37 +78,67 @@
                     <h3 style="margin-bottom: 15px;">Payment information</h3>
 
                     <div class="form-group">
-                        <label for="last_payment_date" class="control-label col-sm-3">Last payment</label>
+                        <label for="next_payment_amount" class="control-label col-sm-3">
+                          Status
+                        </label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="last_payment_date" id="last_payment_date" placeholder="Last payment" value="" >
+                            <input type="text" class="form-control" name="next_payment_amount"
+                              id="next_payment_amount" placeholder="Next payment amount"
+                              value="{% if user.current == 1 %}Current{% else %}Suspended{% endif %}">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="next_payment_amount" class="control-label col-sm-3">Amount</label>
+                        <label for="last_payment_date" class="control-label col-sm-3">
+                          Last payment
+                        </label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="next_payment_amount" id="next_payment_amount" placeholder="Next payment amount" value="" >
+                            <input type="text" class="form-control" name="last_payment_date"
+                              id="last_payment_date" placeholder="Last payment"
+                              value="{{ last_trx }}" >
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="next_payment_due_date" class="control-label col-sm-3">Next payment</label>
+                        <label for="next_payment_amount" class="control-label col-sm-3">
+                          Amount
+                        </label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="next_payment_due_date" id="next_payment_due_date" placeholder="Next payment due date" value="" >
+                            <input type="text" class="form-control" name="next_payment_amount"
+                              id="next_payment_amount" placeholder="Next payment amount"
+                              value="{{ amount }}" >
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="next_payment_amount" class="control-label col-sm-3">Amount</label>
+                        <label for="agents" class="control-label col-sm-3">
+                          Agents
+                        </label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="next_payment_amount" id="next_payment_amount" placeholder="Next payment amount" value="" >
+                            <input type="text" class="form-control" name="agents"
+                              id="agents" placeholder="Number of agents"
+                              value="{{ agent_count }}">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="next_payment_subscription_period" class="control-label col-sm-3">Subscription period</label>
+                        <label for="payment_type" class="control-label col-sm-3">
+                          Next payment
+                        </label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="next_payment_subscription_period" id="next_payment_subscription_period" placeholder="Next payment subscription period" value="" >
+                            <input type="text" class="form-control" name="payment_type"
+                              id="payment_type" placeholder="Payment type" value="Recurring monthly" >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="next_payment_subscription_period" class="control-label col-sm-3">
+                          Profile ID
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="profileid"
+                            id="profileid" placeholder="Profile ID"
+                            value="{{ profileid }}" >
                         </div>
                     </div>
                 </form>
