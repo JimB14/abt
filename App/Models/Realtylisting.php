@@ -2760,4 +2760,38 @@ class Realtylisting extends \Core\Model
             exit();
         }
     }
+
+
+
+    /**
+     * changes display setting so real estate listings will not display
+     *
+     * @param  integer $broker_id   The broker's ID
+     * @return boolean
+     */
+    public static function updateRealtyListingsDisplayToFalse($broker_id)
+    {
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            $sql = "UPDATE realty_listings SET
+                    display = 0
+                    WHERE broker_id = :broker_id";
+            $parameters = [
+                ':broker_id'  => $broker_id
+            ];
+            $stmt = $db->prepare($sql);
+            $result = $stmt->execute($parameters);
+
+            // return $result (boolean)
+            return $result;
+        }
+        catch (PDOException $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
+    }
 }

@@ -129,6 +129,18 @@ use \App\Models\State;
             ]);
             exit();
         }
+        elseif ( ($user) && ($user->first_login == 0 && $user->current == 0) )
+        {
+            // get states for drop-down
+            $states = State::getStates();
+
+            // send for payment
+            View::renderTemplate('Paypal/index.html', [
+                'user'   => $user,
+                'states' => $states
+            ]);
+            exit();
+        }
         else
         {
             echo "Error logging in. Please check credentials and try again.";

@@ -2765,4 +2765,37 @@ class Listing extends \Core\Model
 
 
 
+
+    /**
+     * changes display setting so business listings will not display
+     *
+     * @param  integer $broker_id   The broker's ID
+     * @return boolean
+     */
+    public static function updateBusinessListingsDisplayToFalse($broker_id)
+    {
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            $sql = "UPDATE listing SET
+                    display = 0
+                    WHERE broker_id = :broker_id";
+            $parameters = [
+                ':broker_id'  => $broker_id
+            ];
+            $stmt = $db->prepare($sql);
+            $result = $stmt->execute($parameters);
+
+            // return $result (boolean)
+            return $result;
+        }
+        catch (PDOException $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
+    }
+
 }

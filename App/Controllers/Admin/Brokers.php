@@ -105,6 +105,7 @@ class Brokers extends \Core\Controller
         // get paypal_log data
         $data = Paypal::getTransactionData($user->id);
 
+        // store PP data in variables for use @Views/Admin/Show/my-account.html
         $last_trx = $data[0]->TRANSTIME;
         $amount = $data[0]->AMT;
         $profileid = $data[0]->PROFILEID;

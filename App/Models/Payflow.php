@@ -110,7 +110,7 @@ class Payflow extends \Core\Model
 
 
   /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
+  // SALE with Recurring Billing = Subscription
     /**
      * Recurring billing sale transaction; accepts 9 parameters (one is an array)
      * @param  string   $vendor       PP credential
@@ -194,6 +194,7 @@ class Payflow extends \Core\Model
         $plist .= 'TERM=' . $data_array['TERM'] . '&';
         $plist .= 'OPTIONALTRX=' . $data_array['OPTIONALTRX'] . '&';
         $plist .= 'OPTIONALTRXAMT=' . $data_array['OPTIONALTRXAMT'] . '&';
+        $plist .= 'RETRYNUMDAYS=' . $data_array['RETRYNUMDAYS'] . '&';
         if (isset($data_array['CVV2']))
         {
             $plist .= 'CVV2=' . $data_array['CVV2'] . '&';
@@ -233,7 +234,7 @@ class Payflow extends \Core\Model
         parse_str($pfpro, $response);
 
         // test
-        // echo $response['PNREF'].'<br><br>';
+        // echo $response['TRXPNREF'].'<br><br>';
         // echo 'Response array<br>';
         // echo '<pre>';
         // print_r($response);
@@ -251,6 +252,117 @@ class Payflow extends \Core\Model
             return false;
         }
     }
+
+
+
+  /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+  // Cancel recurring billing
+
+    /**
+     * cancels payment using paypal's payflow gateway
+     *
+     * @param  string  $vendor          The vendor credential
+     * @param  string  $user            The user credential
+     * @param  string  $partner         The partner credential
+     * @param  string  $password        The pwd credential
+     * @param  string  $trxtype         Recurring = 'R'
+     * @param  string  $tender          Tender = 'C' (credit)
+     * @param  string  $action          Action = 'C' (credit)
+     * @param  string  $origprofileid   The user's profile ID in PayPal's records
+     * @return string                   The PayPal response string
+     */
+    public function cancelPayment($vendor, $user, $partner, $password, $trxtype, $tender, $action, $origprofileid)
+    {
+        // store credentials & required parameters in payflow class variables
+        $this->vendor = $vendor;
+        $this->user = $user;
+        $this->partner = $partner;
+        $this->password = $password;
+
+        // set submit URL (endpoint)
+        if ($this->test_mode == 1)
+        {
+            $this->submiturl = 'https://pilot-payflowpro.paypal.com';
+        }
+        else
+        {
+            $this->submiturl = 'https://payflowpro.paypal.com';
+        }
+
+        // create request_id for use in headers - see line #210
+        $tempstr = $origprofileid . date('YmdGis') . "1";
+        $request_id = md5($tempstr);
+
+        // alternative $request_id creation method
+        // $request_id = date('YmdGis'); // must be unique ID
+
+        // build query string for recurring billing to pass to PP
+        $plist  = 'USER=' . $this->user . '&';
+        $plist .= 'VENDOR=' . $this->vendor . '&';
+        $plist .= 'PARTNER=' . $this->partner . '&';
+        $plist .= 'PWD=' . $this->password . '&';
+        $plist .= 'TENDER=' . $tender . '&'; // C = credit card, P = PayPal
+        $plist .= 'TRXTYPE=' . $trxtype . '&'; //  R = Recurring, S = Sale transaction, A = Authorisation, C = Credit, D = Delayed Capture, V = Void
+        $plist .= 'ACTION=' . $action . '&'; // C = cancel
+        $plist .= 'ORIGPROFILEID=' . $origprofileid . '&';
+        //$plist .= 'CLIENTIP=' . $data_array['clientip'] . '&';
+
+        // verbosity
+        $plist .= 'VERBOSITY=HIGH';
+
+        // call method for headers
+        $headers = $this->get_curl_headers();
+        $headers[] = "X-VPS-Request-ID: " . $request_id;
+
+        $user_agent = "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)"; // play as Mozilla
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->submiturl);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
+        curl_setopt($ch, CURLOPT_HEADER, 1); // tells curl to include headers in response
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // return into a variable
+        curl_setopt($ch, CURLOPT_TIMEOUT, 45); // times out after 45 secs
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // this line makes it work under https
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $plist); //adding POST data
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,  2); //verifies ssl certificate
+        curl_setopt($ch, CURLOPT_FORBID_REUSE, TRUE); //forces closure of connection when done
+        curl_setopt($ch, CURLOPT_POST, 1); //data sent as POST
+
+        $result = curl_exec($ch);
+        $headers = curl_getinfo($ch);
+        curl_close($ch);
+
+        $pfpro = $this->get_curl_result($result); //result arrray
+
+        // parse query string & store name-value pairs in array $response[]
+        parse_str($pfpro, $response);
+
+        // test
+        // echo $response['RPREF'].'<br><br>';
+        // echo 'Response array<br>';
+        // echo '<pre>';
+        // print_r($response);
+        // echo '</pre>';
+        // exit();
+
+        // if successful return PP response
+        if (isset($response['RESULT']) && $response['RESULT'] == 0)
+        {
+            // return to Paypal Model
+            return $response;
+        }
+        else
+        {
+            $this->set_errors($response['RESPMSG'] . ' ['. $response['RESULT'] . ']');
+            return false;
+        }
+
+    }
+
+
+
 
 
 

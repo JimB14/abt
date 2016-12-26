@@ -25,9 +25,10 @@ class Paypal extends \Core\Model
         $partner  = Config::PAYPAL_PARTNER;
         $password = Config::PAYPAL_PWD;
 
-        // create new instance of Payflow object & pass parameters from Config class
+        // create new instance of Payflow object
         $payflow = new Payflow();
 
+        // test
         // if(is_object($payflow)) {echo '$payflow is an object';} else {echo "False";};
         // exit();
 
@@ -86,6 +87,7 @@ class Paypal extends \Core\Model
             'LASTNAME'        => $LASTNAME,
             'CVV2'            => $CVV2, // for cvv validation response
             'COMMENT1'        => 'Subscription',
+            'RETRYNUMDAYS'    => '3',  // The number of consecutive days that PayPal should attempt to process a failed transaction until Approved status is received; maximum value is 4.
             'clientip'        => '0.0.0.0'
             ];
 
@@ -109,12 +111,13 @@ class Paypal extends \Core\Model
         // echo '<br><br>';
         // exit();
 
-        // call sale_transaction method of Payflow object & store results in $result
+        // call sale_transaction() of Payflow object & store results in $response
         $response = $payflow->sale_transaction($vendor, $user, $partner, $password, $ACCT, $EXPDATE, $AMT, $CURRENCY='USD', $data_array);
 
 
         if (!$payflow->get_errors())
         {
+            // test
             // echo 'Response array<br>';
             // echo '<pre>';
             // print_r($response);
@@ -132,6 +135,13 @@ class Paypal extends \Core\Model
 
 
 
+    /**
+     * adds transaction data to paypal_log
+     *
+     * @param integer $user_id    The user's ID
+     * @param array   $data_array Required and addtional data for PP
+     * @return boolean
+     */
     public static function addTransactionData($user_id, $data_array)
     {
         try
@@ -142,20 +152,26 @@ class Paypal extends \Core\Model
             // insert paypal transaction data into paypal_log
             $sql = "INSERT INTO paypal_log SET
                     user_id       = :user_id,
+                    RESULT        = :RESULT,
+                    RESPMSG       = :RESPMSG,
                     TRXPNREF      = :TRXPNREF,
                     PPREF         = :PPREF,
                     PROFILEID     = :PROFILEID,
                     CORRELATIONID = :CORRELATIONID,
                     TRANSTIME     = :TRANSTIME,
-                    AMT           = :AMT";
+                    AMT           = :AMT,
+                    RPREF         = :RPREF";
             $parameters = [
                 ':user_id'        => $user_id,
+                ':RESULT'         => $data_array['RESULT'],
+                ':RESPMSG'        => $data_array['RESPMSG'],
                 ':TRXPNREF'       => $data_array['TRXPNREF'],
                 ':PPREF'          => $data_array['PPREF'],
                 ':PROFILEID'      => $data_array['PROFILEID'],
                 ':CORRELATIONID'  => $data_array['CORRELATIONID'],
                 ':TRANSTIME'      => $data_array['TRANSTIME'],
-                ':AMT'            => $data_array['AMT']
+                ':AMT'            => $data_array['AMT'],
+                ':RPREF'          => $data_array['RPREF']
             ];
             $stmt = $db->prepare($sql);
             $result = $stmt->execute($parameters);
@@ -169,6 +185,50 @@ class Paypal extends \Core\Model
             exit();
         }
     }
+
+
+
+    /**
+     * adds cancel transaction data to paypal_log
+     *
+     * @param integer $user_id      The user's ID
+     * @param array   $data_array   The PayPal transaction respose data
+     * @return boolean
+     */
+    public static function addCancelTransactionData($user_id, $data_array)
+    {
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            // insert paypal transaction data into paypal_log
+            $sql = "INSERT INTO paypal_log SET
+                    user_id   = :user_id,
+                    RESULT    = :RESULT,
+                    RPREF     = :RPREF,
+                    PROFILEID = :PROFILEID,
+                    RESPMSG   = :RESPMSG";
+            $parameters = [
+                ':user_id'    => $user_id,
+                ':RESULT'     => $data_array['RESULT'],
+                ':RPREF'      => $data_array['RPREF'],
+                ':PROFILEID'  => $data_array['PROFILEID'],
+                ':RESPMSG'    => $data_array['RESPMSG']
+            ];
+            $stmt = $db->prepare($sql);
+            $result = $stmt->execute($parameters);
+
+            // return boolean to Subscribe Controller
+            return $result;
+        }
+        catch (PDOException $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
+    }
+
 
 
 
@@ -194,9 +254,10 @@ class Paypal extends \Core\Model
             $stmt = $db->prepare($sql);
             $stmt->execute($parameters);
 
+            // store record in variable as object
             $results = $stmt->fetchAll(PDO::FETCH_OBJ);
 
-            // return results to Admin/Brokers Controlller
+            // return results (object) to Admin/Brokers Controlller
             return $results;
         }
         catch(PDOException $e)
@@ -204,6 +265,70 @@ class Paypal extends \Core\Model
             echo $e->getMessage();
             exit();
         }
+    }
+
+
+
+    /**
+     * cancels recurring billing
+     *
+     * @param  integer $user_id        The user's ID
+     * @param  string  $origprofileid  The paypal profileID stored by PP
+     * @return string                  The PP response string
+     */
+    public static function cancelPayment($user_id, $origprofileid)
+    {
+        // resource:  https://developer.paypal.com/docs/classic/payflow/recurring-billing/#using-the-cancel-action
+
+        // store PP credentials in variables
+        $vendor   = Config::PAYPAL_VENDOR;
+        $user     = Config::PAYPAL_USER;
+        $partner  = Config::PAYPAL_PARTNER;
+        $password = Config::PAYPAL_PWD;
+
+        // store required parameters for Cancel Action in variables
+        $trxtype = 'R';
+        $tender  = 'C';
+        $action  = 'C';
+        // origprofileid passed to function above
+
+        // create new instance of Payflow object
+        $payflow = new Payflow();
+
+        // test
+        // if(is_object($payflow)) {echo '$payflow is an object';} else {echo "False";};
+        // exit();
+
+        if ($payflow->get_errors())
+        {
+            echo $payflow->get_errors();
+            exit;
+        }
+
+        // call cancel_payment() of Payflow object & store results in $respnse
+        $response = $payflow->cancelPayment($vendor, $user, $partner, $password, $trxtype, $tender, $action, $origprofileid);
+
+
+        if (!$payflow->get_errors())
+        {
+            // test
+            // echo 'From Paypal model: Response array<br>';
+            // echo '<pre>';
+            // print_r($response);
+            // echo '</pre>';
+            // exit();
+
+            // return to Subscribe Controller
+            return $response;
+        }
+        else
+        {
+            echo $payflow->get_errors();
+        }
+
+
+
+
     }
 
 }
