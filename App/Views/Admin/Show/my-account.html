@@ -74,7 +74,9 @@
 
                     <div class="form-group">
                         <div class="col-sm-offset-3 col-sm-9">
-                           <a href="/subscribe/cancel-payment?user_id={{ user.id }}&amp;profileid={{ profileid }}" role="button" class="btn btn-danger" id="cancel_account">
+                           <a href="/subscribe/cancel-payment?user_id={{ user.id }}&amp;profileid={{ profileid }}"
+                            role="button" class="btn btn-danger" id="cancel_account"
+                            onclick="return confirm('Are you sure you want to permanently delete all of your listings and related data?');">
                             Cancel account
                           </a>
                         </div>
