@@ -223,6 +223,6 @@ class Realty extends \Core\Controller
             'realestateindex' => 'active'
             //'all_listings'    => $all_listings
         ]);
-    }
+    }  
 
 }

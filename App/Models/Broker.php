@@ -513,7 +513,6 @@ class Broker extends \Core\Model
             // echo '$target_file: ' . $target_file . '<br>';
             // exit();
 
-
             // Access $_FILES global array for uploaded file
             $file_name = $_FILES['company_logo']['name'];
             $file_tmp_loc = $_FILES['company_logo']['tmp_name'];

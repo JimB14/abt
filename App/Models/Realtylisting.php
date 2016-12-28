@@ -270,6 +270,78 @@ class Realtylisting extends \Core\Model
 
 
     /**
+     * gets real estate records for specified agent
+     *
+     * @param  integer          $broker_id  [description]
+     * @param  string           $last_name  [description]
+     * @param  integer          $clients_id [description]
+     * @param  integer or null  $limit      [description]
+     * @return array            The listings & pagetitle
+     */
+    public static function getRealtyListingsBySearchCriteria($broker_id, $last_name, $clients_id, $limit)
+    {
+        if($limit != null)
+        {
+          $limit = 'LIMIT  ' . $limit;
+        }
+        if($last_name != null)
+        {
+          $last_name_for_view = $last_name;
+          $last_name = "AND broker_agents.last_name LIKE '$last_name_for_view%'";
+          $pagetitle = "Real estate listings by last name: $last_name_for_view";
+        }
+        if($clients_id != null)
+        {
+          $clients_id_for_view = $clients_id;
+          $clients_id = "AND realty_listings.clients_id LIKE '$clients_id_for_view'";
+          $pagetitle = "Real estate listing by ID: $clients_id_for_view";
+        }
+
+        // execute query
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            $sql = "SELECT * FROM realty_listings
+                    LEFT JOIN broker_agents
+                    ON broker_agents.id = realty_listings.listing_agent_id
+                    LEFT JOIN brokers
+                    ON brokers.broker_id = realty_listings.broker_id
+                    WHERE realty_listings.broker_id = :broker_id
+                    AND realty_listings.display = '1'
+                    $last_name
+                    $clients_id
+                    ORDER BY broker_agents.last_name
+                    $limit";
+
+            $stmt = $db->prepare($sql);
+            $parameters = [
+                ':broker_id' => $broker_id
+            ];
+            $stmt->execute($parameters);
+
+            // store listing details in object
+            $listings = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+            // store in associative array
+            $results = [
+                'listings'  => $listings,
+                'pagetitle' => $pagetitle
+            ];
+
+            // return associative array to Brokers Controller
+            return $results;
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
+    }
+
+
+    /**
      * gets all listings for a particular agent by ID
      *
      * @param  Int $listing_agent_id The agent's ID

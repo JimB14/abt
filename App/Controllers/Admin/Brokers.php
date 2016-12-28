@@ -100,7 +100,7 @@ class Brokers extends \Core\Controller
         $user = User::getUser($_SESSION['user_id']);
 
         // get number of agents
-        $agent_count = BrokerAgent::getCountofAgents($broker_id);
+        $agent_count = BrokerAgent::getCountOfAllBrokerAgents($broker_id);
 
         // get paypal_log data
         $data = Paypal::getTransactionData($user->id);
@@ -347,7 +347,8 @@ class Brokers extends \Core\Controller
         $broker_company_name = Broker::getBrokerCompanyName($broker_id);
 
         // get all agents
-        $agents = BrokerAgent::getAllBrokerAgents($limit=null, $broker_id, $orderby = 'broker_agents.last_name');
+        // $agents = BrokerAgent::getAllBrokerAgents($limit=null, $broker_id, $orderby = 'broker_agents.last_name');
+        $agents = BrokerAgent::getAllBrokerAgentsByType($type=[1,3], $limit=null, $broker_id, $orderby = 'broker_agents.last_name');
 
         // get business categories
         $categories = Category::getCategories();
@@ -361,14 +362,31 @@ class Brokers extends \Core\Controller
         // echo "</pre>";
         // exit();
 
-        // render view
-        View::renderTemplate('Admin/Add/add-new-listing.html',[
-            'agents'              => $agents,
-            'categories'          => $categories,
-            'states'              => $states,
-            'broker_company_name' => $broker_company_name,
-            'broker_id'           => $broker_id
-        ]);
+        if(empty($agents))
+        {
+            $errorMessage = "Your company has no agents with a 'Type' that allows
+            posting business listings. Please update the agent's profile. Go
+            to Admin Panel > Agent / Broker > Manage agents / brokers, then click
+            the 'Edit' button for the agent and modify 'Type' to the correct
+            setting.";
+
+            // render view
+            View::renderTemplate('Error/index.html',[
+              'errorMessage'  => $errorMessage
+            ]);
+            exit();
+        }
+        else
+        {
+            // render view
+            View::renderTemplate('Admin/Add/add-new-listing.html',[
+                'agents'              => $agents,
+                'categories'          => $categories,
+                'states'              => $states,
+                'broker_company_name' => $broker_company_name,
+                'broker_id'           => $broker_id
+            ]);
+        }
     }
 
 
@@ -540,7 +558,73 @@ class Brokers extends \Core\Controller
         $agents = BrokerAgent::getNamesOfAllBrokerAgents($broker_id, $orderby = 'broker_agents.last_name');
 
         // render view, pass $listings object
-        View::renderTemplate('Admin/Show/listings.html', [
+        View::renderTemplate('Admin/Show/realty-listings.html', [
+            'listings'    => $results['listings'],
+            'pagetitle'   => $results['pagetitle'],
+            'agents'      => $agents,
+            'last_name'   => $last_name
+        ]);
+    }
+
+
+
+
+    public function searchRealtyListingsByLastNameOrClientId()
+    {
+        // retrieve form data
+        $broker_id = (isset($_REQUEST['id'])) ? filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING) : '';
+        $input_value = ( isset($_REQUEST['last_name']) ) ?  filter_var($_REQUEST['last_name'], FILTER_SANITIZE_STRING): '';
+        $checkbox = ( isset($_REQUEST['clients_id']) ) ?  filter_var($_REQUEST['clients_id'], FILTER_SANITIZE_STRING): '';
+
+        // test
+        // echo "Form & URL values:<br>";
+        // echo 'broker_id: ' . $broker_id . '<br>';
+        // echo 'input value: ' . $input_value . '<br>';
+        // echo 'checkbox: ' . $checkbox . '<br><br>';
+        // exit();
+
+        // if checkbox is checked, user searching by listing ID
+        if($checkbox)
+        {
+            // assign input value to $client_id & make $last_name = null
+            $clients_id = $input_value;
+            $last_name = null;
+            // echo "If checkbox is checked<br>";
+            // echo 'client_id / field input: ' . $clients_id . '<br>';
+            // echo 'last_name / should be null: ' . $last_name . '<br><br>';
+            // exit();
+        }
+        if($checkbox == null)
+        {
+            $last_name = $input_value;
+            $clients_id = null;
+            // echo "If checkbox not checked<br>";
+            // echo 'last_name: ' . $last_name . '<br>';
+            // echo 'client_id / should be null: ' . $clients_id . '<br><br>';
+            // exit();
+        }
+
+        // test
+        // echo "After conditional statement:<br>";
+        // echo 'broker_id: ' . $broker_id . '<br>';
+        // echo 'last_name / value if being searched: ' . $last_name . '<br>';
+        // echo 'clients_id / value if being searched: ' . $clients_id . '<br>';
+        // exit();
+
+        // get listings and pagetitle
+        $results = Realtylisting::getRealtyListingsBySearchCriteria($broker_id, $last_name, $clients_id, $limit=null);
+
+        // test
+        // echo "<pre>";
+        // print_r($results);
+        // echo "</pre>";
+        // exit();
+
+        // get agents id, last name, first name & broker ID only for drop-down
+        $agents = BrokerAgent::getNamesOfAllBrokerAgents($broker_id, $orderby = 'broker_agents.last_name');
+
+        // render view, pass $listings object
+        View::renderTemplate('Admin/Show/realty-listings.html', [
             'listings'    => $results['listings'],
             'pagetitle'   => $results['pagetitle'],
             'agents'      => $agents,
@@ -573,6 +657,38 @@ class Brokers extends \Core\Controller
 
         // render view, pass $listings object
         View::renderTemplate('Admin/Show/listings.html', [
+            'listings'    => $results['listings'],
+            'pagetitle'   => $results['pagetitle'],
+            'agents'      => $agents,
+            'last_name'   => $last_name
+        ]);
+    }
+
+
+
+
+    public function searchRealtyListingsByClientId()
+    {
+        // retrieve query string variable
+        $broker_id = (isset($_REQUEST['id'])) ? filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING) : '';
+
+        // retrieve form data
+        $clients_id = ( isset($_REQUEST['clients_id']) ) ?  filter_var($_REQUEST['clients_id'], FILTER_SANITIZE_STRING): '';
+
+        // get listings and pagetitle
+        $results = Realtylisting::getRealtyListingsBySearchCriteria($broker_id, $last_name=null, $clients_id, $limit=null);
+
+        // test
+        // echo "<pre>";
+        // print_r($results);
+        // echo "</pre>";
+        // exit();
+
+        // get agents id, last name, first name & broker ID only for drop-down
+        $agents = BrokerAgent::getNamesOfAllBrokerAgents($broker_id, $orderby = 'broker_agents.last_name');
+
+        // render view, pass $listings object
+        View::renderTemplate('Admin/Show/realty-listings.html', [
             'listings'    => $results['listings'],
             'pagetitle'   => $results['pagetitle'],
             'agents'      => $agents,
@@ -1209,8 +1325,9 @@ class Brokers extends \Core\Controller
         // get broker company name
         $broker_company_name = Broker::getBrokerCompanyName($broker_id);
 
-        // get all agents
-        $agents = BrokerAgent::getAllBrokerAgents($limit=null, $broker_id, $orderby = 'broker_agents.last_name');
+        // get all agents who are real estate brokers or business & real estate brokers
+        //$agents = BrokerAgent::getAllBrokerAgents($limit=null, $broker_id, $orderby = 'broker_agents.last_name');
+        $agents = BrokerAgent::getAllBrokerAgentsByType($type=[2,3], $limit=null, $broker_id, $orderby = 'broker_agents.last_name');
 
         // get states
         $states = State::getStates();
@@ -1242,15 +1359,33 @@ class Brokers extends \Core\Controller
         //     "Other"
         // ];
 
-        // render view
-        View::renderTemplate('Admin/Add/add-new-real-estate-listing.html',[
-            'agents'                => $agents,
-            'states'                => $states,
-            'broker_company_name'   => $broker_company_name,
-            'broker_id'             => $broker_id
-            // 'for_sale_categories'   => $for_sale_categories,
-            // 'for_lease_categories'  => $for_lease_categories
-        ]);
+        if(empty($agents))
+        {
+            $errorMessage = "Your company has no agents with a 'Type' that allows
+            posting real estate listings. Please update the agent's profile. Go
+            to Admin Panel > Agent / Broker > Manage agents / brokers, then click
+            the 'Edit' button for the agent and modify 'Type' to the correct
+            setting.";
+
+            // render view
+            View::renderTemplate('Error/index.html',[
+              'errorMessage'  => $errorMessage
+            ]);
+            exit();
+        }
+        else
+        {
+
+          // render view
+          View::renderTemplate('Admin/Add/add-new-real-estate-listing.html',[
+              'agents'                => $agents,
+              'states'                => $states,
+              'broker_company_name'   => $broker_company_name,
+              'broker_id'             => $broker_id
+              // 'for_sale_categories'   => $for_sale_categories,
+              // 'for_lease_categories'  => $for_lease_categories
+          ]);
+        }
     }
 
 

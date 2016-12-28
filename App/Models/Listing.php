@@ -925,19 +925,19 @@ class Listing extends \Core\Model
     {
         if($limit != null)
         {
-          $limit = 'LIMIT  ' . $limit;
+            $limit = 'LIMIT  ' . $limit;
         }
         if($last_name != null)
         {
-          $last_name_for_view = $last_name;
-          $last_name = "AND broker_agents.last_name LIKE '$last_name_for_view%'";
-          $pagetitle = "Listings by last name: $last_name_for_view";
+            $last_name_for_view = $last_name;
+            $last_name = "AND broker_agents.last_name LIKE '$last_name_for_view%'";
+            $pagetitle = "Business listings by last name: $last_name_for_view";
         }
         if($clients_id != null)
         {
-          $clients_id_for_view = $clients_id;
-          $clients_id = "AND listing.clients_id LIKE '$clients_id_for_view'";
-          $pagetitle = "Listing ID: $clients_id_for_view";
+            $clients_id_for_view = $clients_id;
+            $clients_id = "AND listing.clients_id LIKE '$clients_id_for_view'";
+            $pagetitle = "Business listing by ID: $clients_id_for_view";
         }
 
         // execute query
@@ -1060,12 +1060,14 @@ class Listing extends \Core\Model
                     ON brokers.broker_id = listing.broker_id
                     WHERE listing.listing_status = :listing_status
                     AND listing.display = '1'
+                    AND listing.broker_id = :broker_id
                     ORDER BY last_update DESC
                     LIMIT 10";
 
             $stmt = $db->prepare($sql);
             $parameters = [
-                ':listing_status' => 'Sold'
+                ':listing_status' => 'Sold',
+                ':broker_id'      => $broker_id
             ];
             $stmt->execute($parameters);
 

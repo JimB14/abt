@@ -210,6 +210,86 @@ class BrokerAgent extends \Core\Model
 
 
 
+    public static function getAllBrokerAgentsByType($type, $limit, $broker_id, $orderby)
+    {
+        if($broker_id != null)
+        {
+            $broker_id = "WHERE brokers.broker_id = $broker_id";
+        }
+        if($limit != null)
+        {
+            $limit = 'LIMIT ' . $limit;
+        }
+        if($orderby != null)
+        {
+            $orderby = 'ORDER BY ' . $orderby;
+        }
+        if($type != null)
+        {
+            $string = implode(', ', $type);
+            $type = "AND broker_agents.type IN ($string)";
+        }
+
+
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            $sql = "SELECT brokers.broker_id, brokers.type,
+                    brokers.first_name as broker_first_name,
+                    brokers.last_name as broker_last_name,
+                    brokers.broker_email, brokers.address1,
+                    brokers.address2, brokers.city, brokers.state, brokers.zip,
+                    brokers.telephone, brokers.fax, brokers.company_name,
+                    brokers.company_logo, brokers.company_bio, brokers.services,
+                    brokers.website,
+                    broker_agents.id as agent_id, broker_agents.status,
+                    broker_agents.type,
+                    broker_agents.first_name as agent_first_name,
+                    broker_agents.last_name as agent_last_name,
+                    broker_agents.agent_email,
+                    broker_agents.agent_telephone,
+                    broker_agents.cell as agent_cell,
+                    broker_agents.address1 as agent_address1,
+                    broker_agents.address2 as agent_address2,
+                    broker_agents.city as agent_city,
+                    broker_agents.state as agent_state,
+                    broker_agents.zip as agent_zip, broker_agents.about_me,
+                    broker_agents.profile_photo, broker_agents.affiliations,
+                    broker_agents.state_serv01,broker_agents.state_serv02,
+                    broker_agents.state_serv03, broker_agents.state_serv04,
+                    broker_agents.state_serv05,
+                    broker_agents.counties_serv01,
+                    broker_agents.counties_serv02, broker_agents.counties_serv03,
+                    broker_agents.counties_serv04, broker_agents.counties_serv05,
+                    broker_agents.regDate, broker_agents.updated
+                    FROM brokers
+                    INNER JOIN broker_agents
+                    ON brokers.broker_id = broker_agents.broker_id
+                    $broker_id
+                    $type
+                    $orderby
+                    $limit";
+              $stmt = $db->prepare($sql);
+              $parameters = [
+                  ':broker_id' => $broker_id
+              ];
+              $stmt->execute($parameters);
+
+              $agents = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+              return $agents;
+        }
+        catch (PDOException $e)
+        {
+           echo $e->getMessage();
+           exit();
+        }
+    }
+
+
+
 
     public static function getCountOfAllBrokerAgents()
     {
