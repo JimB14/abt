@@ -56,6 +56,22 @@
               </p>
               <br><br><br><br>
             {% endif %}
+
+            {% if contact_broker == 'true' %}
+              <h3 style="margin-top: 0px">
+                Thank you {{ first_name }} {{ last_name}}!
+              </h3>
+              <h4 style="margin-top: 15px">
+                {{ contact_msg1 }}
+              </h4>
+              <p style="margin-top: 15px">
+                {{ contact_msg2 }}
+              </p>
+              <h4 style="margin-top: 20px; font-weight:bold;">
+                {{ contact_msg3 }}
+              </h4>
+              <br><br><br><br>
+            {% endif %}
         </div>
 
         <div class="col-md-4">

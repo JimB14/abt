@@ -13,6 +13,7 @@ use \App\Models\Realtylisting;
 use \App\Mail;
 use \App\Config;
 use \Core\Model\PDO;
+use \App\Models\Lead;
 
 /**
  * Realty controller
@@ -223,6 +224,148 @@ class Realty extends \Core\Controller
             'realestateindex' => 'active'
             //'all_listings'    => $all_listings
         ]);
-    }  
+    }
+
+
+
+    public function contactRealtyBroker()
+    {
+        // retrieve variables
+        $id         = (isset($_REQUEST['listing_id'])) ? filter_var($_REQUEST['listing_id'], FILTER_SANITIZE_NUMBER_INT): '';
+        $broker_id  = (isset($_REQUEST['broker_id'])) ? filter_var($_REQUEST['broker_id'], FILTER_SANITIZE_NUMBER_INT): '';
+        $agent_id   = (isset($_REQUEST['agent_id'])) ? filter_var($_REQUEST['agent_id'], FILTER_SANITIZE_NUMBER_INT): '';
+
+        // test
+        // echo $id . '<br>';
+        // echo $broker_id . '<br>';
+        // echo $agent_id . '<br>';
+        //exit();
+
+        // get listing details
+        $listing = Realtylisting::getRealEstateListing($id);
+
+        // test
+        // echo '<pre>';
+        // print_r($listing);
+        // echo '</pre>';
+        // exit();
+
+        // get broker details
+        $broker = Broker::getBrokerDetails($broker_id);
+
+        // get agent details
+        $agent = BrokerAgent::getAgent($agent_id);
+
+        // test
+        // echo '<pre>';
+        // print_r($agent);
+        // echo '</pre>';
+        // exit();
+
+        // validate user data; return $results[] w/ form data
+        $results = Contact::validateBrokerContactFormData();
+
+        // test
+        // echo '<pre>';
+        // print_r($results);
+        // echo '</pre>';
+        // exit();
+
+        // store data for email in array
+        $listing_inquiry = [
+            'id'              => $listing->clients_id,
+            'ad_title'        => $listing->ad_title,
+            'type'            => $listing->type,
+            'agent_first_name'=> $agent->first_name,
+            'agent_last_name' => $agent->last_name,
+            'agent_email'     => $agent->agent_email,
+            'company_name'    => $broker->company_name,
+            'broker_email'    => $broker->broker_email,
+            'first_name'      => $results['first_name'],
+            'last_name'       => $results['last_name'],
+            'telephone'       => $results['telephone'],
+            'email'           => $results['email'],
+            'investment'      => $results['investment'],
+            'time_frame'      => $results['time_frame'],
+            'message'         => $results['message']
+        ];
+
+        // store lead data in array (field names match db.leads field names)
+        $lead_data = [
+          'listing_id'        => $id,
+          'broker_id'         => $broker_id,
+          'listing_agent_id'  => $agent_id,
+          'clients_id'        => $listing->clients_id,
+          'type'              => $listing->type,
+          'ad_title'          => $listing->ad_title,
+          'asking_price'      => $listing->asking_price,
+          'address'           => $listing->address,
+          'address2'          => $listing->address2,
+          'city'              => $listing->city,
+          'state'             => $listing->state,
+          'county'            => $listing->county,
+          'zip'               => $listing->zip,
+          'description'       => $listing->description,
+          'first_name'        => $results['first_name'],
+          'last_name'         => $results['last_name'],
+          'telephone'         => $results['telephone'],
+          'email'             => $results['email'],
+          'investment'        => $results['investment'],
+          'time_frame'        => $results['time_frame'],
+          'message'           => $results['message'],
+          'agent_first_name'  => $agent->first_name,
+          'agent_last_name'   => $agent->last_name,
+        ];
+
+        // test
+        // echo '<pre>';
+        // print_r($listing_inquiry);
+        // echo '</pre>';
+        // exit();
+
+        // send email to broker with user data
+        $result = Mail::mailBrokerContactFormData($listing_inquiry);
+
+        // test
+        // echo '<pre>';
+        // print_r($lead_data);
+        // echo '</pre>';
+        // echo '--------------------------------------<br><br>';
+        // extract($lead_data);
+        // echo $ad_title . '<br>';
+        // echo $description . '<br>';
+        // echo $type . '<br>';
+        // echo $asking_price . '<br>';
+        // echo $email . '<br>';
+        // echo $message . '<br>';
+        // exit();
+
+        if($result)
+        {
+            // store lead data in `leads` table
+            $result = Lead::setLeadData($lead_data);
+
+            if($result)
+            {
+                $contact_msg1 = "Your information was sent.";
+                $contact_msg2 = "You will be contacted as soon as possible.";
+                $contact_msg3 = "Thank you for using American Biz Trader!";
+
+                View::renderTemplate('Success/index.html', [
+                    'first_name'      => $results['first_name'],
+                    'last_name'       => $results['last_name'],
+                    'contact_msg1'    => $contact_msg1,
+                    'contact_msg2'    => $contact_msg2,
+                    'contact_msg3'    => $contact_msg3,
+                    'contact_broker'  => 'true'
+                ]);
+            }
+            else
+            {
+                echo 'Error inserting lead data into database.';
+                exit();
+            }
+        }
+    }
 
 }

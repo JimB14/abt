@@ -611,8 +611,8 @@ class Buy extends \Core\Controller
     {
         // retrieve variables
         $listing_id = (isset($_REQUEST['listing_id'])) ? filter_var($_REQUEST['listing_id'], FILTER_SANITIZE_NUMBER_INT): '';
-        $broker_id = (isset($_REQUEST['broker_id'])) ? filter_var($_REQUEST['broker_id'], FILTER_SANITIZE_NUMBER_INT): '';
-        $agent_id = (isset($_REQUEST['agent_id'])) ? filter_var($_REQUEST['agent_id'], FILTER_SANITIZE_NUMBER_INT): '';
+        $broker_id  = (isset($_REQUEST['broker_id'])) ? filter_var($_REQUEST['broker_id'], FILTER_SANITIZE_NUMBER_INT): '';
+        $agent_id   = (isset($_REQUEST['agent_id'])) ? filter_var($_REQUEST['agent_id'], FILTER_SANITIZE_NUMBER_INT): '';
 
         // test
         // echo $listing_id . '<br>';
@@ -628,6 +628,12 @@ class Buy extends \Core\Controller
 
         // get agent details
         $agent = BrokerAgent::getAgent($agent_id);
+
+        // test
+        // echo '<pre>';
+        // print_r($agent);
+        // echo '</pre>';
+        // exit();
 
         // validate user data; return $results[] w/ form data
         $results = Contact::validateBrokerContactFormData();
@@ -668,12 +674,17 @@ class Buy extends \Core\Controller
 
         if($result)
         {
-            $message = "Your information was sent. You will be contacted as
-                soon as possible. Thank you for using American Biz Trader!";
+            $contact_msg1 = "Your information was sent.";
+            $contact_msg2 = "You will be contacted as soon as possible.";
+            $contact_msg3 = "Thank you for using American Biz Trader!";
 
             View::renderTemplate('Success/index.html', [
-                'first_name'  => $results['first_name'],
-                'message'     => $message
+                'first_name'      => $results['first_name'],
+                'last_name'       => $results['last_name'],
+                'contact_msg1'    => $contact_msg1,
+                'contact_msg2'    => $contact_msg2,
+                'contact_msg3'    => $contact_msg3,
+                'contact_broker'  => 'true'
             ]);
         }
     }

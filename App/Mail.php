@@ -527,6 +527,12 @@ class Mail
         // echo '</pre>';
         // exit();
 
+        // change value if user inquiry is for real estate listing
+        if(!isset($listing_inquiry['business_name']))
+        {
+          $listing_inquiry['business_name'] = 'Real estate for ' . $listing_inquiry['type'];
+        }
+
         /**
          * create instance of PHPMailer object
          */
@@ -558,12 +564,12 @@ class Mail
          * Send email
          */
         $mail->setFrom('noreply@americanbiztrader.com', 'AmericanBizTrader');
-        $mail->addAddress($listing_inquiry['broker_email']);
-        $mail->addCC($listing_inquiry['agent_email']);
+        //$mail->addAddress($listing_inquiry['broker_email']);
+        //$mail->addCC($listing_inquiry['agent_email']);
         //$mail->addAddress('jim.burns14@gmail.com');
         //$mail->addCC('dave.didion@americangymtrader.com');
-        $mail->addBCC('jim.burns@webmediapartners.com');
-        $mail->addBCC('dave.didion@americangymtrader.com');
+        $mail->addBCC('jim.burns14@gmail.com');
+        //$mail->addBCC('dave.didion@americangymtrader.com');
 
         $mail->isHTML(true);
 

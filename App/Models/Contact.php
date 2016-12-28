@@ -14,13 +14,19 @@ class Contact extends \Core\Model
         $last_name = (isset($_REQUEST['last_name'])) ? filter_var($_REQUEST['last_name'], FILTER_SANITIZE_STRING): '';
         $telephone = (isset($_REQUEST['telephone'])) ? filter_var($_REQUEST['telephone'], FILTER_SANITIZE_STRING): '';
         $email = (isset($_REQUEST['email'])) ? filter_var($_REQUEST['email'], FILTER_SANITIZE_EMAIL): '';
-        $investment = (isset($_REQUEST['investment'])) ? filter_var($_REQUEST['investment'], FILTER_SANITIZE_NUMBER_INT): '';
+        $investment = (isset($_REQUEST['investment'])) ? filter_var($_REQUEST['investment'], FILTER_SANITIZE_NUMBER_INT): 0;
         $time_frame = (isset($_REQUEST['time_frame'])) ? filter_var($_REQUEST['time_frame'], FILTER_SANITIZE_STRING): '';
         $message = (isset($_REQUEST['message'])) ? filter_var($_REQUEST['message'], FILTER_SANITIZE_STRING): '';
 
+        // test
+        // echo '<pre>';
+        // print_r($_REQUEST);
+        // echo '</pre>';
+        // exit();
+
         // validate for data
         if($first_name == '' || $last_name == '' || $telphone = '' || $email == ''
-        || $investment == '' || $time_frame == '' || $message == '')
+        || $time_frame == '' || $message == '')
         {
             echo "Error. All fields required.";
             exit();

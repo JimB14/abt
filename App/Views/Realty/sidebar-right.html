@@ -5,7 +5,7 @@
             {{ agent.first_name }}  {{ agent.last_name }}
         {% endif %}
     </h3>
-    <form method="post" action="/buy/contact-broker?listing_id={{ listing.listing_id }}&amp;broker_id={{ broker.broker_id }}&amp;agent_id={{ agent.id }}"
+    <form method="post" action="/realty/contact-realty-broker?listing_id={{ listing.id }}&amp;broker_id={{ broker.broker_id }}&amp;agent_id={{ agent.id }}"
     name="broker_contact_form" id="broker_contact_form">
 
         <div class="form-group has-feedback">

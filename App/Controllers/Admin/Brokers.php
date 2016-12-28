@@ -11,6 +11,7 @@ use \App\Models\Category;
 use \App\Models\State;
 use \App\Models\Realtylisting;
 use \App\Models\Paypal;
+use \App\Models\Lead;
 
 /**
  * Admin controller
@@ -506,9 +507,9 @@ class Brokers extends \Core\Controller
     public function searchListingsByLastNameOrClientId()
     {
         // retrieve form data
-        $broker_id = (isset($_REQUEST['id'])) ? filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING) : '';
+        $broker_id   = (isset($_REQUEST['id'])) ? filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING) : '';
         $input_value = ( isset($_REQUEST['last_name']) ) ?  filter_var($_REQUEST['last_name'], FILTER_SANITIZE_STRING): '';
-        $checkbox = ( isset($_REQUEST['clients_id']) ) ?  filter_var($_REQUEST['clients_id'], FILTER_SANITIZE_STRING): '';
+        $checkbox    = ( isset($_REQUEST['clients_id']) ) ?  filter_var($_REQUEST['clients_id'], FILTER_SANITIZE_STRING): '';
 
         // test
         // echo "Form & URL values:<br>";
@@ -628,6 +629,71 @@ class Brokers extends \Core\Controller
             'listings'    => $results['listings'],
             'pagetitle'   => $results['pagetitle'],
             'agents'      => $agents,
+            'last_name'   => $last_name
+        ]);
+    }
+
+
+
+    public function searchLeadsByLastNameOrClientId()
+    {
+        // retrieve form data
+        $broker_id   = (isset($_REQUEST['id'])) ? filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING) : '';
+        $input_value = ( isset($_REQUEST['last_name']) ) ?  filter_var($_REQUEST['last_name'], FILTER_SANITIZE_STRING): '';
+        $checkbox    = ( isset($_REQUEST['clients_id']) ) ?  filter_var($_REQUEST['clients_id'], FILTER_SANITIZE_STRING): '';
+
+        // test
+        // echo "Form & URL values:<br>";
+        // echo 'broker_id: ' . $broker_id . '<br>';
+        // echo 'input value: ' . $input_value . '<br>';
+        // echo 'checkbox: ' . $checkbox . '<br><br>';
+        // exit();
+
+        // if checkbox is checked, user searching by listing ID
+        if($checkbox)
+        {
+            // assign input value to $client_id & make $last_name = null
+            $clients_id = $input_value;
+            $last_name = null;
+            // echo "If checkbox is checked<br>";
+            // echo 'client_id / field input: ' . $clients_id . '<br>';
+            // echo 'last_name / should be null: ' . $last_name . '<br><br>';
+            // exit();
+        }
+        if($checkbox == null)
+        {
+            $last_name = $input_value;
+            $clients_id = null;
+            // echo "If checkbox not checked<br>";
+            // echo 'last_name: ' . $last_name . '<br>';
+            // echo 'client_id / should be null: ' . $clients_id . '<br><br>';
+            // exit();
+        }
+
+        // test
+        // echo "After conditional statement:<br>";
+        // echo 'broker_id: ' . $broker_id . '<br>';
+        // echo 'last_name / value if being searched: ' . $last_name . '<br>';
+        // echo 'clients_id / value if being searched: ' . $clients_id . '<br>';
+        // exit();
+
+        // get listings and pagetitle
+        $results = Lead::getLeadsBySearchCriteria($broker_id, $last_name, $clients_id, $limit=null);
+
+        // test
+        // echo "<pre>";
+        // print_r($results);
+        // echo "</pre>";
+        // exit();
+
+        // get agents id, last name, first name & broker ID only for drop-down
+        //$agents = BrokerAgent::getNamesOfAllBrokerAgents($broker_id, $orderby = 'broker_agents.last_name');
+
+        // render view, pass $listings object
+        View::renderTemplate('Admin/Show/leads.html', [
+            'leads'       => $results['leads'],
+            'pagetitle'   => $results['pagetitle'],
+            // 'agents'      => $agents,
             'last_name'   => $last_name
         ]);
     }
@@ -1650,5 +1716,77 @@ class Brokers extends \Core\Controller
             exit();
         }
     }
+
+
+
+    public function showLeads()
+    {
+        // retrieve GET variable
+        $broker_id = (isset($_REQUEST['id'])) ? filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING) : '';
+
+        // get listings
+        $leads = Lead::getLeads($broker_id, $limit = null);
+
+        // test
+        // echo $_SESSION['broker_id'];
+        // echo "<pre>";
+        // print_r($leads);
+        // echo "</pre>";
+        // exit();
+
+        // get agents id, last name, first name & broker ID only for drop-down
+        $agents = BrokerAgent::getNamesOfAllBrokerAgents($broker_id, $orderby='broker_agents.last_name');
+
+        $pagetitle = "My leads";
+
+        // render view, pass $listings object
+        View::renderTemplate('Admin/Show/leads.html', [
+            'leads'   => $leads,
+            'agents'  => $agents
+        ]);
+    }
+
+
+
+    public function deleteLead()
+    {
+        // retrieve GET variable
+        $id = (isset($_REQUEST['id'])) ? filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING) : '';
+        $broker_id = (isset($_REQUEST['broker_id'])) ? filter_var($_REQUEST['broker_id'], FILTER_SANITIZE_STRING) : '';
+
+        // delete lead from leads table
+        $result = Lead::deleteLead($id, $broker_id);
+
+        // if lead successfully deleted
+        if($result)
+        {
+            $message = "Lead successfully deleted!";
+
+            // display success message
+            echo '<script>';
+            echo 'alert("'.$message.'")';
+            echo '</script>';
+
+            // redirect user to "Manage agents" page
+            echo '<script>';
+            echo 'window.location.href="/admin/brokers/show-leads?id='.$broker_id.'"';
+            echo '</script>';
+            exit();
+
+            // optional php redirect - no msg
+            // header("Location: /admin/brokers/show-agents?id=$broker_id");
+            // exit();
+        }
+        else
+        {
+            $message = "Error. Please try again.";
+
+            // display error message
+            echo '<script>';
+            echo 'alert("'.$message.'")';
+            echo '</script>';
+        }
+    }
+
 
 }

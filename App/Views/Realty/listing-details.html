@@ -32,7 +32,7 @@
         <div class="row">
             <div class="col-md-12" style="padding-top:15px;">
                 <h2 style="color: #bdbdbd; margin: 5px 0px 20px 0px;" class="text-center">
-                  {{ broker.company_name|raw }} presents
+                  {{ (broker.company_name|striptags)|raw }} presents
                 </h2>
                 <h3 style="margin-top: -10px; margin-bottom: -7px;">
                     {% if listing.type == 'sale' %}
@@ -41,6 +41,8 @@
                       For lease:
                     {% endif %}
                     {{ (listing.ad_title|striptags)|raw }}
+                    -
+                    {{ ((listing.address|striptags)|title)|raw }}
                 </h3>
                 <h5>
                     {% if listing.city %}
@@ -183,7 +185,11 @@
 
                             <div class="col-md-4 col-sm-4">
                                 <p>Date available: <span class="bold"> {{ listing.date_available }}</span></p>
-                                <p><a href="/assets/images/uploaded_real_estate_brochures/{{ listing.brochure }}" target="_blank">Brochure</a> <span class="glyphicon glyphicon-cloud-download"></span></p>
+                                {% if listing.brochure %}
+                                  <p><a href="/assets/images/uploaded_real_estate_brochures/{{ listing.brochure }}" target="_blank">Brochure</a> <span class="glyphicon glyphicon-cloud-download"></span></p>
+                                {% else %}
+                                  <p><a href="#" target="_blank">No brochure</a> <span class="glyphicon glyphicon-cloud-download"></span></p>
+                                {% endif %}
                             </div>
                         </div>
                     </div><!--  // . row  -->
@@ -230,7 +236,7 @@
 <!--  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
 
             <div class="col-md-4 col-sm-12">
-                {% include 'Buy/sidebar-right.html' %}
+                {% include 'Realty/sidebar-right.html' %}
             </div><!--  // .col-md-4  -->
 
 
