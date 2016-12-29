@@ -56,7 +56,7 @@
                       Meta description
                     </label>
                     <div class="col-sm-9">
-                        <p id="meta-description-content"><a style="text-decoration:underline;cursor:pointer" title="Category">{{ listing.subtype }}</a> commercial real estate {% if listing.type == 'sale' %}<a style="text-decoration:underline;cursor:pointer" title="Listing type">for sale.</a> {% else %}<a style="text-decoration:underline;cursor:pointer" title="Type">for lease.</a> {% endif %}<a style="text-decoration:underline;cursor:pointer" title="Address">{{ listing.address }}</a>, <a style="text-decoration:underline;cursor:pointer" title="City">{{ listing.city }}</a>,<a style="text-decoration:underline;cursor:pointer" title="State">{{ listing.state }}</a> <a style="text-decoration:underline;cursor:pointer" title="Zip">{{ listing.zip }}.</a> {% if listing.date_available %}Occupy date: <a style="text-decoration:underline;cursor:pointer" title="Date available">{{ listing.date_available }}.</a>{% endif %} <a style="text-decoration:underline;cursor:pointer" title="Ad title">{{ listing.ad_title }}</a> <a style="text-decoration:underline;cursor:pointer" title="Today's date">{{ 'now'|date('Y-m-d') }}.</a></p>
+                        <p style="margin-top:6px;" id="meta-description-content"><a style="text-decoration:underline;cursor:pointer" title="Category">{{ listing.subtype }}</a> commercial real estate {% if listing.type == 'sale' %}<a style="text-decoration:underline;cursor:pointer" title="Listing type">for sale.</a> {% else %}<a style="text-decoration:underline;cursor:pointer" title="Listing type">for lease.</a> {% endif %}<a style="text-decoration:underline;cursor:pointer" title="Address">{{ listing.address }}</a>, <a style="text-decoration:underline;cursor:pointer" title="City">{{ listing.city }}</a>,<a style="text-decoration:underline;cursor:pointer" title="State">{{ listing.state }}</a> <a style="text-decoration:underline;cursor:pointer" title="Zip">{{ listing.zip }}.</a> {% if listing.date_available %}Occupy date: <a style="text-decoration:underline;cursor:pointer" title="Date available">{{ listing.date_available }}.</a>{% endif %} <a style="text-decoration:underline;cursor:pointer" title="Ad title">{{ listing.ad_title }}</a> <a style="text-decoration:underline;cursor:pointer" title="Today's date">{{ 'now'|date('Y-m-d') }}.</a></p>
                         <p id="display-meta-description-length"></p>
                     </div>
                 </div>
@@ -634,7 +634,7 @@ $(document).ready(function(){
 
       console.log(string_length);
 
-      document.getElementById("display-meta-description-length").innerHTML="Current character length is " + string_length + ". Recommended length is 150 - 160 characters (inlcudes spaces).";
+      document.getElementById("display-meta-description-length").innerHTML="Current character length is " + string_length + ". Recommended length is 150 - 160 characters (includes spaces).";
     };
 
 

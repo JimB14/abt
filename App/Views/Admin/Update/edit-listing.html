@@ -13,7 +13,7 @@
     <div class="row">
         <div id="dashboard-toggle" class="col-md-8" style="margin-top:-20px;margin-left:254px;">
 
-          <h2>Edit listing (ad)</h2>
+          <h2>Edit business listing (ad)</h2>
           <hr>
 
           <form class="form-horizontal" method="post"
@@ -34,6 +34,24 @@
                         {% endfor %}
                     </select>
                         <span class="glyphicon form-control-feedback" id="listing_agent_id1"></span>
+                </div>
+            </div>
+            <hr>
+
+            <h3 class="subheading">
+              Important data stored by search engines
+              <a href="https://moz.com/learn/seo/meta-description" target="_blank">
+                (learn more)
+              </a>
+            </h3>
+
+            <div class="form-group">
+                <label for="type" class="control-label col-sm-3">
+                  Meta description
+                </label>
+                <div class="col-sm-9">
+                    <p style="margin-top:6px;" id="meta-description-content">Business for sale: <a style="text-decoration:underline;cursor:pointer" title="Today's date">{{ 'now'|date('Y-m-d') }}</a> in <a style="text-decoration:underline;cursor:pointer" title="State">{{ listing.state }};</a> {% if listing.hide_city == '0' %}<a style="text-decoration:underline;cursor:pointer" title="City">{{ listing.city }}</a>{% endif%} {% if listing.hide_county == '0' %}<a style="text-decoration:underline;cursor:pointer" title="County if not hidden">{{ listing.county }} County;</a> {% endif %}<a style="text-decoration:underline;cursor:pointer" title="Ad title">{{ (listing.ad_title|striptags)|raw }}</a>: <a style="text-decoration:underline;cursor:pointer" title="Keywords">{{ listing.keywords }}</a></p>
+                    <p id="display-meta-description-length"></p>
                 </div>
             </div>
             <hr>
@@ -904,6 +922,21 @@ $(document).ready(function(){
             }
         });
     });
+
+
+    // get meta-description length
+    getLength("meta-description-content");
+
+    function getLength(id){
+      var string = document.getElementById(id).innerHTML;
+      //alert(string);
+      var string_length = string.length;
+      string_length = string_length - 379;
+
+      console.log(string_length);
+
+      document.getElementById("display-meta-description-length").innerHTML="Current character length is " + string_length + ". Recommended length is 150 - 160 characters (includes spaces).";
+    };
 
 
     // Display fields with CSS display: none;

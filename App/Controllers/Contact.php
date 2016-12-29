@@ -39,9 +39,13 @@ class Contact extends \Core\Controller
       // retrieve string query
       $id = ( isset($_REQUEST['id']) ) ? filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING): '';
 
-      if($id != '')
+      if($id === 'advertise')
       {
           $message = 'Please contact me about advertising on American Biz Trader';
+      }
+      else
+      {
+          $message = '';
       }
 
        View::renderTemplate('Contact/index.html', [

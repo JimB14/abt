@@ -1,16 +1,18 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Buy a business
+    Professional profile
+{% endblock %}
+
+{% block metadescription %}
+  {{ agent.first_name }} {{ agent.last_name }} is a professional {% if agent.type == 1 %}Business Broker{% elseif agent.type == 2 %}Commercial Real Estate Broker{% elseif agent.type == 3 %} Business & Commercial Real Estate Broker{% endif %} for {{ broker.company_name}}, serving {{ agent.counties_serv01 }} in {{ states_served }}Call {{ agent.agent_telephone }}
 {% endblock %}
 
 {% block css %}
-
 {% endblock %}
 
 
 {% block content %}
-
 <div class="page-wrapper">
         <div class="row">
             <div class="col-md-12 p1 ptop30">

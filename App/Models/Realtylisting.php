@@ -133,6 +133,44 @@ class Realtylisting extends \Core\Model
 
 
     /**
+     * retrieves listings for specicified agent and broker
+     *
+     * @param  integer  $broker_id  The broker ID
+     * @param  integer  $agent_id   The agent's ID
+     * @return object               The listings
+     */
+    public static function getListingsByAgent($broker_id, $agent_id)
+    {
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            $sql = "SELECT * FROM realty_listings
+                    WHERE broker_id = :broker_id
+                    AND listing_agent_id = :listing_agent_id";
+            $stmt = $db->prepare($sql);
+            $parameters = [
+                ':broker_id'        => $broker_id,
+                ':listing_agent_id' => $agent_id
+            ];
+            $stmt->execute($parameters);
+
+            // store listing details in object
+            $realty_listings = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+            // return object to Admin/Brokers Controller
+            return $realty_listings;
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
+    }
+
+
+    /**
      * retrieves listings with matched keywords
      *
      * @return array The matched listings

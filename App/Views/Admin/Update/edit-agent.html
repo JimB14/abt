@@ -18,6 +18,34 @@
 
           <form method="post" class="form-horizontal" action="/admin/brokers/update-agent?id={{ agent.id }}&amp;broker_id={{ session.broker_id }}" name="update-agent-form" id="update-agent-form" enctype="multipart/form-data">
 
+            <h3 class="subheading">
+              Important data stored by search engines
+              <a href="https://moz.com/learn/seo/meta-description" target="_blank">
+                (learn more)
+              </a>
+            </h3>
+
+            <div class="form-group">
+                <label for="type" class="control-label col-sm-3">
+                  Meta description
+                  <br>
+                  <small>
+                    <a href="/buy/agent-profile/{{ agent.id }}&amp;broker_id={{ session.broker_id }}">
+                      (On your profile page)
+                    </a>
+                  </small>
+                </label>
+                <div class="col-sm-9">
+                      <p style="margin-top:6px;" id="meta-description-content">
+                        <a style="text-decoration:underline;cursor:pointer" title="First name">{{ agent.first_name }}</a> <a style="text-decoration:underline;cursor:pointer" title="Last name">{{ agent.last_name }}</a> is a professional {% if agent.type == 1 %}<a style="text-decoration:underline;cursor:pointer" title="Type">Business Broker</a>{% elseif agent.type == 2 %}<a style="text-decoration:underline;cursor:pointer" title="Type">Commercial Real Estate Broker</a>{% elseif agent.type == 3 %}<a style="text-decoration:underline;cursor:pointer" title="Type">Business & Commercial Real Estate Broker</a>{% endif %} for <a style="text-decoration:underline;cursor:pointer" title="Company name">{{ company_name }}</a>, serving <a style="text-decoration:underline;cursor:pointer" title="County or counties of first state">{{ agent.counties_serv01 }}</a> in <a style="text-decoration:underline;cursor:pointer" title="First state">{{ agent.state_serv01 }}</a> Call: <a style="text-decoration:underline;cursor:pointer" title="Office telephone">{{ agent.agent_telephone }}</a>
+                      </p>
+                      <a style="text-decoration:underline;cursor:pointer" title="Category"></a>
+                    <p id="display-meta-description-length"></p>
+                </div>
+            </div>
+            <hr>
+
+
               <h3 style="margin-bottom: 15px;">
                 Agent information
               </h3>
@@ -1114,7 +1142,19 @@ $(document).ready(function(){
     });
 
 
+    // get meta-description length
+    getLength("meta-description-content");
 
+    function getLength(id){
+      var string = document.getElementById(id).innerHTML;
+      //alert(string);
+      var string_length = string.length;
+      string_length = string_length - 602;
+
+      console.log(string_length);
+
+      document.getElementById("display-meta-description-length").innerHTML="Current character length is " + string_length + ". Recommended length is 150 - 160 characters (includes spaces).";
+    };
 
 
 });
