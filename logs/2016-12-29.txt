@@ -1,0 +1,8 @@
+[29-Dec-2016 20:42:06 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched'
+Stack trace: #0 C:\xampp\htdocs\americanbiztrader.site\public\index.php(77): Core\Router->dispatch('brokers')
+#1 {main}
+Thrown in  'C:\xampp\htdocs\americanbiztrader.site\Core\Router.php' on line 194
+[29-Dec-2016 20:42:14 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched'
+Stack trace: #0 C:\xampp\htdocs\americanbiztrader.site\public\index.php(77): Core\Router->dispatch('admin')
+#1 {main}
+Thrown in  'C:\xampp\htdocs\americanbiztrader.site\Core\Router.php' on line 194

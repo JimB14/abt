@@ -18,12 +18,13 @@
 
           <form method="post" class="form-horizontal" action="/admin/brokers/update-agent?id={{ agent.id }}&amp;broker_id={{ session.broker_id }}" name="update-agent-form" id="update-agent-form" enctype="multipart/form-data">
 
-            <h3 class="subheading">
+            <h3 style="margin-bottom: 15px;">Search engine optimized to generate leads</h3>
+            <h4 class="subheading">
               Important data stored by search engines
               <a href="https://moz.com/learn/seo/meta-description" target="_blank">
                 (learn more)
               </a>
-            </h3>
+            </h4>
 
             <div class="form-group">
                 <label for="type" class="control-label col-sm-3">
@@ -56,6 +57,9 @@
                   </label>
                   <div class="col-sm-9">
                       <input type="text" name="first_name" class="form-control" id="first_name" placeholder="First name" value="{{ agent.first_name }}" autofocus>
+                      <small>
+                        *Displays in meta description.
+                      </small>
                   </div>
                       <span class="glyphicon form-control-feedback" id="first_name1"></span>
               </div>
@@ -67,6 +71,9 @@
                   </label>
                   <div class="col-sm-9">
                       <input type="text" name="last_name" class="form-control" id="last_name" placeholder="Last name" value="{{ agent.last_name }}">
+                      <small>
+                        *Displays in meta description.
+                      </small>
                   </div>
                       <span class="glyphicon form-control-feedback" id="last_name1"></span>
               </div>
@@ -97,7 +104,10 @@
                         <option value="2">Sells commercial real estate only</option>
                         <option value="3">Sells both</option>
                       </select>
-                      <small>1 = business broker; 2 = commercial real estate broker; 3 = both</small>
+                      <small>
+                        1 = business broker; 2 = commercial real estate broker; 3 = both &nbsp;&nbsp;
+                        *Displays in meta description.
+                      </small>
                   </div>
               </div>
 
@@ -159,6 +169,9 @@
                   </label>
                   <div class="col-sm-9">
                       <input type="text" name="agent_telephone" class="form-control" id="agent_telephone" placeholder="Telephone" value="{{ agent.agent_telephone }}">
+                      <small>
+                        *Displays in meta description.
+                      </small>
                   </div>
                       <span class="glyphicon form-control-feedback" id="agent_telephone1"></span>
               </div>
@@ -256,6 +269,9 @@
                               <option value="{{ state.abbrev }}">{{ state.name }}</option>
                           {% endfor %}
                       </select>
+                      <small>
+                        *Displays in meta description.
+                      </small>
                   </div>
               </div>
 
@@ -278,6 +294,9 @@
                       <select class="form-control" name="counties_serv01[]" id="edit-counties-serv01" multiple>
                           <option value="{{ agent.counties_serv01 }}" selected="selected">{{ agent.counties_serv01 }}</option>
                       </select>
+                      <small>
+                        *Displays in meta description.
+                      </small>
                   </div>
               </div>
 

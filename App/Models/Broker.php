@@ -514,7 +514,7 @@ class Broker extends \Core\Model
         || empty($telephone) || empty($company_name) || empty($type)
         || empty($company_bio) || empty($services) || empty($website))
         {
-          echo 'All fields except Address2, Fax and Company Logo are required.';
+          echo 'All fields except Address2 and Fax are required.';
           exit();
         }
 
@@ -598,122 +598,164 @@ class Broker extends \Core\Model
                 echo 'File not uploaded. Please try again.';
                 exit();
             }
-
-            // insert new broker data w/ logo into brokers table
-            try
+            else
             {
-                // establish db connection
-                $db = static::getDB();
-
-                $sql = "INSERT INTO brokers SET
-                        user_id       = :user_id,
-                        first_name    = :first_name,
-                        last_name     = :last_name,
-                        title         = :title,
-                        broker_email  = :broker_email,
-                        broker_cell   = :broker_cell,
-                        address1      = :address1,
-                        address2      = :address2,
-                        city          = :city,
-                        state         = :state,
-                        zip           = :zip,
-                        telephone     = :telephone,
-                        fax           = :fax,
-                        company_name  = :company_name,
-                        type          = :type,
-                        company_logo  = :company_logo,
-                        services      = :services,
-                        company_bio   = :company_bio,
-                        website       = :website";
-                $stmt = $db->prepare($sql);
-                $parameters = [
-                    ':user_id'      => $user_id,
-                    ':first_name'   => $first_name,
-                    ':last_name'    => $last_name,
-                    ':title'        => $title,
-                    ':broker_email' => $broker_email,
-                    ':broker_cell'  => $broker_cell,
-                    ':address1'     => $address1,
-                    ':address2'     => $address2,
-                    ':city'         => $city,
-                    ':state'        => $state,
-                    ':zip'          => $zip,
-                    ':telephone'    => $telephone,
-                    ':fax'          => $fax,
-                    ':company_name' => $company_name,
-                    ':type'         => $type,
-                    ':company_logo' => $file_name,
-                    ':services'     => $services,
-                    ':company_bio'  => $company_bio,
-                    ':website'      => $website
-                ];
-                $result = $stmt->execute($parameters);
-
-                return $result;
-            }
-            catch (PDOException $e)
-            {
-                echo "Error updating data in database " . $e->getMessage();
+                echo "Company logo required.";
                 exit();
             }
         }
-        else
+
+
+        /* - - - - - -  Broker photo - - - - - - - - */
+
+        // Check if broker photo was uploaded; if true, process
+        if (!empty($_FILES['broker_photo']['tmp_name']))
         {
-            // if company logo not uploaded
-            try
+            // Assign target directory based on server
+            if($_SERVER['SERVER_NAME'] != 'localhost')
             {
-                // establish db connection
-                $db = static::getDB();
-
-                $sql = "INSERT INTO brokers SET
-                        user_id       = :user_id,
-                        first_name    = :first_name,
-                        last_name     = :last_name,
-                        title         = :title
-                        broker_email  = :broker_email,
-                        broker_cell   = :broker_cell,
-                        address1      = :address1,
-                        address2      = :address2,
-                        city          = :city,
-                        state         = :state,
-                        zip           = :zip,
-                        telephone     = :telephone,
-                        fax           = :fax,
-                        company_name  = :company_name,
-                        type          = :type,
-                        services      = :services,
-                        company_bio   = :company_bio,
-                        website       = :website";
-                $stmt = $db->prepare($sql);
-                $parameters = [
-                    ':user_id'      => $user_id,
-                    ':first_name'   => $first_name,
-                    ':last_name'    => $last_name,
-                    ':title'        => $title,
-                    ':broker_email' => $broker_email,
-                    ':broker_cell'  => $broker_cell,
-                    ':address1'     => $address1,
-                    ':address2'     => $address2,
-                    ':city'         => $city,
-                    ':state'        => $state,
-                    ':zip'          => $zip,
-                    ':telephone'    => $telephone,
-                    ':fax'          => $fax,
-                    ':company_name' => $company_name,
-                    ':type'         => $type,
-                    ':services'     => $services,
-                    ':company_bio'  => $company_bio,
-                    ':website'      => $website
-                ];
-                $result = $stmt->execute($parameters);
-
-                return $result;
+              // path for live server
+              // UPLOAD_PATH = '/home/pamska5/public_html/americanbiztrader.site/public'
+              $target_dir = Config::UPLOAD_PATH . '/assets/images/uploaded_profile_photos/';
             }
-            catch (PDOException $e)
+            else
             {
-                echo "Error updating data in database " . $e->getMessage();
+              // path for local machine
+              $target_dir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/uploaded_profile_photos/';
+            }
+
+            // create single variable
+            $target_file = $target_dir . $_FILES['broker_photo']['name'];
+
+            // test
+            // echo '$server: ' . $server . '<br>';
+            // echo '$target_dir: ' . $target_dir . '<br>';
+            // echo '$target_file: ' . $target_file . '<br>';
+            // exit();
+
+            // Access $_FILES global array for uploaded file
+            $file_name = $_FILES['broker_photo']['name'];
+            $file_tmp_loc = $_FILES['broker_photo']['tmp_name'];
+            $file_type = $_FILES['broker_photo']['type'];
+            $file_size = $_FILES['broker_photo']['size'];
+            $file_err_msg = $_FILES['broker_photo']['error'];
+
+            // Separate file name into an array by the dot
+            $kaboom = explode(".", $file_name);
+
+            // Assign last element of array to file_extension variable (in case file has more than one dot)
+            $file_extension = end($kaboom);
+
+
+            /* - - - - -  Error handling  - - - - - - */
+
+            // Check if file already exists
+            if (file_exists($target_file))
+            {
+                echo "Sorry, broker photo file already exists. Please rename
+                file and try again.";
                 exit();
             }
+            // Check if file size < 2 MB
+            if ($file_size > 2097152)
+            {
+                unlink($file_tmp_loc);
+                echo 'File must be less than 2 Megabytes to upload.';
+                exit();
+            }
+            // Check if file is gif, jpg, jpeg or png
+            if (!preg_match("/\.(gif|jpg|jpeg|png)$/i", $file_name))
+            {
+                unlink($file_tmp_loc);
+                echo 'Image must be gif, jpg, jpeg, or to upload.';
+                exit();
+            }
+            // Check for any errors
+            if ($file_err_msg == 1)
+            {
+                echo 'Error uploading file. Please try again.';
+                exit();
+            }
+
+            // Upload file to server into designated folder
+            $move_result = move_uploaded_file($file_tmp_loc, "$target_file");
+
+            // Check for boolean result of move_uploaded_file()
+            if ($move_result != true)
+            {
+                unlink($file_tmp_loc);
+                echo 'File not uploaded. Please try again.';
+                exit();
+            }
+
+            // change filename
+            $broker_photo = $file_name;
+        }
+        else
+        {
+            echo "Profile photo required.";
+            exit();
+        }
+
+
+        // insert new broker data, including company logo and broker photo
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            $sql = "INSERT INTO brokers SET
+                    user_id       = :user_id,
+                    first_name    = :first_name,
+                    last_name     = :last_name,
+                    title         = :title,
+                    broker_email  = :broker_email,
+                    broker_cell   = :broker_cell,
+                    broker_photo  = :broker_photo,
+                    address1      = :address1,
+                    address2      = :address2,
+                    city          = :city,
+                    state         = :state,
+                    zip           = :zip,
+                    telephone     = :telephone,
+                    fax           = :fax,
+                    company_name  = :company_name,
+                    type          = :type,
+                    company_logo  = :company_logo,
+                    services      = :services,
+                    company_bio   = :company_bio,
+                    website       = :website";
+            $stmt = $db->prepare($sql);
+            $parameters = [
+                ':user_id'      => $user_id,
+                ':first_name'   => $first_name,
+                ':last_name'    => $last_name,
+                ':title'        => $title,
+                ':broker_email' => $broker_email,
+                ':broker_cell'  => $broker_cell,
+                ':broker_photo' => $broker_photo,
+                ':address1'     => $address1,
+                ':address2'     => $address2,
+                ':city'         => $city,
+                ':state'        => $state,
+                ':zip'          => $zip,
+                ':telephone'    => $telephone,
+                ':fax'          => $fax,
+                ':company_name' => $company_name,
+                ':type'         => $type,
+                ':company_logo' => $file_name,
+                ':services'     => $services,
+                ':company_bio'  => $company_bio,
+                ':website'      => $website
+            ];
+            $result = $stmt->execute($parameters);
+
+            return $result;
+        }
+        catch (PDOException $e)
+        {
+            echo "Error updating data in database " . $e->getMessage();
+            exit();
         }
     }
 

@@ -38,12 +38,14 @@
             </div>
             <hr>
 
-            <h3 class="subheading">
+            <h3 style="margin-bottom: 15px;">Search engine optimized to generate leads</h3>
+
+            <h4 class="subheading">
               Important data stored by search engines
               <a href="https://moz.com/learn/seo/meta-description" target="_blank">
                 (learn more)
               </a>
-            </h3>
+            </h4>
 
             <div class="form-group">
                 <label for="type" class="control-label col-sm-3">
@@ -111,6 +113,9 @@
                     <input type="text" class="form-control" name="ad_title"
                     id="ad_title" placeholder="Ad title"
                     value="{{ listing.ad_title }}" >
+                    <small>
+                      *Displays in meta description.
+                    </small>
                 </div>
             </div>
 
@@ -249,6 +254,9 @@
                     <input type="text" name="county" class="form-control"
                     id="county" placeholder="County"
                     value="{{ listing.county }}">
+                    <small>
+                      *Displays in meta description if set to display below.
+                    </small>
                  </div>
             </div>
 
@@ -277,7 +285,10 @@
                 <div class="col-sm-9">
                     <input type="text" name="city" class="form-control"
                     id="city" placeholder="City"
-                    value="{{ listing.city }}" >
+                    value="{{ listing.city }}">
+                    <small>
+                      *Displays in meta description if set to display below.
+                    </small>
                 </div>
             </div>
 
@@ -310,6 +321,9 @@
                             <option value="{{ state.abbrev }}">{{ state.name }}</option>
                         {% endfor %}
                     </select>
+                    <small>
+                      *Displays in meta description.
+                    </small>
                 </div>
             </div>
 
@@ -420,7 +434,11 @@
                     <input type="text" class="form-control" name="keywords"
                     id="keywords" placeholder="Comma separated keywords"
                     value="{{ listing.keywords }}">
+                    <small>
+                      *Displays in meta description.
+                    </small>
                 </div>
+
             </div>
 
 

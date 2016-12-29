@@ -20,9 +20,8 @@
               Welcome {{ user.first_name }} {{ user.last_name}} to American Biz Trader
           </h3>
           <p>
-              After registration, be sure to upload a profile photo
-              from inside the Admin Panel. You can also upload your company logo
-              if it's not available to upload now.
+              After registration, you can upload a different logo image and/or
+              profile photo from inside the Admin Panel in &quot;Company profile.&quot;
           </p>
 
 
@@ -90,7 +89,7 @@
                   <div class="col-sm-9">
                       <input type="broker_cell" name="broker_cell" class="form-control"
                       id="broker_cell" placeholder="Cell"
-                      value="">
+                      value="" required>
                   </div>
                   <span class="glyphicon form-control-feedback" id="broker_cell1"></span>
               </div>
@@ -103,7 +102,7 @@
                   <div class="col-sm-9">
                       <input type="text" class="form-control" name="company_name"
                       id="company_name" placeholder="Company name"
-                      value="">
+                      value="" required>
                   </div>
                   <span class="glyphicon form-control-feedback" id="company_name1"></span>
               </div>
@@ -114,7 +113,7 @@
                     Type
                   </label>
                   <div class="col-sm-9">
-                      <select name="type" id="type" class="form-control required">
+                      <select name="type" id="type" class="form-control" required>
                         <option value="">Select</option>
                         <option value="1">Business Broker</option>
                         <option value="2">Commercial Real Estate Broker</option>
@@ -130,7 +129,7 @@
                   <div class="col-sm-9">
                       <input type="text" name="address1" class="form-control"
                       id="address1" placeholder="Address"
-                      value="">
+                      value="" required>
                   </div>
                   <span class="glyphicon form-control-feedback" id="address11"></span>
               </div>
@@ -158,7 +157,7 @@
                   <div class="col-sm-9">
                       <input type="text" name="city" class="form-control"
                       id="city" placeholder="City"
-                      value="" >
+                      value="" required>
                   </div>
                   <span class="glyphicon form-control-feedback" id="city1"></span>
               </div>
@@ -170,7 +169,7 @@
                       State
                   </label>
                   <div class="col-sm-9">
-                      <select class="form-control" name="state" id="state">
+                      <select class="form-control" name="state" id="state" required>
                           <option value="">Select state</option>
                           {% for state in states %}
                           <option value="{{ state.abbrev }}">{{ state.name }}</option>
@@ -189,7 +188,7 @@
                   <div class="col-sm-9">
                       <input type="text" name="zip" class="form-control"
                       id="zip" placeholder="Zip"
-                      value="">
+                      value="" required>
                   </div>
                   <span class="glyphicon form-control-feedback" id="zip1"></span>
               </div>
@@ -203,7 +202,7 @@
                   <div class="col-sm-9">
                       <input type="text" name="telephone" class="form-control"
                       id="telephone" placeholder="Telephone"
-                      value="">
+                      value="" required>
                   </div>
                   <span class="glyphicon form-control-feedback" id="telephone1"></span>
               </div>
@@ -229,7 +228,7 @@
                       Company Logo
                   </label>
                   <div class="col-sm-9">
-                  <input type="file" name="company_logo" id="company_logo">
+                  <input type="file" name="company_logo" id="company_logo" required>
                       <p class="help-block small">
                           *Must be gif, jpg, jpeg or png under 2MB
                       </p>
@@ -239,18 +238,18 @@
 
 
 
-              <!-- <div class="form-group has-feedback">
+              <div class="form-group has-feedback">
                   <label for="broker_photo" class="control-label col-sm-3">
                       Broker photo
                   </label>
                   <div class="col-sm-9">
-                  <input type="file" name="broker_photo" id="broker_photo">
+                  <input type="file" name="broker_photo" id="broker_photo" required>
                       <p class="help-block small">
                           *Must be gif, jpg, jpeg or png under 2MB
                       </p>
                   </div>
                   <span class="glyphicon form-control-feedback" id="broker_photo1"></span>
-              </div> -->
+              </div>
 
 
 
@@ -289,7 +288,7 @@
                   <div class="col-sm-9">
                       <input type="url" name="website" class="form-control"
                       id="website" placeholder="http://www.YourDomain.com"
-                      value="" >
+                      value="" required>
                   </div>
                   <span class="glyphicon form-control-feedback" id="website1"></span>
               </div>
@@ -313,5 +312,12 @@
 {% endblock %}
 
 {% block bottomjs %}
+<script>
+$(document).ready(function(){
 
+  $("#new-business-broker-form").validate();
+
+});
+
+</script>
 {% endblock %}
