@@ -25,7 +25,7 @@ class BrokerAgent extends \Core\Model
             ];
             $stmt->execute($parameters);
             $agent = $stmt->fetch(PDO::FETCH_OBJ);
-
+            
             return $agent;
         }
         catch(PDOException $e)
@@ -47,6 +47,20 @@ class BrokerAgent extends \Core\Model
      */
     public static function getAgents($broker_id, $last_name)
     {
+        // display alert & redirect to same page on empty form submission
+        if($last_name === '')
+        {
+            echo '<script>';
+            echo 'alert("Please enter a last name.")';
+            echo '</script>';
+
+            // redirect user to same page
+            echo '<script>';
+            echo 'window.location.href="/admin/brokers/show-agents?user_id=' .$_SESSION['user_id'].'"';
+            echo '</script>';
+            exit();
+        }
+
         try
         {
             // establish db connection

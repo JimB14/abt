@@ -57,7 +57,11 @@ class Brokers extends \Core\Controller
             // get broker data from User model
             $broker = Broker::getBrokerData($user_id);
 
+            // get broker type & store in variable
+            $broker_type = $broker->type;
+
             // test
+            // echo $broker_type . '<br>';
             // echo '<pre>';
             // print_r($broker);
             // echo '</pre>';
@@ -77,8 +81,9 @@ class Brokers extends \Core\Controller
 
             // render view & pass $broker object
             View::renderTemplate('Admin/index.html', [
-                'broker' => $broker,
-                'agents' => $agents
+                'broker'      => $broker,
+                'agents'      => $agents,
+                'broker_type' => $broker_type
             ]);
         }
     }
@@ -97,6 +102,9 @@ class Brokers extends \Core\Controller
         // get company name
         $company_name = Broker::getBrokerCompanyName($broker_id);
 
+        // get company type (broker type = business(1), realty(2), both(3))
+        $broker_type = Broker::getBrokerCompanyType($broker_id);
+
         // get user data
         $user = User::getUser($_SESSION['user_id']);
 
@@ -106,10 +114,19 @@ class Brokers extends \Core\Controller
         // get paypal_log data
         $data = Paypal::getTransactionData($user->id);
 
-        // store PP data in variables for use @Views/Admin/Show/my-account.html
-        $last_trx = $data[0]->TRANSTIME;
-        $amount = $data[0]->AMT;
-        $profileid = $data[0]->PROFILEID;
+        if($data)
+        {
+            // store PP data in variables for use @Views/Admin/Show/my-account.html
+            $last_trx = $data[0]->TRANSTIME;
+            $amount = $data[0]->AMT;
+            $profileid = $data[0]->PROFILEID;
+        }
+        else
+        {
+          $last_trx = '';
+          $amount = '';
+          $profileid = '';
+        }
 
         // test
         // echo $amount;
@@ -126,7 +143,8 @@ class Brokers extends \Core\Controller
             'last_trx'      => $last_trx,
             'amount'        => $amount,
             'profileid'     => $profileid,
-            'agent_count'   => $agent_count
+            'agent_count'   => $agent_count,
+            'broker_type'   => $broker_type
         ]);
     }
 
@@ -140,6 +158,9 @@ class Brokers extends \Core\Controller
 
         // get broker data from broker model
         $broker = Broker::getBrokerDetails($broker_id);
+
+        // assign broker type to variable
+        $broker_type = $broker->type;
 
         // get user data
         $user = User::getUser($broker->user_id);
@@ -163,10 +184,11 @@ class Brokers extends \Core\Controller
 
         // render view & pass $broker object
         View::renderTemplate('Admin/Show/company-profile.html', [
-            'broker'  => $broker,
-            'states'  => $states,
-            'agents'  => $agents,
-            'user'    => $user
+            'broker'      => $broker,
+            'states'      => $states,
+            'agents'      => $agents,
+            'user'        => $user,
+            'broker_type' => $broker_type
         ]);
     }
 
@@ -233,11 +255,15 @@ class Brokers extends \Core\Controller
       // get states array for drop-down
       $states = State::getStates();
 
+      // get company type (broker type = business(1), realty(2), both(3))
+      $broker_type = Broker::getBrokerCompanyType($broker_id);
+
       // render view
       View::renderTemplate('Admin/Add/add-new-agent.html', [
-          'broker_id'  => $broker_id,
-          'agents'     => $agents,
-          'states'     => $states
+          'broker_id'   => $broker_id,
+          'agents'      => $agents,
+          'states'      => $states,
+          'broker_type' => $broker_type
       ]);
     }
 
@@ -329,10 +355,14 @@ class Brokers extends \Core\Controller
       // echo "</pre>";
       // exit();
 
+      // get company type (broker type = business(1), realty(2), both(3))
+      $broker_type = Broker::getBrokerCompanyType($broker_id);
+
       // render view & pass $agents object
       View::renderTemplate('Admin/Show/agents.html', [
-          'agents'    => $agents,
-          'broker_id' => $broker_id
+          'agents'      => $agents,
+          'broker_id'   => $broker_id,
+          'broker_type' => $broker_type
       ]);
     }
 
@@ -346,6 +376,9 @@ class Brokers extends \Core\Controller
 
         // get broker company name
         $broker_company_name = Broker::getBrokerCompanyName($broker_id);
+
+        // get company type (broker type = business(1), realty(2), both(3))
+        $broker_type = Broker::getBrokerCompanyType($broker_id);
 
         // get all agents
         // $agents = BrokerAgent::getAllBrokerAgents($limit=null, $broker_id, $orderby = 'broker_agents.last_name');
@@ -385,7 +418,8 @@ class Brokers extends \Core\Controller
                 'categories'          => $categories,
                 'states'              => $states,
                 'broker_company_name' => $broker_company_name,
-                'broker_id'           => $broker_id
+                'broker_id'           => $broker_id,
+                'broker_type'         => $broker_type
             ]);
         }
     }
@@ -439,10 +473,14 @@ class Brokers extends \Core\Controller
         // get agents id, last name, first name & broker ID only for drop-down
         $agents = BrokerAgent::getNamesOfAllBrokerAgents($broker_id, $orderby='broker_agents.last_name');
 
+        // get company type (broker type = business(1), realty(2), both(3))
+        $broker_type = Broker::getBrokerCompanyType($broker_id);
+
         // render view, pass $listings object
         View::renderTemplate('Admin/Show/listings.html', [
-            'listings' => $listings,
-            'agents'   => $agents
+            'listings'    => $listings,
+            'agents'      => $agents,
+            'broker_type' => $broker_type
         ]);
     }
 
@@ -689,12 +727,16 @@ class Brokers extends \Core\Controller
         // get agents id, last name, first name & broker ID only for drop-down
         //$agents = BrokerAgent::getNamesOfAllBrokerAgents($broker_id, $orderby = 'broker_agents.last_name');
 
+        // get company type (broker type = business(1), realty(2), both(3))
+        $broker_type = Broker::getBrokerCompanyType($broker_id);
+
         // render view, pass $listings object
         View::renderTemplate('Admin/Show/leads.html', [
             'leads'       => $results['leads'],
             'pagetitle'   => $results['pagetitle'],
             // 'agents'      => $agents,
-            'last_name'   => $last_name
+            'last_name'   => $last_name,
+            'broker_type' => $broker_type
         ]);
     }
 
@@ -708,6 +750,20 @@ class Brokers extends \Core\Controller
 
         // retrieve form data
         $clients_id = ( isset($_REQUEST['clients_id']) ) ?  filter_var($_REQUEST['clients_id'], FILTER_SANITIZE_STRING): '';
+
+        // display alert & redirect to same page on empty form submission
+        if($clients_id === '')
+        {
+            echo '<script>';
+            echo 'alert("Please enter a listing ID.")';
+            echo '</script>';
+
+            // redirect user to same page
+            echo '<script>';
+            echo 'window.location.href="/admin/brokers/index?user_id=' .$_SESSION['user_id'].'"';
+            echo '</script>';
+            exit();
+        }
 
         // get listings and pagetitle
         $results = Listing::getListingsBySearchCriteria($broker_id, $last_name=null, $clients_id, $limit=null);
@@ -741,8 +797,25 @@ class Brokers extends \Core\Controller
         // retrieve form data
         $clients_id = ( isset($_REQUEST['clients_id']) ) ?  filter_var($_REQUEST['clients_id'], FILTER_SANITIZE_STRING): '';
 
+
+        // display alert & redirect to same page on empty form submission
+        if($clients_id === '')
+        {
+            echo '<script>';
+            echo 'alert("Please enter a listing ID.")';
+            echo '</script>';
+
+            // redirect user to same page
+            echo '<script>';
+            echo 'window.location.href="/admin/brokers/index?user_id=' .$_SESSION['user_id'].'"';
+            echo '</script>';
+            exit();
+        }
+
+
         // get listings and pagetitle
         $results = Realtylisting::getRealtyListingsBySearchCriteria($broker_id, $last_name=null, $clients_id, $limit=null);
+
 
         // test
         // echo "<pre>";
@@ -1391,6 +1464,9 @@ class Brokers extends \Core\Controller
         // get broker company name
         $broker_company_name = Broker::getBrokerCompanyName($broker_id);
 
+        // get company type (broker type = business(1), realty(2), both(3))
+        $broker_type = Broker::getBrokerCompanyType($broker_id);
+
         // get all agents who are real estate brokers or business & real estate brokers
         //$agents = BrokerAgent::getAllBrokerAgents($limit=null, $broker_id, $orderby = 'broker_agents.last_name');
         $agents = BrokerAgent::getAllBrokerAgentsByType($type=[2,3], $limit=null, $broker_id, $orderby = 'broker_agents.last_name');
@@ -1447,7 +1523,8 @@ class Brokers extends \Core\Controller
               'agents'                => $agents,
               'states'                => $states,
               'broker_company_name'   => $broker_company_name,
-              'broker_id'             => $broker_id
+              'broker_id'             => $broker_id,
+              'broker_type'           => $broker_type
               // 'for_sale_categories'   => $for_sale_categories,
               // 'for_lease_categories'  => $for_lease_categories
           ]);
@@ -1475,10 +1552,14 @@ class Brokers extends \Core\Controller
         //$agents = BrokerAgent::getRealtyBrokerAgents($limit=null, $broker_id, $type=['2','3'], $orderby = 'broker_agents.last_name');
         $agents = BrokerAgent::getNamesOfAllBrokerAgents($broker_id, $orderby='broker_agents.last_name');
 
+        // get company type (broker type = business(1), realty(2), both(3))
+        $broker_type = Broker::getBrokerCompanyType($broker_id);
+
         // render view, pass $listings object
         View::renderTemplate('Admin/Show/realty-listings.html', [
-            'listings' => $listings,
-            'agents'   => $agents
+            'listings'    => $listings,
+            'agents'      => $agents,
+            'broker_type' => $broker_type
         ]);
     }
 
@@ -1737,12 +1818,16 @@ class Brokers extends \Core\Controller
         // get agents id, last name, first name & broker ID only for drop-down
         $agents = BrokerAgent::getNamesOfAllBrokerAgents($broker_id, $orderby='broker_agents.last_name');
 
+        // get company type (broker type = business(1), realty(2), both(3))
+        $broker_type = Broker::getBrokerCompanyType($broker_id);
+
         $pagetitle = "My leads";
 
         // render view, pass $listings object
         View::renderTemplate('Admin/Show/leads.html', [
-            'leads'   => $leads,
-            'agents'  => $agents
+            'leads'       => $leads,
+            'agents'      => $agents,
+            'broker_type' => $broker_type
         ]);
     }
 

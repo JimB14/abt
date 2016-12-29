@@ -123,6 +123,36 @@ class Broker extends \Core\Model
 
 
 
+    public static function getBrokerCompanyType($broker_id)
+    {
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            $sql = "SELECT type FROM brokers
+                    WHERE broker_id = :broker_id";
+            $stmt = $db->prepare($sql);
+            $parameters = [
+                ':broker_id' => $broker_id
+            ];
+            $stmt->execute($parameters);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $broker_type = $result['type'];
+
+            return $broker_type;
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
+    }
+
+
+
+
     public static function updateCompanyProfile($broker_id)
     {
         // From form fields @admin/edit-company-profile-form.html.php (update `brokers` table with these values)

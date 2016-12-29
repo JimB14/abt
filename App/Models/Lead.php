@@ -115,6 +115,34 @@ class Lead extends \Core\Model
 
     public static function getLeadsBySearchCriteria($broker_id, $last_name, $clients_id, $limit)
     {
+        // if checkbox = false (not checked) & empty form is submitted
+        if($clients_id == null && $last_name === '')
+        {
+            echo '<script>';
+            echo 'alert("Please enter a last name.")';
+            echo '</script>';
+
+            // redirect user to same page
+            echo '<script>';
+            echo 'window.location.href="/admin/brokers/show-leads?id=' .$broker_id.'"';
+            echo '</script>';
+            exit();
+        }
+
+        // if checkbox = true (checked = on) & empty form submitted
+        if($last_name == null && $clients_id === '')
+        {
+            echo '<script>';
+            echo 'alert("Please enter a listing ID.")';
+            echo '</script>';
+
+            // redirect user to same page
+            echo '<script>';
+            echo 'window.location.href="/admin/brokers/show-leads?id=' .$broker_id.'"';
+            echo '</script>';
+            exit();
+        }
+
         if($limit != null)
         {
             $limit = 'LIMIT  ' . $limit;
@@ -122,7 +150,7 @@ class Lead extends \Core\Model
         if($last_name != null)
         {
             $last_name_for_view = $last_name;
-            $last_name = "AND broker_agents.last_name LIKE '$last_name_for_view%'";
+            $last_name = "AND leads.agent_last_name LIKE '$last_name_for_view%'";
             $pagetitle = "Leads by last name: $last_name_for_view";
         }
         if($clients_id != null)
@@ -146,7 +174,7 @@ class Lead extends \Core\Model
                     WHERE leads.broker_id = :broker_id
                     $last_name
                     $clients_id
-                    ORDER BY leads.created_at  DESC
+                    ORDER BY leads.created_at DESC
                     $limit";
 
             $stmt = $db->prepare($sql);
@@ -190,7 +218,7 @@ class Lead extends \Core\Model
             $parameters = [
                 ':id'         => $id,
                 ':broker_id'  => $broker_id
-            ];            
+            ];
             $result = $stmt->execute($parameters);
 
             // return boolean to Admin/Brokers Controller

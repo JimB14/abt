@@ -280,6 +280,34 @@ class Realtylisting extends \Core\Model
      */
     public static function getRealtyListingsBySearchCriteria($broker_id, $last_name, $clients_id, $limit)
     {
+        // if checkbox = false (not checked) & empty form is submitted
+        if($clients_id == null && $last_name === '')
+        {
+            echo '<script>';
+            echo 'alert("Please enter an agent last name.")';
+            echo '</script>';
+
+            // redirect user to same page
+            echo '<script>';
+            echo 'window.location.href="/admin/brokers/show-real-estate-listings?id=' .$broker_id.'"';
+            echo '</script>';
+            exit();
+        }
+
+        // if checkbox = true (checked = on) & empty form submitted
+        if($last_name == null && $clients_id === '')
+        {
+            echo '<script>';
+            echo 'alert("Please enter a real estate listing ID.")';
+            echo '</script>';
+
+            // redirect user to same page
+            echo '<script>';
+            echo 'window.location.href="/admin/brokers/show-real-estate-listings?id=' .$broker_id.'"';
+            echo '</script>';
+            exit();
+        }
+
         if($limit != null)
         {
           $limit = 'LIMIT  ' . $limit;
