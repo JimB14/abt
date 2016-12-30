@@ -509,10 +509,19 @@ class Broker extends \Core\Model
 
         $website = ( isset($_POST['website']) ) ? filter_var($_POST['website'], FILTER_SANITIZE_STRING) : '';
 
+        // test
+        // echo '<pre>';
+        // print_r($_POST);
+        // echo '</pre>';
+        // exit();
+
         // Fallback validation code if user has disabled JavaScript
-        if (empty($address1) || empty($city) || empty($state) || empty($zip)
-        || empty($telephone) || empty($company_name) || empty($type)
-        || empty($company_bio) || empty($services) || empty($website))
+        if (
+          ($first_name == '') || ($last_name == '') || ($title == '') || ($broker_email == '')
+          || ($broker_cell == '') || ($company_name == '') || ($type == '') || ($address1 == '')
+          || ($city == '') || ($state == '') || ($zip == '') || ($telephone == '')
+          || ($services == '') || ($company_bio == '') || ($website == '')
+        )
         {
           echo 'All fields except Address2 and Fax are required.';
           exit();
@@ -535,7 +544,7 @@ class Broker extends \Core\Model
             }
 
             // create single variable
-            $target_file = $target_dir . $_FILES['company_logo']['name'];
+            //$target_file = $target_dir . $_FILES['company_logo']['name'];
 
             // test
             // echo '$server: ' . $server . '<br>';
@@ -556,12 +565,15 @@ class Broker extends \Core\Model
             // Assign last element of array to file_extension variable (in case file has more than one dot)
             $file_extension = end($kaboom);
 
+            // Assign value to prefix
+            $prefix = $user_id.'-';
 
 
             /* - - - - -  Error handling  - - - - - - */
+            $upload_ok = 1;
 
             // Check if file already exists
-            if (file_exists($target_file))
+            if ( file_exists($target_dir . $prefix . $file_name) )
             {
                 echo "Sorry, company logo file already exists. Please rename
                 file and try again.";
@@ -570,6 +582,7 @@ class Broker extends \Core\Model
             // Check if file size < 2 MB
             if ($file_size > 2097152)
             {
+                $upload_ok = 0;
                 unlink($file_tmp_loc);
                 echo 'File must be less than 2 Megabytes to upload.';
                 exit();
@@ -577,6 +590,7 @@ class Broker extends \Core\Model
             // Check if file is gif, jpg, jpeg or png
             if (!preg_match("/\.(gif|jpg|jpeg|png)$/i", $file_name))
             {
+                $upload_ok = 0;
                 unlink($file_tmp_loc);
                 echo 'Image must be gif, jpg, jpeg, or to upload.';
                 exit();
@@ -584,26 +598,38 @@ class Broker extends \Core\Model
             // Check for any errors
             if ($file_err_msg == 1)
             {
+                $upload_ok = 0;
                 echo 'Error uploading file. Please try again.';
                 exit();
             }
 
-            // Upload file to server into designated folder
-            $move_result = move_uploaded_file($file_tmp_loc, "$target_file");
+            if( $upload_ok = 1 )
+            {
+                // Attach prefix to file name so server & database table match
+                $file_name = $prefix . $file_name;
 
-            // Check for boolean result of move_uploaded_file()
-            if ($move_result != true)
-            {
-                unlink($file_tmp_loc);
-                echo 'File not uploaded. Please try again.';
-                exit();
-            }
-            else
-            {
-                echo "Company logo required.";
-                exit();
+                // Upload file to server into designated folder
+                $move_result = move_uploaded_file($file_tmp_loc, $target_dir . $file_name);
+
+                // Check for boolean result of move_uploaded_file()
+                if ($move_result != true)
+                {
+                    unlink($file_tmp_loc);
+                    echo 'File not uploaded. Please try again.';
+                    exit();
+                }
+
+                // change file_name for db insertion
+                $company_logo = $file_name;
             }
         }
+        else
+        {
+            echo "Company logo required.";
+            exit();
+        }
+
+
 
 
         /* - - - - - -  Broker photo - - - - - - - - */
@@ -625,7 +651,7 @@ class Broker extends \Core\Model
             }
 
             // create single variable
-            $target_file = $target_dir . $_FILES['broker_photo']['name'];
+            //$target_file = $target_dir . $_FILES['broker_photo']['name'];
 
             // test
             // echo '$server: ' . $server . '<br>';
@@ -646,12 +672,18 @@ class Broker extends \Core\Model
             // Assign last element of array to file_extension variable (in case file has more than one dot)
             $file_extension = end($kaboom);
 
+            // Assign value to prefix
+            $prefix = $user_id.'-';
+
 
             /* - - - - -  Error handling  - - - - - - */
 
+            $upload_ok = 1;
+
             // Check if file already exists
-            if (file_exists($target_file))
+            if ( file_exists($target_dir . $prefix . $file_name) )
             {
+                $upload_ok = 0;
                 echo "Sorry, broker photo file already exists. Please rename
                 file and try again.";
                 exit();
@@ -659,6 +691,7 @@ class Broker extends \Core\Model
             // Check if file size < 2 MB
             if ($file_size > 2097152)
             {
+                $upload_ok = 0;
                 unlink($file_tmp_loc);
                 echo 'File must be less than 2 Megabytes to upload.';
                 exit();
@@ -666,6 +699,7 @@ class Broker extends \Core\Model
             // Check if file is gif, jpg, jpeg or png
             if (!preg_match("/\.(gif|jpg|jpeg|png)$/i", $file_name))
             {
+                $upload_ok = 0;
                 unlink($file_tmp_loc);
                 echo 'Image must be gif, jpg, jpeg, or to upload.';
                 exit();
@@ -673,23 +707,31 @@ class Broker extends \Core\Model
             // Check for any errors
             if ($file_err_msg == 1)
             {
+                $upload_ok = 0;
                 echo 'Error uploading file. Please try again.';
                 exit();
             }
 
-            // Upload file to server into designated folder
-            $move_result = move_uploaded_file($file_tmp_loc, "$target_file");
-
-            // Check for boolean result of move_uploaded_file()
-            if ($move_result != true)
+            if($upload_ok = 1)
             {
-                unlink($file_tmp_loc);
-                echo 'File not uploaded. Please try again.';
-                exit();
-            }
+                // Attach prefix to file name so server & database table match
+                $file_name = $prefix . $file_name;
 
-            // change filename
-            $broker_photo = $file_name;
+                // Upload file to server into designated folder
+                $move_result = move_uploaded_file($file_tmp_loc, $target_dir . $file_name);
+
+                // Check for boolean result of move_uploaded_file()
+                if ($move_result != true)
+                {
+                    unlink($file_tmp_loc);
+                    echo 'File not uploaded. Please try again.';
+                    exit();
+                }
+
+                // change file_name for db insertion
+                $broker_photo = $file_name;
+
+            }
         }
         else
         {
@@ -743,7 +785,7 @@ class Broker extends \Core\Model
                 ':fax'          => $fax,
                 ':company_name' => $company_name,
                 ':type'         => $type,
-                ':company_logo' => $file_name,
+                ':company_logo' => $company_logo,
                 ':services'     => $services,
                 ':company_bio'  => $company_bio,
                 ':website'      => $website

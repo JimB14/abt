@@ -69,7 +69,7 @@
                 <div class="col-sm-9">
                   <input type="text" class="form-control" name="acct"
                     id="ACCT" placeholder="Debit/Credit Card Number"
-                    value="4032039928000399">
+                    value="4032034487575998">
                 </div>
               </div>
               <div class="form-group">
@@ -150,7 +150,7 @@
 
               <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-9">
-                  <button type="submit" class="btn btn-primary">
+                  <button type="submit" id="pay-now-btn" class="btn btn-primary">
                     Pay Now
                   </button>
                 </div>
@@ -164,5 +164,14 @@
 {% endblock %}
 
 {% block bottomjs %}
+<script>
+$(document).ready(function(){
+  
+  $("#payment-form").submit(function(){
+      $("#pay-now-btn").text("Sending data. Please wait...");
+  });
 
+});
+
+</script>
 {% endblock %}

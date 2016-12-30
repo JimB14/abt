@@ -172,7 +172,11 @@ class Register extends \Core\Controller
 
 
 
-
+    /**
+     * Registers new broker
+     *
+     * @return boolean  Success or failure
+     */
     public function brokerRegistration()
     {
         // retrieve token in order to pass to verifyNewUserAccount method below
@@ -183,7 +187,7 @@ class Register extends \Core\Controller
 
         // test
         // echo '<pre>';
-        // print_r($results);
+        // print_r($result);
         // echo '</pre>';
         // exit();
 

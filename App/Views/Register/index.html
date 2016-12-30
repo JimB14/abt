@@ -32,54 +32,73 @@
           <div class="alert alert-success alert-padding">{{ success }}</div>
           {% endif %}
 
-          <form name="registrationform" id="registrationform" class="form-horizontal" action="register/register-new-user" method="post">
+          <form name="registrationform" id="registrationform" class="form-horizontal"
+                    action="register/register-new-user" method="post">
 
               <div class="form-group has-feedback">
-                  <label for="email" class="col-sm-3 control-label">Email</label>
+                  <label for="email" class="col-sm-3 control-label">
+                    Email
+                  </label>
                   <div class="col-sm-9">
-                      <input type="email" class="form-control email" name="email" id="register_email" placeholder="user@example.com" autofocus>
-                  </div>
+                      <input type="email" class="form-control email" name="email"
+                        id="register_email" placeholder="user@example.com" autofocus>
                       <span class="glyphicon form-control-feedback" id="register_email1"></span>
+                  </div>
               </div>
 
               <div class="form-group has-feedback">
-                  <label for="verify_email" class="col-sm-3 control-label">Verify email</label>
+                  <label for="verify_email" class="col-sm-3 control-label">
+                    Verify email
+                  </label>
                   <div class="col-sm-9">
-                      <input type="email" class="form-control" name="verify_email" id="verify_email" placeholder="user@example.com">
+                      <input type="email" class="form-control" name="verify_email"
+                        id="verify_email" placeholder="user@example.com">
+                      <span class="glyphicon form-control-feedback" id="verify_email1"></span>
                   </div>
-                  <span class="glyphicon form-control-feedback" id="verify_email1"></span>
               </div>
 
               <div class="form-group has-feedback">
-                  <label for="first_name" class="col-sm-3 control-label">First name</label>
+                  <label for="first_name" class="col-sm-3 control-label">
+                    First name
+                  </label>
                   <div class="col-sm-9">
-                      <input type="text" class="form-control" name="first_name" id="first_name" placeholder="First name">
+                      <input type="text" class="form-control" name="first_name"
+                        id="first_name" placeholder="First name">
+                      <span class="glyphicon form-control-feedback" id="first_name1"></span>
                   </div>
-                  <span class="glyphicon form-control-feedback" id="first_name1"></span>
               </div>
 
               <div class="form-group has-feedback">
-                  <label for="last_name" class="col-sm-3 control-label">Last name</label>
+                  <label for="last_name" class="col-sm-3 control-label">
+                    Last name
+                  </label>
                   <div class="col-sm-9">
-                      <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Last name">
+                      <input type="text" class="form-control" name="last_name"
+                        id="last_name" placeholder="Last name">
+                      <span class="glyphicon form-control-feedback" id="last_name1"></span>
                   </div>
-                  <span class="glyphicon form-control-feedback" id="last_name1"></span>
               </div>
 
               <div class="form-group has-feedback">
-                  <label for="password" class="col-sm-3 control-label">Password</label>
+                  <label for="password" class="col-sm-3 control-label">
+                    Password
+                  </label>
                   <div class="col-sm-9">
-                      <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                      <input type="password" class="form-control" name="password"
+                        id="password" placeholder="Password">
+                      <span class="glyphicon form-control-feedback" id="password1"></span>
                   </div>
-                  <span class="glyphicon form-control-feedback" id="password1"></span>
               </div>
 
                 <div class="form-group has-feedback">
-                    <label for="verify_password" class="col-sm-3 control-label">Verify password</label>
+                    <label for="verify_password" class="col-sm-3 control-label">
+                      Verify password
+                    </label>
                     <div class="col-sm-9">
-                        <input type="password" class="form-control" name="verify_password" id="verify_password" placeholder="Verify password">
+                        <input type="password" class="form-control" name="verify_password"
+                          id="verify_password" placeholder="Verify password">
+                        <span class="glyphicon form-control-feedback" id="verify_password1"></span>
                     </div>
-                    <span class="glyphicon form-control-feedback" id="verify_password1"></span>
                 </div>
 
                 <div class="form-group has-feedback has-feedback">
@@ -100,7 +119,9 @@
 
                 <div class="form-group has-feedback">
                     <div class="col-sm-offset-3 col-sm-9">
-                        <button id="registerBtn" type="submit" class="btn btn-primary">Register</button>
+                        <button id="registerBtn" type="submit" class="btn btn-primary btn-lg">
+                          Register
+                        </button>
                     </div>
                 </div>
 
@@ -115,12 +136,10 @@
 
   </div><!-- // .row  -->
 </div><!-- .page-wrapper -->
-
 {% endblock %}
 
 
 {% block bottomjs %}
-
 <script>
 $(document).ready(function(){
 
@@ -208,7 +227,7 @@ $(document).ready(function(){
 
   /* - - - - Check if email in db  - - - -  */
 
-    $("#register-email").blur(function(){
+    $("#register_email").blur(function(){
         var email = $( this ).val();
         console.log("email = " + email);
 
@@ -220,11 +239,11 @@ $(document).ready(function(){
             },
             cache: false,
             success: function(data){
-                var available = '<div class="alert alert-success alert-padding">';
+                var available = '<div class="col-sm-offset-3 col-sm-9 alert alert-success alert-padding text-center">';
                 available += 'Email address is available!';
                 available += '</div>';
 
-                var not_available = '<div class="alert alert-danger alert-padding">';
+                var not_available = '<div class="col-sm-offset-3 col-sm-9 alert alert-danger alert-padding text-center">';
                 not_available += 'Sorry, email address entered is not available.';
                 not_available += '</div>';
 
@@ -239,6 +258,11 @@ $(document).ready(function(){
                 alert("An error occurred.");
             }
         });
+    });
+
+    // change button text on submit 
+    $("#registrationform").submit(function(){
+        $("#registerBtn").text("Sending data. Please wait...");
     });
 
 });

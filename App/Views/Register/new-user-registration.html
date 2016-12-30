@@ -37,8 +37,8 @@
                       <input type="text" name="first_name" class="form-control"
                       id="first_name" placeholder="First name"
                       value="{{ user.first_name }}">
+                      <span class="glyphicon form-control-feedback" id="first_name1"></span>
                   </div>
-                  <span class="glyphicon form-control-feedback" id="first_name1"></span>
               </div>
 
 
@@ -51,8 +51,8 @@
                       <input type="text" name="last_name" class="form-control"
                         id="last_name" placeholder="Last name"
                         value="{{ user.last_name }}">
+                        <span class="glyphicon form-control-feedback" id="last_name1"></span>
                   </div>
-                  <span class="glyphicon form-control-feedback" id="last_name1"></span>
               </div>
 
 
@@ -63,10 +63,9 @@
                   <div class="col-sm-9">
                       <input type="text" name="title" class="form-control"
                       id="title" placeholder="Title" value="{{ user.title }}" autofocus>
+                      <span class="glyphicon form-control-feedback" id="title1"></span>
                   </div>
-                  <span class="glyphicon form-control-feedback" id="title1"></span>
               </div>
-
 
 
               <div class="form-group has-feedback">
@@ -77,8 +76,8 @@
                       <input type="broker_email" name="broker_email" class="form-control"
                       id="email" placeholder="Email"
                       value="{% if user.email %}{{ user.email }}{% endif %}">
+                      <span class="glyphicon form-control-feedback" id="email1"></span>
                   </div>
-                  <span class="glyphicon form-control-feedback" id="email1"></span>
               </div>
 
 
@@ -87,11 +86,9 @@
                       Cell
                   </label>
                   <div class="col-sm-9">
-                      <input type="broker_cell" name="broker_cell" class="form-control"
-                      id="broker_cell" placeholder="Cell"
-                      value="" required>
+                      <input type="broker_cell" name="broker_cell" class="form-control required">
+                      <span class="glyphicon form-control-feedback" id="broker_cell1"></span>
                   </div>
-                  <span class="glyphicon form-control-feedback" id="broker_cell1"></span>
               </div>
 
 
@@ -100,11 +97,10 @@
                       Company Name
                   </label>
                   <div class="col-sm-9">
-                      <input type="text" class="form-control" name="company_name"
-                      id="company_name" placeholder="Company name"
-                      value="" required>
+                      <input type="text" class="form-control required" name="company_name"
+                      id="company_name" placeholder="Company name">
+                      <span class="glyphicon form-control-feedback" id="company_name1"></span>
                   </div>
-                  <span class="glyphicon form-control-feedback" id="company_name1"></span>
               </div>
 
 
@@ -113,25 +109,24 @@
                     Type
                   </label>
                   <div class="col-sm-9">
-                      <select name="type" id="type" class="form-control" required>
+                      <select name="type" id="type" class="form-control required">
                         <option value="">Select</option>
                         <option value="1">Business Broker</option>
                         <option value="2">Commercial Real Estate Broker</option>
-                        <option value="3">Both</option>
+                        <option value="3">Both - Business &amp; Real Estate Broker</option>
                       </select>
+                      <span class="glyphicon form-control-feedback" id="type1"></span>
                   </div>
-                  <span class="glyphicon form-control-feedback" id="type1"></span>
               </div>
 
 
               <div class="form-group has-feedback">
                   <label for="address1" class="control-label col-sm-3">Address </label>
                   <div class="col-sm-9">
-                      <input type="text" name="address1" class="form-control"
-                      id="address1" placeholder="Address"
-                      value="" required>
+                      <input type="text" name="address1" class="form-control required"
+                      id="address1" placeholder="Address">
+                      <span class="glyphicon form-control-feedback" id="address11"></span>
                   </div>
-                  <span class="glyphicon form-control-feedback" id="address11"></span>
               </div>
 
 
@@ -142,10 +137,9 @@
                   </label>
                   <div class="col-sm-9">
                       <input type="text" name="address2" class="form-control"
-                      id="address2" placeholder="Address2"
-                      value="">
+                      id="address2" placeholder="Address2">
+                      <span class="glyphicon form-control-feedback" id="address21"></span>
                   </div>
-                  <span class="glyphicon form-control-feedback" id="address21"></span>
               </div>
 
 
@@ -155,11 +149,10 @@
                       City
                   </label>
                   <div class="col-sm-9">
-                      <input type="text" name="city" class="form-control"
-                      id="city" placeholder="City"
-                      value="" required>
+                      <input type="text" name="city" class="form-control required"
+                      id="city" placeholder="City">
+                      <span class="glyphicon form-control-feedback" id="city1"></span>
                   </div>
-                  <span class="glyphicon form-control-feedback" id="city1"></span>
               </div>
 
 
@@ -169,14 +162,14 @@
                       State
                   </label>
                   <div class="col-sm-9">
-                      <select class="form-control" name="state" id="state" required>
+                      <select class="form-control required" name="state" id="state">
                           <option value="">Select state</option>
                           {% for state in states %}
                           <option value="{{ state.abbrev }}">{{ state.name }}</option>
                           {% endfor %}
                       </select>
+                      <span class="glyphicon form-control-feedback" id="state1"></span>
                   </div>
-                  <span class="glyphicon form-control-feedback" id="state1"></span>
               </div>
 
 
@@ -186,11 +179,10 @@
                       Zip
                   </label>
                   <div class="col-sm-9">
-                      <input type="text" name="zip" class="form-control"
-                      id="zip" placeholder="Zip"
-                      value="" required>
+                      <input type="text" name="zip" class="form-control required"
+                      id="zip" placeholder="Zip">
+                      <span class="glyphicon form-control-feedback" id="zip1"></span>
                   </div>
-                  <span class="glyphicon form-control-feedback" id="zip1"></span>
               </div>
 
 
@@ -200,11 +192,10 @@
                       Telephone
                   </label>
                   <div class="col-sm-9">
-                      <input type="text" name="telephone" class="form-control"
-                      id="telephone" placeholder="Telephone"
-                      value="" required>
+                      <input type="text" name="telephone" class="form-control required"
+                      id="telephone" placeholder="Telephone">
+                      <span class="glyphicon form-control-feedback" id="telephone1"></span>
                   </div>
-                  <span class="glyphicon form-control-feedback" id="telephone1"></span>
               </div>
 
 
@@ -215,10 +206,9 @@
                   </label>
                   <div class="col-sm-9">
                       <input type="text" class="form-control" name="fax"
-                      id="fax" placeholder="Fax"
-                      value="">
+                      id="fax" placeholder="Fax">
+                      <span class="glyphicon form-control-feedback" id="fax1"></span>
                   </div>
-                  <span class="glyphicon form-control-feedback" id="fax1"></span>
               </div>
 
 
@@ -228,12 +218,12 @@
                       Company Logo
                   </label>
                   <div class="col-sm-9">
-                  <input type="file" name="company_logo" id="company_logo" required>
+                      <input type="file" name="company_logo" id="company_logo" class="required">
                       <p class="help-block small">
                           *Must be gif, jpg, jpeg or png under 2MB
                       </p>
+                      <span class="glyphicon form-control-feedback" id="company_logo1"></span>
                   </div>
-                  <span class="glyphicon form-control-feedback" id="company_logo1"></span>
               </div>
 
 
@@ -243,12 +233,12 @@
                       Broker photo
                   </label>
                   <div class="col-sm-9">
-                  <input type="file" name="broker_photo" id="broker_photo" required>
+                      <input type="file" name="broker_photo" id="broker_photo" class="required">
                       <p class="help-block small">
                           *Must be gif, jpg, jpeg or png under 2MB
                       </p>
+                      <span class="glyphicon form-control-feedback" id="broker_photo1"></span>
                   </div>
-                  <span class="glyphicon form-control-feedback" id="broker_photo1"></span>
               </div>
 
 
@@ -258,7 +248,7 @@
                       Services offered
                   </label>
                   <div class="col-sm-9">
-                      <textarea name="services" class="form-control" id="services" placeholder="Services offered"></textarea>
+                      <textarea name="services" class="form-control required" id="services" placeholder="Services offered"></textarea>
                   </div>
                   <span class="glyphicon form-control-feedback" id="services1"></span>
               </div>
@@ -270,7 +260,7 @@
                       Company Biography
                   </label>
                   <div class="col-sm-9">
-                      <textarea name="company_bio" class="form-control" id="company_bio" placeholder="Company Biography"></textarea>
+                      <textarea name="company_bio" class="form-control required" id="company_bio" placeholder="Company Biography"></textarea>
                   </div>
                   <span class="glyphicon form-control-feedback" id="company_bio1"></span>
               </div>
@@ -286,16 +276,15 @@
                       </small>
                   </label>
                   <div class="col-sm-9">
-                      <input type="url" name="website" class="form-control"
-                      id="website" placeholder="http://www.YourDomain.com"
-                      value="" required>
-                  </div>
-                  <span class="glyphicon form-control-feedback" id="website1"></span>
+                      <input type="url" name="website" class="form-control required"
+                      id="website" placeholder="http://www.YourDomain.com">
+                      <span class="glyphicon form-control-feedback" id="website1"></span>
+                  </div>                  
               </div>
 
               <div class="col-sm-offset-3 col-sm-9">
-                  <button type="submit" class="btn btn-primary btn-lg btn-block"
-                  name="action" value="new_registered_user_data_submission">
+                  <button type="submit" id="submit-registration-form-btn"
+                      class="btn btn-primary btn-lg btn-block">
                       Submit
                   </button>
               </div>
@@ -316,6 +305,10 @@
 $(document).ready(function(){
 
   $("#new-business-broker-form").validate();
+
+  $("#new-business-broker-form").submit(function(){
+      $("#submit-registration-form-btn").text("Sending data. Please wait...");
+  });
 
 });
 
