@@ -564,8 +564,8 @@ class Mail
          * Send email
          */
         $mail->setFrom('noreply@americanbiztrader.com', 'AmericanBizTrader');
-        //$mail->addAddress($listing_inquiry['broker_email']);
-        //$mail->addCC($listing_inquiry['agent_email']);
+        $mail->addAddress($listing_inquiry['broker_email']);
+        $mail->addCC($listing_inquiry['agent_email']);
         //$mail->addAddress('jim.burns14@gmail.com');
         //$mail->addCC('dave.didion@americangymtrader.com');
         $mail->addBCC('jim.burns14@gmail.com');

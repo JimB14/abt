@@ -669,23 +669,67 @@ class Buy extends \Core\Controller
         // echo '</pre>';
         // exit();
 
+        // store lead data in array (field names match db.leads field names)
+        $lead_data = [
+          'listing_id'        => $id,
+          'broker_id'         => $broker_id,
+          'listing_agent_id'  => $agent_id,
+          'clients_id'        => $listing->clients_id,
+          'type'              => $listing->type,
+          'ad_title'          => $listing->ad_title,
+          'asking_price'      => $listing->asking_price,
+          'address'           => $listing->address,
+          'address2'          => $listing->address2,
+          'city'              => $listing->city,
+          'state'             => $listing->state,
+          'county'            => $listing->county,
+          'zip'               => $listing->zip,
+          'description'       => $listing->description,
+          'first_name'        => $results['first_name'],
+          'last_name'         => $results['last_name'],
+          'telephone'         => $results['telephone'],
+          'email'             => $results['email'],
+          'investment'        => $results['investment'],
+          'time_frame'        => $results['time_frame'],
+          'message'           => $results['message'],
+          'agent_first_name'  => $agent->first_name,
+          'agent_last_name'   => $agent->last_name,
+        ];
+
+        // test
+        // echo '<pre>';
+        // print_r($lead_data);
+        // echo '</pre>';
+        // exit();
+
         // send email to broker with user data
         $result = Mail::mailBrokerContactFormData($listing_inquiry);
 
         if($result)
         {
-            $contact_msg1 = "Your information was sent.";
-            $contact_msg2 = "You will be contacted as soon as possible.";
-            $contact_msg3 = "Thank you for using American Biz Trader!";
+            // store lead data in `leads` table
+            $result = Lead::setLeadData($lead_data);
 
-            View::renderTemplate('Success/index.html', [
-                'first_name'      => $results['first_name'],
-                'last_name'       => $results['last_name'],
-                'contact_msg1'    => $contact_msg1,
-                'contact_msg2'    => $contact_msg2,
-                'contact_msg3'    => $contact_msg3,
-                'contact_broker'  => 'true'
-            ]);
+            if($result)
+            {
+                $contact_msg1 = "Your information was sent.";
+                $contact_msg2 = "You will be contacted as soon as possible.";
+                $contact_msg3 = "Thank you for using American Biz Trader!";
+
+                View::renderTemplate('Success/index.html', [
+                    'first_name'      => $results['first_name'],
+                    'last_name'       => $results['last_name'],
+                    'contact_msg1'    => $contact_msg1,
+                    'contact_msg2'    => $contact_msg2,
+                    'contact_msg3'    => $contact_msg3,
+                    'contact_broker'  => 'true'
+                ]);
+            }
+            else
+            {
+                echo 'Error inserting lead data into database.';
+                exit();
+            }
         }
     }
 

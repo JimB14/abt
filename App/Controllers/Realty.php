@@ -290,6 +290,12 @@ class Realty extends \Core\Controller
             'message'         => $results['message']
         ];
 
+        // test
+        // echo '<pre>';
+        // print_r($listing_inquiry);
+        // echo '</pre>';
+        // exit();
+
         // store lead data in array (field names match db.leads field names)
         $lead_data = [
           'listing_id'        => $id,
@@ -319,7 +325,7 @@ class Realty extends \Core\Controller
 
         // test
         // echo '<pre>';
-        // print_r($listing_inquiry);
+        // print_r($lead_data);
         // echo '</pre>';
         // exit();
 

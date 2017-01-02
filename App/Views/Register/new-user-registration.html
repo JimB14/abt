@@ -11,7 +11,7 @@
     <div class="row">
 
         <div class="col-md-12">
-            <h1>Company registration</h1>
+            <h1>Create Your Company Profile</h1>
             <hr style="margin-bottom: 10px;">
         </div>
 
@@ -20,8 +20,8 @@
               Welcome {{ user.first_name }} {{ user.last_name}} to American Biz Trader
           </h3>
           <p>
-              After registration, you can upload a different logo image and/or
-              profile photo from inside the Admin Panel in &quot;Company profile.&quot;
+              After registration, you can edit this information any time from your
+              admin panel.
           </p>
 
 
@@ -116,6 +116,9 @@
                         <option value="3">Both - Business &amp; Real Estate Broker</option>
                       </select>
                       <span class="glyphicon form-control-feedback" id="type1"></span>
+                      <small>
+                        IMPORTANT! You can post listings only for the type selected
+                      </small>
                   </div>
               </div>
 
@@ -249,6 +252,9 @@
                   </label>
                   <div class="col-sm-9">
                       <textarea name="services" class="form-control required" id="services" placeholder="Services offered"></textarea>
+                      <script>
+                        CKEDITOR.replace( 'services' );
+                      </script>
                   </div>
                   <span class="glyphicon form-control-feedback" id="services1"></span>
               </div>
@@ -261,6 +267,9 @@
                   </label>
                   <div class="col-sm-9">
                       <textarea name="company_bio" class="form-control required" id="company_bio" placeholder="Company Biography"></textarea>
+                      <script>
+                        CKEDITOR.replace( 'company_bio' );
+                      </script>
                   </div>
                   <span class="glyphicon form-control-feedback" id="company_bio1"></span>
               </div>
@@ -279,7 +288,7 @@
                       <input type="url" name="website" class="form-control required"
                       id="website" placeholder="http://www.YourDomain.com">
                       <span class="glyphicon form-control-feedback" id="website1"></span>
-                  </div>                  
+                  </div>
               </div>
 
               <div class="col-sm-offset-3 col-sm-9">

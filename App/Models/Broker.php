@@ -566,7 +566,8 @@ class Broker extends \Core\Model
             $file_extension = end($kaboom);
 
             // Assign value to prefix
-            $prefix = $user_id.'-';
+            //$prefix = $user_id.'-';
+            $prefix = $user_id.'-'.time().'-';
 
 
             /* - - - - -  Error handling  - - - - - - */
@@ -673,7 +674,8 @@ class Broker extends \Core\Model
             $file_extension = end($kaboom);
 
             // Assign value to prefix
-            $prefix = $user_id.'-';
+            //$prefix = $user_id.'-';
+            $prefix = $user_id.'-'.time().'-';
 
 
             /* - - - - -  Error handling  - - - - - - */
