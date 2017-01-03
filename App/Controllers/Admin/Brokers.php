@@ -1307,7 +1307,8 @@ class Brokers extends \Core\Controller
 
             // redirect user back to this edit page
             echo '<script>';
-            echo 'window.location.href="/admin/brokers/edit-listing?id='.$id.'&amp;broker_id='.$broker_id.'"';
+            // echo 'window.location.href="/admin/brokers/edit-listing?id='.$id.'&broker_id='.$broker_id.'"';
+            echo 'window.location.href="/admin/brokers/show-listings?id='.$broker_id.'"';
             echo '</script>';
             exit();
         }
@@ -1486,7 +1487,7 @@ class Brokers extends \Core\Controller
             // redirect user to "Manage agents" page
             echo '<script>';
             //echo 'window.location.href="/admin/brokers/show-listings?id='.$broker_id.'"';
-            echo 'window.location.href="/admin/brokers/edit-listing?id='.$listing_id.'&amp;broker_id='.$broker_id.'"';
+            echo 'window.location.href="/admin/brokers/edit-listing?id='.$listing_id.'&broker_id='.$broker_id.'"';
             echo '</script>';
             exit();
         }
@@ -1501,7 +1502,7 @@ class Brokers extends \Core\Controller
 
             // redirect user back to this page to see failed delete
             echo '<script>';
-            echo 'window.location.href="/admin/brokers/edit-listing?id='.$listing_id.'&amp;broker_id='.$broker_id.'"';
+            echo 'window.location.href="/admin/brokers/edit-listing?id='.$listing_id.'&broker_id='.$broker_id.'"';
             echo '</script>';
             exit();
         }
@@ -1834,7 +1835,7 @@ class Brokers extends \Core\Controller
             // redirect user to "Manage agents" page
             echo '<script>';
             //echo 'window.location.href="/admin/brokers/show-listings?id='.$broker_id.'"';
-            echo 'window.location.href="/admin/brokers/edit-real-estate-listing?id='.$id.'&amp;broker_id='.$broker_id.'"';
+            echo 'window.location.href="/admin/brokers/edit-real-estate-listing?id='.$id.'&broker_id='.$broker_id.'"';
             echo '</script>';
             exit();
         }
@@ -1849,7 +1850,7 @@ class Brokers extends \Core\Controller
 
             // redirect user back to this page to see failed delete
             echo '<script>';
-            echo 'window.location.href="/admin/brokers/edit-real-estate-listing?id='.$id.'&amp;broker_id='.$broker_id.'"';
+            echo 'window.location.href="/admin/brokers/edit-real-estate-listing?id='.$id.'&broker_id='.$broker_id.'"';
             echo '</script>';
             exit();
         }
