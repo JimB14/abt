@@ -111,14 +111,38 @@
 
 
                 <div class="form-group">
+                    <label for="realty_listing_status" class="control-label col-sm-3">
+                      Listing status
+                    </label>
+                    <div class="col-sm-9">
+                        <select name="realty_listing_status" id="realty_listing_status" class="form-control">
+                            <option value="{{ listing.status }}">{{ listing.status|capitalize }}</option>
+                            <option value="active">Active</option>
+                            <option value="sold">Sold</option>
+                        </select>
+                        <small>
+                          IMPORTANT!  When or if this listing is sold, change status to "Sold" to populate
+                          "Sold Listings" tab, which displays on your Profile page and Company page. The "Sold"
+                          tab and its content will not display unless you have listings with a
+                          Listing status of "Sold." To change Listing status,
+                          click "Manage listings" under "Real Estate Listings", navigate to
+                          the listing you want to change, click the "Edit" button
+                          and find the Listing status field. Make change and click
+                          "Update Listing."
+                        </small>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
                     <label for="listing_status" class="control-label col-sm-3">Display status</label>
                     <div class="col-sm-9">
                         <select name="display" id="display" class="form-control">
-                            <option value="{{ listing.display }}"> {{ listing.display }}</option>
+                            <option value="{{ listing.display }}">{% if listing.display == 1 %}Show{% else %}Hide{% endif %}</option>
                             <option value="1">Show</option>
                             <option value="0">Hide</option>
                         </select>
-                        <small>1 = show, 0 = hide. To change status select Hide or Show & click "Update real estate listing" button below.</small>
+                        <!-- <small>1 = show, 0 = hide. To change status select Hide or Show & click "Update real estate listing" button below.</small> -->
                     </div>
                 </div>
 

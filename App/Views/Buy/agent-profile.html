@@ -403,6 +403,7 @@
             </div><!--  // .col-md-4  -->
         </div><!-- // .row -->
 
+
         <div class="row">
 
             <div class="col-md-12">
@@ -410,6 +411,7 @@
 
               <!-- Nav tabs -->
               <ul style="margin: 0px 15px 0px 15px;" class="nav nav-tabs" role="tablist">
+                {% if agent.type == 1 or agent.type == 3 %}
                   <li role="presentation" class="active">
                       <a href="#active_listings" aria-controls="active_listings" role="tab" data-toggle="tab">
                           Business Listings
@@ -420,6 +422,9 @@
                           {% endif %}
                       </a>
                   </li>
+                {% endif %}
+
+                {% if agent.type == 2 or agent.type == 3 %}
                   <li role="presentation">
                       <a href="#broker_realty_listings" aria-controls="broker_realty_listings" role="tab" data-toggle="tab">
                           Real Estate Listings
@@ -430,9 +435,12 @@
                           {% endif %}
                       </a>
                   </li>
+                {% endif %}
+
+                {% if agent_business_listings_sold|length > 0 %}
                   <li role="presentation">
                       <a href="#sold_listings" aria-controls="sold_listings" role="tab" data-toggle="tab">
-                          Sold Business Listings
+                            Sold Business Listings
                           {% if agent_business_listings_sold|length > 0 %}
                             <span class="badge" style="margin: -18px 0px 0px 7px;">
                                 {{ agent_business_listings_sold|length }}
@@ -440,6 +448,20 @@
                           {% endif %}
                       </a>
                   </li>
+                {% endif %}
+
+                {% if agent_realty_listings_sold|length > 0 %}
+                  <li role="presentation">
+                      <a href="#sold_realty_listings" aria-controls="sold_realty_listings" role="tab" data-toggle="tab">
+                            Sold Real Estate listings
+                          {% if agent_realty_listings_sold|length > 0 %}
+                            <span class="badge" style="margin: -18px 0px 0px 7px;">
+                                {{ agent_realty_listings_sold|length }}
+                            </span>
+                          {% endif %}
+                      </a>
+                  </li>
+                {% endif %}
               </ul>
 
               <!-- Tab panes -->
@@ -579,6 +601,9 @@
                         <p class="text-center">
                           Sorry, no results for your search criteria.
                         </p>
+                      </div>
+                      <div style="height: 400px;">
+                          <h1>Check back soon!</h1>
                       </div>
                   {% endif %}
 
@@ -722,22 +747,26 @@
 
                   </div><!-- // .listing-all-lisings  -->
                   {% endfor %}
-                  {% endif %}
+                {% endif %}
 
-                  {% if broker_realty_listings is empty %}
-                      <div class="alert alert-info">
-                        <p class="text-center">Sorry, no results for your search criteria.</p>
-                      </div>
-                  {% endif %}
+                {% if agent_realty_listings is empty %}
+                    <div class="alert alert-info">
+                      <p class="text-center">Sorry, no results for your search criteria.</p>
+                    </div>
+                    <div style="height: 400px;">
+                        <h1>Check back soon!</h1>
+                    </div>
+                {% endif %}
 
               </div><!--  // .tab-pane  -->
 
 
-              <!-- - - - - - - - - - Sold Listings  - - - - - - - - - - -->
+              <!-- - - - - - - - - - Sold Business Listings  - - - - - - - - - - -->
 
               <div role="tabpanel" class="tab-pane fade" id="sold_listings">
 
                   <div style="min-height: 300px;">
+                    {% if agent_business_listings_sold %}
                       <h4 class="text-center">
                           Business Listings recently
                           <span class="text-uppercase bold">
@@ -746,7 +775,7 @@
                            by {{ agent_full_name }}
                        </h4>
 
-                     {% if agent_business_listings_sold %}
+
                       <table class="table table-hover table-responsive table-condensed">
                           <thead>
                               <tr>
@@ -786,6 +815,68 @@
                       {% endif %}
                     </div>
                 </div><!--  // .tab-pane  -->
+
+
+                <!-- - - - - - - - - - Sold Realty Listings  - - - - - - - - - - -->
+
+                <div role="tabpanel" class="tab-pane fade" id="sold_realty_listings">
+
+                    <div style="min-height: 300px;">
+                      {% if agent_realty_listings_sold %}
+                        <h4 class="text-center">
+                            Real Estate Listings recently
+                            <span class="text-uppercase bold">
+                              sold
+                            </span>
+                             by {{ agent_full_name }}
+                         </h4>
+
+
+                        <table class="table table-hover table-responsive table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th>Type</th>
+                                    <th>Address</th>
+                                    <th>City</th>
+                                    <th>State</th>
+                                    <th>Asking price</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                              {% for item in agent_realty_listings_sold %}
+                                <tr>
+                                    <td>
+                                        <a href="/realty/view-listing-details?listing_id={{ item.id }}&amp;broker_id={{ item.broker_id}}&amp;listing_agent_id={{ item.listing_agent_id }}">
+                                        {% if item.ad_title %} {{ item.ad_title }} {% endif %}
+                                        </a>
+                                    </td>
+                                    <td>{% if item.status == 'sold' %} <span style="color:#ff0000;font-weight:bold;">*SOLD*</span>{% endif %}</td>
+                                    <td>{% if item.type %}{{ item.type|capitalize }}{% endif %} </td>
+                                    <td>{% if item.address %}{{ item.address }}{% endif %} </td>
+                                    <td>{% if item.city %}{{ item.city }}{% endif %} </td>
+                                    <td>{% if item.state %}{{ item.state }}{% endif %} </td>
+                                    <td>{% if item.asking_price %}${{ item.asking_price|number_format(0) }}{% endif %} </td>
+                                </tr>
+                              {% endfor %}
+
+                            </tbody>
+                        </table>
+                        {% endif %}
+
+                        {% if agent_realty_listings_sold is empty %}
+                            <div class="alert alert-info">
+                                <p class="text-center">Sorry, no results for your search criteria.</p>
+                            </div>
+                            <div style="height: 400px;">
+                                <h1>Check back soon!</h1>
+                            </div>
+                        {% endif %}
+                      </div>
+                  </div><!--  // .tab-pane  -->
 
             </div><!--  // .tab-content  -->
 

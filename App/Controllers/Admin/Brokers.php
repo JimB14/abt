@@ -1694,7 +1694,7 @@ class Brokers extends \Core\Controller
         $id = (isset($_REQUEST['id'])) ? filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING) : '';
         $broker_id = (isset($_REQUEST['broker_id'])) ? filter_var($_REQUEST['broker_id'], FILTER_SANITIZE_STRING) : '';
 
-        // get lisgin data
+        // get listing data
         $listing = Realtylisting::getRealEstateListing($id);
 
         // test

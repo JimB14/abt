@@ -171,6 +171,55 @@ class Realtylisting extends \Core\Model
 
 
     /**
+     *  gets realty listings where status = 'sold' by agent for specific broker
+     *
+     * @param  Int $broker_id   The broker's ID
+     * @param  Int $agent_id    The agent's ID
+     * @param  Int $limit       Count of records returned
+     *
+     * @return Object          The results / listings
+     */
+    public static function getListingsSold($broker_id, $agent_id, $limit=null)
+    {
+        if($limit != null)
+        {
+           $limit = 'LIMIT ' . $limit;
+        }
+
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            // get only fields used @Buy/index.html
+            $sql = "SELECT * FROM realty_listings
+                    WHERE broker_id = :broker_id
+                    AND listing_agent_id = :listing_agent_id
+                    AND status = 'sold'
+                    ORDER BY updated_at DESC
+                    $limit";
+
+            $stmt = $db->prepare($sql);
+            $parameters = [
+                ':broker_id'        => $broker_id,
+                ':listing_agent_id' => $agent_id
+            ];
+            $stmt->execute($parameters);
+            $listings = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+            // return to Buy Controller
+            return $listings;
+        }
+        catch (PDOException $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
+
+    }
+
+
+    /**
      * retrieves listings with matched keywords
      *
      * @return array The matched listings
@@ -440,6 +489,7 @@ class Realtylisting extends \Core\Model
 
             $sql = "SELECT * FROM realty_listings
                     WHERE realty_listings.display = '1'
+                    AND realty_listings.status = 'active'
                     AND listing_agent_id = :listing_agent_id
                     ORDER BY realty_listings.created_at DESC
                     $limit";
@@ -1695,6 +1745,7 @@ class Realtylisting extends \Core\Model
         // Retrieve post data, sanitize and store in local variables
         $listing_agent_id = ( isset($_POST['listing_agent_id']) ) ? filter_var($_POST['listing_agent_id'], FILTER_SANITIZE_STRING) : '';
         $type = ( isset($_POST['type']) ) ? filter_var($_POST['type'], FILTER_SANITIZE_STRING) : '';
+        $status = ( isset($_POST['realty_listing_status']) ) ? filter_var($_POST['realty_listing_status'], FILTER_SANITIZE_STRING) : '';
         $display = ( isset($_POST['display']) ) ? filter_var($_POST['display'], FILTER_SANITIZE_STRING) : '';
         $subtype = ( isset($_POST['subtype']) ) ? filter_var($_POST['subtype'], FILTER_SANITIZE_STRING) : '';
         $clients_id = ( isset($_POST['clients_id']) ) ? filter_var($_POST['clients_id'], FILTER_SANITIZE_STRING) : '';
@@ -1736,6 +1787,7 @@ class Realtylisting extends \Core\Model
             $sql = "UPDATE realty_listings SET
                     listing_agent_id  = :listing_agent_id,
                     type              = :type,
+                    status            = :status,
                     display           = :display,
                     subtype           = :subtype,
                     clients_id        = :clients_id,
@@ -1758,6 +1810,7 @@ class Realtylisting extends \Core\Model
                 ':id'               => $id,
                 ':listing_agent_id' => $listing_agent_id,
                 ':type'             => $type,
+                ':status'           => $status,
                 ':display'          => $display,
                 ':subtype'          => $subtype,
                 ':clients_id'       => $clients_id,

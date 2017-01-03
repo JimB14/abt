@@ -21,7 +21,7 @@ class Search extends \Core\Controller
         $county = ( isset($_REQUEST['county']) ) ? filter_var($_REQUEST['county'], FILTER_SANITIZE_STRING) : '';
 
         // get experts
-        $experts = BrokerAgent::findExperts($expert_category, $state, $county, $orderby='broker_agents.state, broker_agents.last_name');
+        $agents = BrokerAgent::findExperts($expert_category, $state, $county, $orderby='broker_agents.state, broker_agents.last_name');
 
         // get states & pass to view for drop-down
         $states = State::getStates();
@@ -42,7 +42,7 @@ class Search extends \Core\Controller
             $pagetitle = 'Business Brokers';
             $expert_type = 'Business Broker';
         }
-          if($expert_category == 2)
+        if($expert_category == 2)
         {
             $pagetitle = "Commercial Real Estate Brokers";
             $expert_type = 'Commercial Real Estate Broker';
@@ -54,7 +54,7 @@ class Search extends \Core\Controller
         }
 
         View::renderTemplate('Experts/index.html', [
-            'experts'         => $experts,
+            'agents'          => $agents,
             'states'          => $states,
             'pagetitle'       => $pagetitle,
             'statesearched'   => $state,

@@ -510,13 +510,13 @@ class Buy extends \Core\Controller
       // exit();
 
       // get agent's real estate listings
-      $agent_realty_listings = Realtylisting::getAgentListings($agent_id, $limit=6);
+      $agent_realty_listings = Realtylisting::getAgentListings($agent_id, $limit=10);
 
       // get all broker listings from Listing model
-      $broker_listings = Listing::getListings($broker_id, $limit=8);
+      $broker_listings = Listing::getListings($broker_id, $limit=10);
 
       // get broker real estate listings
-      $broker_realty_listings = Realtylisting::getListings($broker_id, $id=null, $limit=8);
+      $broker_realty_listings = Realtylisting::getListings($broker_id, $id=null, $limit=10);
 
       // get listing broker data from Broker model
       $broker = Broker::getBrokerDetails($broker_id);
@@ -533,6 +533,9 @@ class Buy extends \Core\Controller
       // get agent businesses sold listings
       $agent_business_listings_sold = Listing::getListingsSold($broker_id, $agent_id, $limit=null);
 
+      // get agent realty listings sold
+      $agent_realty_listings_sold = Realtylisting::getListingsSold($broker_id, $agent_id, $limit=null);
+
       // store agent full name in variable
       $agent_full_name = $agent->first_name . ' ' . $agent->last_name;
 
@@ -547,7 +550,8 @@ class Buy extends \Core\Controller
           'agent_realty_listings'         => $agent_realty_listings,
           'broker_realty_listings'        => $broker_realty_listings,
           'agent_full_name'               => $agent_full_name,
-          'agent_business_listings_sold'  => $agent_business_listings_sold
+          'agent_business_listings_sold'  => $agent_business_listings_sold,
+          'agent_realty_listings_sold'    => $agent_realty_listings_sold
       ]);
 
     }

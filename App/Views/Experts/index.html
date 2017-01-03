@@ -39,7 +39,7 @@
 
       <div class="col-md-12">
         <div id="wrap-choose-expert">
-          
+
             <form method="get" action="/search/find-expert" name="find_expert_form" id="find_expert_form">
                 <div class="col-md-4">
                     <h3>Expert</h3>
@@ -119,11 +119,11 @@
                             {{ agent.agent_first_name}} {{ (agent.agent_last_name|striptags)|raw }}
                         </h2>
                         <h4>
-                          {% if agent.type == 1 %}
+                          {% if agent.broker_agent_type == 1 %}
                             Business Broker
-                          {% elseif agent.type == 2 %}
+                          {% elseif agent.broker_agent_type == 2 %}
                             Commercial Real Estate Broker
-                          {% elseif agent.type == 3 %}
+                          {% elseif agent.broker_agent_type == 3 %}
                             Business &amp; Commercial Real Estate Broker
                           {% endif %}
                         </h4>

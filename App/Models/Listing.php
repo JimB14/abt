@@ -611,6 +611,7 @@ class Listing extends \Core\Model
                     ON broker_agents.id = listing.listing_agent_id
                     WHERE listing.broker_id = :broker_id
                     AND listing.listing_agent_id = :listing_agent_id
+                    AND listing.listing_status = 'active'
                     ORDER BY create_date DESC
                     $limit";
 
@@ -660,7 +661,7 @@ class Listing extends \Core\Model
             // get only fields used @Buy/index.html
             $sql = "SELECT listing.listing_id, listing.listing_agent_id, listing.ad_title, listing.clients_id,
                     listing.biz_description, listing.city, listing.hide_city, listing.state,
-                    listing.county, listing.hide_county,
+                    listing.county, listing.hide_county, listing.listing_status,
                     listing_images.img01,
                     listing_financial.asking_price, listing_financial.cash_flow,
                     listing_financial.seller_financing_available,

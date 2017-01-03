@@ -61,7 +61,9 @@
             <h3 class="subheading">Business information</h3>
 
             <div class="form-group">
-                <label for="category" class="control-label col-sm-3">Category (ID)</label>
+                <label for="category" class="control-label col-sm-3">
+                  Category (ID)
+                </label>
                 <div class="col-sm-9">
                     <select class="form-control p1" name="category" id="edit-listing-business-category">
                         <option value="{{ listing.category_id }}">{{ listing.category_id }}</option>
@@ -75,7 +77,9 @@
 
 
            <div class="form-group">
-                <label for="subcategory-list" class="control-label col-sm-3">Subcategory (ID)</label>
+                <label for="subcategory-list" class="control-label col-sm-3">
+                  Subcategory (ID)
+                </label>
                 <div class="col-sm-9">
                     <select class="form-control" name="subcategory" id="edit-listing-subcategory-list" >
                         <option value="{{ listing.subcategory_id }}">{{ listing.subcategory_id }}</option>
@@ -188,33 +192,50 @@
 
 
             <div class="form-group">
-                <label for="listing_status" class="control-label col-sm-3">Listing status</label>
+                <label for="listing_status" class="control-label col-sm-3">
+                  Listing status
+                </label>
                 <div class="col-sm-9">
                     <select name="listing_status" id="listing_status" class="form-control">
+                        <option value="{{ listing.listing_status }}">{{ listing.listing_status|capitalize }}</option>
                         <option value="active">Active</option>
                         <option value="sold">Sold</option>
                     </select>
+                    <small>
+                      IMPORTANT!  When or if this listing is sold, change status to "Sold" to populate
+                      "Sold Listings" tab, which displays on your Profile page and Company page. The "Sold"
+                      tab and its content will not display unless you have listings with a
+                      Listing status of "Sold." To change Listing status,
+                      click "Manage listings" under "Business Listings", navigate to
+                      the listing you want to change, click the "Edit" button
+                      and find the Listing status field. Make change and click
+                      "Update Listing."
+                    </small>
                 </div>
             </div>
 
 
 
             <div class="form-group">
-                <label for="listing_status" class="control-label col-sm-3">Display status</label>
+                <label for="listing_status" class="control-label col-sm-3">
+                  Display status
+                </label>
                 <div class="col-sm-9">
                     <select name="display" id="display" class="form-control">
-                        <option value="{{ listing.display }}"> {{ listing.display }}</option>
+                        <option value="{{ listing.display }}">{% if listing.display == 1 %}Show{% else %}Hide{% endif %}</option>
                         <option value="1">Show</option>
                         <option value="0">Hide</option>
                     </select>
-                    <small>1 = show, 0 = hide. To change status select Hide or Show & click "Update listing" button below.</small>
+                    <!-- <small>1 = show, 0 = hide. To change status select Hide or Show & click "Update listing" button below.</small> -->
                 </div>
             </div>
 
 
 
             <div class="form-group">
-                <label for="year_established" class="control-label col-sm-3"> Year established </label>
+                <label for="year_established" class="control-label col-sm-3">
+                  Year established
+                </label>
                 <div class="col-sm-9">
                     <input type="text" name="year_established" class="form-control"
                     id="year_established" placeholder="Year established"
@@ -225,7 +246,9 @@
 
 
             <div class="form-group">
-                <label for="number_of_employees" class="control-label col-sm-3">Number of employees </label>
+                <label for="number_of_employees" class="control-label col-sm-3"
+                >Number of employees
+              </label>
                 <div class="col-sm-9">
                     <input type="text" name="number_of_employees" class="form-control"
                     id="number_of_employees" placeholder="Number of employees"
@@ -236,7 +259,9 @@
 
 
             <div class="form-group">
-                <label for="country" class="control-label col-sm-3">Country</label>
+                <label for="country" class="control-label col-sm-3">
+                  Country
+                </label>
                 <div class="col-sm-9">
                     <select name="country" id="country" class="form-control">
                         <option value="{{ listing.country }}"> {{ listing.country }}</option>
@@ -249,7 +274,9 @@
 
 
             <div class="form-group">
-                <label for="county" class="control-label col-sm-3">County </label>
+                <label for="county" class="control-label col-sm-3">
+                  County
+                </label>
                 <div class="col-sm-9">
                     <input type="text" name="county" class="form-control"
                     id="county" placeholder="County"
@@ -281,7 +308,9 @@
 
 
             <div class="form-group">
-                <label for="city" class="control-label col-sm-3">City </label>
+                <label for="city" class="control-label col-sm-3">
+                  City
+                </label>
                 <div class="col-sm-9">
                     <input type="text" name="city" class="form-control"
                     id="city" placeholder="City"
@@ -313,7 +342,9 @@
 
 
             <div class="form-group">
-                <label for="state" class="control-label col-sm-3"> State </label>
+                <label for="state" class="control-label col-sm-3">
+                  State
+                </label>
                 <div class="col-sm-9">
                     <select class="form-control" name="state" id="state">
                         <option value="{{ listing.state }}"> {{ listing.state }}</option>
@@ -330,7 +361,9 @@
 
 
             <div class="form-group">
-                <label for="zip" class="control-label col-sm-3">Zip </label>
+                <label for="zip" class="control-label col-sm-3">
+                  Zip
+                </label>
                 <div class="col-sm-9">
                     <input type="text" name="zip" class="form-control"
                     id="zip" placeholder="Zip" value="{{ listing.zip }}" >

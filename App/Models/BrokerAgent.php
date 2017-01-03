@@ -25,7 +25,7 @@ class BrokerAgent extends \Core\Model
             ];
             $stmt->execute($parameters);
             $agent = $stmt->fetch(PDO::FETCH_OBJ);
-            
+
             return $agent;
         }
         catch(PDOException $e)
@@ -180,7 +180,7 @@ class BrokerAgent extends \Core\Model
                     brokers.company_logo, brokers.company_bio, brokers.services,
                     brokers.website,
                     broker_agents.id as agent_id, broker_agents.status,
-                    broker_agents.type,
+                    broker_agents.type as broker_agent_type,
                     broker_agents.first_name as agent_first_name,
                     broker_agents.last_name as agent_last_name,
                     broker_agents.agent_email,
@@ -1498,10 +1498,10 @@ class BrokerAgent extends \Core\Model
               $stmt = $db->prepare($sql);
               $stmt->execute();
 
-              $experts = $stmt->fetchAll(PDO::FETCH_OBJ);
+              $agents = $stmt->fetchAll(PDO::FETCH_OBJ);
 
               // return object to Search Controller
-              return $experts;
+              return $agents;
         }
         catch(PDOException $e)
         {

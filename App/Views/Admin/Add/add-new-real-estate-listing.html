@@ -81,6 +81,28 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label for="realty_listing_status" class="control-label col-sm-3">
+                      Listing status
+                    </label>
+                    <div class="col-sm-9">
+                        <select name="realty_listing_status" id="realty_listing_status" class="form-control">
+                            <option value="active">Active</option>
+                            <!-- <option value="sold">Sold</option> -->
+                        </select>
+                        <small>
+                          IMPORTANT!  When this listing is sold, change status to "Sold" to populate
+                          "Sold Listings" tab, which displays on your Profile page and Company page. The "Sold"
+                          tab and its content will not display unless you have listings with a
+                          Listing status of "Sold." To change Listing status,
+                          click "Manage listings" under "Real Estate Listings", navigate to
+                          the listing you want to change, click the "Edit" button
+                          and find the Listing status field. Make change and click
+                          "Update Listing."
+                        </small>
+                    </div>
+                </div>
+
 
 
 
@@ -462,8 +484,9 @@
                         class="btn btn-primary btn-lg">
                         Add real estate listing
                       </button>
+                      <br><br>
                       <small>
-                          After submission, please test that you receive an email from
+                          *After submission, please test that you receive an email from
                           the contact form for this listing by filling it out and submitting
                           it. Make sure you "whitelist" noreply@americanbiztrader.com.
                           If you do not receive an email, verify that the correct emails
