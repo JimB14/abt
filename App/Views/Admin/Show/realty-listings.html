@@ -112,7 +112,7 @@
                               </a>
                           </td>
                           <td align="center">
-                              <a id="preview-listing" href="/realty/view-listing-details?listing_id={{ listing.id }}&amp;broker_id={{ session.broker_id}}&amp;listing_agent_id={{ listing.listing_agent_id}}">
+                              <a id="preview-listing" href="/realty/view-listing-details?listing_id={% if listing.realty_id %}{{ listing.realty_id }}{% else %}{{ listing.id }}{% endif %}&amp;broker_id={{ session.broker_id}}&amp;listing_agent_id={% if listing.realty_listing_agent_id %}{{ listing.realty_listing_agent_id }}{% else %}{{ listing.listing_agent_id}}{% endif %}">
                                   {% if listing.ad_title %} {{ (listing.ad_title|striptags|slice(0,20))|raw }} {% else %} Preview {% endif %}
                               </a>
                           </td>

@@ -78,14 +78,14 @@
                           <th>Message</th>
                           <th>Agent</th>
                           <th>Ad title</th>
-                          <th>Type</th>
+                          <!-- <th>Type</th> -->
                           <th>Price</th>
-                          <th>Address</th>
+                          <!-- <th>Address</th>
                           <th>Address2</th>
                           <th>City</th>
                           <th>St</th>
                           <th>County</th>
-                          <th>Zip</th>
+                          <th>Zip</th> -->
                           <th>Descr</th>
                       </tr>
                   </thead>
@@ -110,14 +110,14 @@
                           <td>{{ (item.message|striptags|slice(0,30))|raw  }}</td>
                           <td>{{ item.agent_last_name }}</td>
                           <td>{{ item.ad_title }}</td>
-                          <td>{{ item.type }}</td>
+                          <!-- <td>{# item.type #}</td> -->
                           <td>{{ item.asking_price }}</td>
-                          <td>{{ item.address }}</td>
-                          <td>{{ item.address2 }}</td>
-                          <td>{{ item.city }}</td>
-                          <td>{{ item.state }}</td>
-                          <td>{{ item.county }}</td>
-                          <td>{{ item.zip }}</td>
+                          <!-- <td>{# item.address #}</td>
+                          <td>{# item.address2 #}</td>
+                          <td>{# item.city #}</td>
+                          <td>{# item.state #}</td>
+                          <td>{# item.county #}</td>
+                          <td>{# item.zip #}</td> -->
                           <td>{{ (item.description|slice(0,30))|raw }}</td>
                       {% endfor %}
                   </tbody>

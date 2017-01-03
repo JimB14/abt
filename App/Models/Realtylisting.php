@@ -369,7 +369,19 @@ class Realtylisting extends \Core\Model
             // establish db connection
             $db = static::getDB();
 
-            $sql = "SELECT * FROM realty_listings
+            $sql = "SELECT realty_listings.id as realty_id, realty_listings.display as realty_display,
+                    realty_listings.broker_id as realty_broker_id, realty_listings.listing_agent_id as realty_listing_agent_id,
+                    realty_listings.type, realty_listings.subtype, realty_listings.status as realty_status,
+                    realty_listings.clients_id as realty_client_id, realty_listings.ad_title as realty_ad_title,
+                    realty_listings.asking_price as realty_asking_price, realty_listings.date_available,
+                    realty_listings.square_feet, realty_listings.acres, realty_listings.address as realty_address,
+                    realty_listings.address2 as realty_address2, realty_listings.city as realty_city,
+                    realty_listings.state as realty_state, realty_listings.county as realty_county,
+                    realty_listings.zip as realty_zip, realty_listings.description as realty_description,
+                    realty_listings.keywords as realty_keywords, realty_listings.brochure,
+                    realty_listings.img01 as realty_img01,realty_listings.img02 as realty_img02,realty_listings.img03 as realty_img03,
+                    realty_listings.img04 as realty_img04,realty_listings.img05 as realty_img05,realty_listings.img06 as realty_img06
+                    FROM realty_listings
                     LEFT JOIN broker_agents
                     ON broker_agents.id = realty_listings.listing_agent_id
                     LEFT JOIN brokers

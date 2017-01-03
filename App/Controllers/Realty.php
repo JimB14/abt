@@ -302,7 +302,7 @@ class Realty extends \Core\Controller
           'broker_id'         => $broker_id,
           'listing_agent_id'  => $agent_id,
           'clients_id'        => $listing->clients_id,
-          'type'              => $listing->type,
+          // 'type'              => $listing->type,
           'ad_title'          => $listing->ad_title,
           'asking_price'      => $listing->asking_price,
           'address'           => $listing->address,

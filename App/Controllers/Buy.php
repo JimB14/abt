@@ -14,6 +14,7 @@ use \App\Models\Contact;
 use \App\Models\Realtylisting;
 use \App\Mail;
 use \App\Config;
+use \App\Models\Lead;
 
 use \Core\Model\PDO;
 
@@ -671,20 +672,14 @@ class Buy extends \Core\Controller
 
         // store lead data in array (field names match db.leads field names)
         $lead_data = [
-          'listing_id'        => $id,
+          'listing_id'        => $listing_id,
           'broker_id'         => $broker_id,
           'listing_agent_id'  => $agent_id,
           'clients_id'        => $listing->clients_id,
-          'type'              => $listing->type,
+          // 'type'              => $listing->type,
           'ad_title'          => $listing->ad_title,
           'asking_price'      => $listing->asking_price,
-          'address'           => $listing->address,
-          'address2'          => $listing->address2,
-          'city'              => $listing->city,
-          'state'             => $listing->state,
-          'county'            => $listing->county,
-          'zip'               => $listing->zip,
-          'description'       => $listing->description,
+          'description'       => $listing->biz_description,
           'first_name'        => $results['first_name'],
           'last_name'         => $results['last_name'],
           'telephone'         => $results['telephone'],
