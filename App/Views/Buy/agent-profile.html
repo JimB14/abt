@@ -407,10 +407,13 @@
         <div class="row">
 
             <div class="col-md-12">
-              <h2 style="margin:10px 0 12px 0;" class="text-center">All Listings from {{ agent_full_name }}</h2>
+            {% if agent_listings or agent_realty_listings %}
+              <h2 style="margin:10px 0 12px 0;" class="text-center">Listings presented by {{ agent_full_name }}</h2>
+            {% endif %}  
 
               <!-- Nav tabs -->
               <ul style="margin: 0px 15px 0px 15px;" class="nav nav-tabs" role="tablist">
+              {% if agent_listings|length > 0 %}
                 {% if agent.type == 1 or agent.type == 3 %}
                   <li role="presentation" class="active">
                       <a href="#active_listings" aria-controls="active_listings" role="tab" data-toggle="tab">
@@ -423,7 +426,9 @@
                       </a>
                   </li>
                 {% endif %}
+              {% endif %}
 
+              {% if agent_realty_listings|length > 0 %}
                 {% if agent.type == 2 or agent.type == 3 %}
                   <li role="presentation">
                       <a href="#broker_realty_listings" aria-controls="broker_realty_listings" role="tab" data-toggle="tab">
@@ -436,6 +441,7 @@
                       </a>
                   </li>
                 {% endif %}
+              {% endif %}
 
                 {% if agent_business_listings_sold|length > 0 %}
                   <li role="presentation">
@@ -597,14 +603,14 @@
                   {% endif %}
 
                   {% if agent_listings is empty %}
-                      <div class="alert alert-info">
+                      <!-- <div class="alert alert-info">
                         <p class="text-center">
                           Sorry, no results for your search criteria.
                         </p>
                       </div>
                       <div style="height: 400px;">
                           <h1>Check back soon!</h1>
-                      </div>
+                      </div> -->
                   {% endif %}
 
               </div><!--  // .tab-pane  -->

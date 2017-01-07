@@ -219,7 +219,8 @@ class Register extends \Core\Controller
 
         if($result)
         {
-          $message = "Information successfully uploaded! You can now log in.";
+          $message = "Information successfully uploaded! You can now log in.
+           To post listings, click 'Admin' and then 'Admin Panel' in the Menu.";
 
           // display success message
           echo '<script>';

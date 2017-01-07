@@ -49,9 +49,13 @@
       <!-- - - - - - - - - - - -  Sidebar  - - - - - - - - - - -->
       <div id="sidebar-wrapper">
 
-          <p style="font-size:20px; margin:10px 0px 15px 12px;"><a style="color:#fff;" href="/">American Biz Trader</a></p>
+          <p style="font-size:20px; margin:10px 0px 15px 12px;">
+            <a style="color:#fff;" href="/">
+              American Biz Trader
+            </a>
+          </p>
 
-          <ul class="sidebar-nav" style="margin-top: {% if broker_type == 3 %} 214px; {% else %} 157px; {% endif %}">
+          <ul class="sidebar-nav" style="margin-bottom: 20px; margin-top: {% if broker_type == 3 %} 221px;{% endif %}">
               <li style="font-size: 130%; color: #fff;">Company</li>
 
               <li>
@@ -214,12 +218,12 @@
         </div>
     </div><!--  // .row  -->
 </div><!-- // #navbar-subheader-bar  -->
-  {% block content %}
+{% block content %}
 
 
 
 
-  {% endblock %}
+{% endblock %}
 <!--  footer -->
 <!-- <div class="footer text-center" style="background-color: #fff; margin-top: 60px; padding:10px;color:#fff;">
 
