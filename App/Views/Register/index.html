@@ -19,7 +19,8 @@
           <h3 class="bold">Welcome to American Biz Trader</h3>
           <h5 style="padding-bottom: 15px; color: #838383;">
               Please provide the following information to create
-              your account.
+              your account. You must complete this form and submit it
+              successfully to be able to post listings.
           </h5>
           {% if session.registererror %}
             {% include 'Error/errormessage.html' %}
@@ -260,7 +261,7 @@ $(document).ready(function(){
         });
     });
 
-    // change button text on submit 
+    // change button text on submit
     $("#registrationform").submit(function(){
         $("#registerBtn").text("Sending data. Please wait...");
     });

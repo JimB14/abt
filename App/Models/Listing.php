@@ -142,7 +142,7 @@ class Listing extends \Core\Model
         // echo "Subcategory ID: " . $subcategory . '<br>';
         // echo "State: " . $state . '<br>';
         // echo "Counties: " . $county . '<br><br>';
-        //exit();
+        // exit();
 
         /*  If user makes no particular selection that filter must be removed
          *  from query; but if used, included in query

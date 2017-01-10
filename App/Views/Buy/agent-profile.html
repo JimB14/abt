@@ -100,7 +100,7 @@
                     <div class="box-for-text">
                         {% if agent.state_serv01 != '' and agent.counties_serv01 %} <p>    {{ agent.state_serv01 }} : {{ agent.counties_serv01 }}</p> {% endif %}
                         {% if agent.state_serv02 != '' and agent.counties_serv02 %} <hr><p>{{ agent.state_serv02 }} : {{ agent.counties_serv02 }}</p> {% endif %}
-                        {% if agent.state_serv03 != '' and agent.countie_servs03 %} <hr><p>{{ agent.state_serv03 }} : {{ agent.counties_serv03 }}</p> {% endif %}
+                        {% if agent.state_serv03 != '' and agent.counties_serv03 %} <hr><p>{{ agent.state_serv03 }} : {{ agent.counties_serv03 }}</p> {% endif %}
                         {% if agent.state_serv04 != '' and agent.counties_serv04 %} <hr><p>{{ agent.state_serv04 }} : {{ agent.counties_serv04 }}</p> {% endif %}
                         {% if agent.state_serv05 != '' and agent.counties_serv05 %} <hr><p>{{ agent.state_serv05 }} : {{ agent.counties_serv05 }}</p> {% endif %}
                     </div>
@@ -409,7 +409,7 @@
             <div class="col-md-12">
             {% if agent_listings or agent_realty_listings %}
               <h2 style="margin:10px 0 12px 0;" class="text-center">Listings presented by {{ agent_full_name }}</h2>
-            {% endif %}  
+            {% endif %}
 
               <!-- Nav tabs -->
               <ul style="margin: 0px 15px 0px 15px;" class="nav nav-tabs" role="tablist">

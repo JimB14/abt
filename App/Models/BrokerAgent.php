@@ -469,6 +469,12 @@ class BrokerAgent extends \Core\Model
         {
             // Implode $counties_served array into comma separated string
             $counties_serv01 = implode(', ', $counties_serv01);
+
+            // if value = 'All counties' store as null
+            // if($counties_serv01 == 'All counties')
+            // {
+            //     $counties_serv01 = '';
+            // }
         }
         else
         {
@@ -1422,10 +1428,11 @@ class BrokerAgent extends \Core\Model
         else
         {
           // state selected -- search 1st state field for match
-           $state = "AND state_serv01 = " . "'$state'";
+          //  $state = "AND state_serv01 = " . "'$state'";
+           $state = "AND". "'$state'" . "IN (state_serv01, state_serv02, state_serv03, state_serv04, state_serv05)";
         }
-        // no county selecte (default = 'all counties' -- no filter)
-        if($county == 'all')
+        // no county selected (default = 'all counties' -- no filter)
+        if($county == 'all' || $county == 'All counties')
         {
           $county = '';
         }

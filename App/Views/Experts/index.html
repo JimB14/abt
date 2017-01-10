@@ -40,7 +40,7 @@
       <div class="col-md-12">
         <div id="wrap-choose-expert">
 
-            <form method="get" action="/search/find-expert" name="find_expert_form" id="find_expert_form">
+            <form method="get" action="/experts/find-expert" name="find_expert_form" id="find_expert_form">
                 <div class="col-md-4">
                     <h3>Expert</h3>
                     <select class="form-control p1" name="expert_category" id="expert_category" autofocus>
@@ -250,7 +250,7 @@
 $(document).ready(function(){
 
     // To populate county drop-down
-    $("#expert-state").change(function(){
+/*    $("#expert-state").change(function(){
         var state = $(this).val();
         console.log("state = " + state);
 
@@ -277,6 +277,7 @@ $(document).ready(function(){
                 alert("Error occurred during Ajax request.");
             }
         });
+    */
 
     });
 

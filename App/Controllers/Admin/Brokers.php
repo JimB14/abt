@@ -244,7 +244,7 @@ class Brokers extends \Core\Controller
 
 
 
-    public function addNewAgent()
+    public function addNewAgentAction()
     {
       // retrieve GET variable
       $broker_id = (isset($_REQUEST['id'])) ? filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING) : '';
