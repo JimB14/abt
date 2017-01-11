@@ -780,4 +780,74 @@ class User extends \Core\Model
     }
 
 
+    /**
+     * updates user's table after paying for new agents
+     *
+     * @param  Integer   $user_id      The user's ID
+     * @param  Integer   $new_amount   New monthly billing amount
+     * @param  Integer   $agents_added Number of agents added
+     * @return boolean
+     */
+    public static function updateUserAfterAddingAgents($user_id, $agents_added, $new_amount)
+    {
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            $sql = "UPDATE users SET
+                    max_agents = :max_agents,
+                    sub_amt    = :sub_amt
+                    WHERE id = :id";
+            $stmt = $db->prepare($sql);
+            $parameters = [
+                ':max_agents' => $agents_added,
+                ':sub_amt'    => $new_amount,
+                ':id'         => $user_id
+            ];
+            $result = $stmt->execute($parameters);
+
+            // return to Controller
+            return $result;
+        }
+        catch (PDOException $e)
+        {
+            echo $e-getMessage();
+            exit();
+        }
+    }
+
+
+    /**
+     * updates max_agents field after new agent posted
+     *
+     * @param  Integer  $user_id   The user's ID
+     * @return boolean
+     */
+    public static function updateMaxagents($user_id)
+    {
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            $sql = "UPDATE users SET
+                    max_agents = max_agents - 1
+                    WHERE id = :id";
+            $stmt = $db->prepare($sql);
+            $parameters = [
+                ':id' => $user_id
+            ];
+            $result = $stmt->execute($parameters);
+
+            return $result;
+        }
+        catch (PDOException $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
+    }
+
+
 }

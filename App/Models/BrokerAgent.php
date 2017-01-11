@@ -305,7 +305,7 @@ class BrokerAgent extends \Core\Model
 
 
 
-    public static function getCountOfAllBrokerAgents()
+    public static function getCountOfAllBrokerAgents($broker_id)
     {
         try
         {

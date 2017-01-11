@@ -111,12 +111,12 @@
 
                     <div class="form-group">
                         <label for="next_payment_amount" class="control-label col-sm-3">
-                          Amount
+                          Recurring bill amount
                         </label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" name="next_payment_amount"
                               id="next_payment_amount" placeholder="Next payment amount"
-                              value="{{ amount }}" >
+                              value="{{ user.sub_amt }}" >
                         </div>
                     </div>
 
@@ -128,6 +128,17 @@
                             <input type="text" class="form-control" name="agents"
                               id="agents" placeholder="Number of agents"
                               value="{{ agent_count }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="agent-limit" class="control-label col-sm-3">
+                          Agent limit
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="agent-limit"
+                              id="agent-limit" placeholder="Max number of agents"
+                              value="{{ user.max_agents }}">
                         </div>
                     </div>
 

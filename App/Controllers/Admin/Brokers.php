@@ -12,6 +12,7 @@ use \App\Models\State;
 use \App\Models\Realtylisting;
 use \App\Models\Paypal;
 use \App\Models\Lead;
+use \App\Models\Paypallog;
 
 /**
  * Admin controller
@@ -112,7 +113,7 @@ class Brokers extends \Core\Controller
         $agent_count = BrokerAgent::getCountOfAgents($broker_id);
 
         // get paypal_log data
-        $data = Paypal::getTransactionData($user->id);
+        $data = Paypallog::getTransactionData($user->id);
 
         if($data)
         {
@@ -144,7 +145,8 @@ class Brokers extends \Core\Controller
             'amount'        => $amount,
             'profileid'     => $profileid,
             'agent_count'   => $agent_count,
-            'broker_type'   => $broker_type
+            'broker_type'   => $broker_type,
+            'data'          => $data
         ]);
     }
 
@@ -243,28 +245,76 @@ class Brokers extends \Core\Controller
 
 
 
-
+    /**
+     * adds new agent to broker/company
+     */
     public function addNewAgentAction()
     {
-      // retrieve GET variable
-      $broker_id = (isset($_REQUEST['id'])) ? filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING) : '';
+        // retrieve broker ID from query string
+        $broker_id = (isset($_REQUEST['id'])) ? filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING) : '';
 
-      // get agents id, last name, first name & broker ID only for drop-down
-      $agents = BrokerAgent::getNamesOfAllBrokerAgents($_SESSION['broker_id'], $orderby = 'broker_agents.last_name');
+        // get count of agents
+        $number_agents = BrokerAgent::getCountOfAllBrokerAgents($broker_id);
 
-      // get states array for drop-down
-      $states = State::getStates();
+        // get user record
+        $user = User::getUser($_SESSION['user_id']);
 
-      // get company type (broker type = business(1), realty(2), both(3))
-      $broker_type = Broker::getBrokerCompanyType($broker_id);
+        // store max_agents value in variable
+        $max_agents = $user->max_agents;
 
-      // render view
-      View::renderTemplate('Admin/Add/add-new-agent.html', [
-          'broker_id'   => $broker_id,
-          'agents'      => $agents,
-          'states'      => $states,
-          'broker_type' => $broker_type
-      ]);
+        // check if current number of agents is less than agents paid for
+        if($number_agents < $max_agents)
+        {
+            // get agents id, last name, first name & broker ID only for drop-down
+            $agents = BrokerAgent::getNamesOfAllBrokerAgents($_SESSION['broker_id'], $orderby = 'broker_agents.last_name');
+
+            // get states array for drop-down
+            $states = State::getStates();
+
+            // get company type (broker type = business(1), realty(2), both(3))
+            $broker_type = Broker::getBrokerCompanyType($broker_id);
+
+            // render view
+            View::renderTemplate('Admin/Add/add-new-agent.html', [
+                'broker_id'     => $broker_id,
+                'agents'        => $agents,
+                'states'        => $states,
+                'broker_type'   => $broker_type
+            ]);
+        }
+        else
+        {
+            // user must pay for more agents
+
+            // get user record
+            $user = User::getUser($_SESSION['user_id']);
+
+            // test
+            // echo '<pre>';
+            // print_r($user);
+            // echo '</pre>';
+            // exit();
+
+            // store user ID in variable
+            $user_id = $user->id;
+
+            // get user's PayPal data to modify recurring billing profile
+            $profile = Paypallog::getPaypalData($user->id);
+
+            // store user's PayPal profile ID in variable
+            $profileid = $profile->PROFILEID;
+
+            // create page title for payment view
+            $pagetitle = "Add agents";
+
+            // render payment view & pass action for adding new agent
+            View::renderTemplate('Paypal/index.html', [
+                'user'      => $user,
+                'pagetitle' => $pagetitle,
+                'profileid' => $profileid,
+                'action'    => '/subscribe/process-payment-for-new-agents?id='.$user_id.'&profileid='.$profileid
+            ]);
+        }
     }
 
 
@@ -300,18 +350,34 @@ class Brokers extends \Core\Controller
 
             if($result)
             {
-              $message = "Agent successfully added!";
+                // reduce `users`.`max_agents` by one
+                $result = User::updateMaxagents($_SESSION['user_id']);
 
-              // display success message
-              echo '<script>';
-              echo 'alert("'.$message.'")';
-              echo '</script>';
+                if($result)
+                {
+                    $message = "Agent successfully added!";
 
-              // redirect user to "Manage agents" page
-              echo '<script>';
-              echo 'window.location.href="/admin/brokers/show-agents?id='.$broker_id.'"';
-              echo '</script>';
-              exit();
+                    // display success message
+                    echo '<script>';
+                    echo 'alert("'.$message.'")';
+                    echo '</script>';
+
+                    // redirect user to "Manage agents" page
+                    echo '<script>';
+                    echo 'window.location.href="/admin/brokers/show-agents?id='.$broker_id.'"';
+                    echo '</script>';
+                    exit();
+                }
+                else
+                {
+                    echo "Error updating database.";
+                    exit();
+                }
+            }
+            else
+            {
+                echo "Error adding new agent to database.";
+                exit();
             }
         }
         else
@@ -321,21 +387,36 @@ class Brokers extends \Core\Controller
 
             if($result)
             {
-              $message = "Agent successfully added!";
+                // reduce `users`.`max_agents` by one
+                $result = User::updateMaxagents($_SESSION['user_id']);
 
-              // display success message
-              echo '<script>';
-              echo 'alert("'.$message.'")';
-              echo '</script>';
+                if($result)
+                {
+                    $message = "Agent successfully added!";
 
-              // redirect user to "Manage agents" page
-              echo '<script>';
-              echo 'window.location.href="/admin/brokers/show-agents?id='.$broker_id.'"';
-              echo '</script>';
-              exit();
+                    // display success message
+                    echo '<script>';
+                    echo 'alert("'.$message.'")';
+                    echo '</script>';
+
+                    // redirect user to "Manage agents" page
+                    echo '<script>';
+                    echo 'window.location.href="/admin/brokers/show-agents?id='.$broker_id.'"';
+                    echo '</script>';
+                    exit();
+                }
+                else
+                {
+                    echo "Error updating database.";
+                    exit();
+                }
+            }
+            else
+            {
+                echo "Error adding new agent to database.";
+                exit();
             }
         }
-
     }
 
 

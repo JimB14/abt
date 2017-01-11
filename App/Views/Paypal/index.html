@@ -17,22 +17,74 @@
   <div class="row">
 
     <div class="col-md-12">
+      {% if pagetitle %}
+        <h1>{{ pagetitle }}</h1>
+      {% else %}
         <h1>Subscribe</h1>
+      {% endif %}
         <hr>
     </div>
 
-        <div class="col-md-8">
+        <div class="col-md-8" style="margin-bottom: 20px;">
 
           <form class="form-horizontal" role="form" name="payment-form" id="payment-form"
-              action="/subscribe/process-payment?id={{ user.id }}" method="post">
+              action="{{ action }}" method="post">
 
+              {% if pagetitle == 'Add agents' %}
+                <div class="form-group">
+                    <label for="first_name" class="col-sm-3 control-label">
+                      Agents to add
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="number" class="form-control required" name="agent_qty"
+                          id="agent_qty" value="1" min="1" step="1" autofocus>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="current-billing" class="col-sm-3 control-label">
+                      Current monthly billing
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="number" class="form-control required" name="current-billing"
+                          id="current-billing" value="{{ user.sub_amt }}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="new-agents-cost" class="col-sm-3 control-label">
+                      Cost of new agents
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="number" class="form-control required" name="new-agents-cost"
+                          id="new-agents-cost" min="9.95" step="0.01">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="new-billing" class="col-sm-3 control-label">
+                      New monthly billing
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="number" class="form-control required" name="new-billing"
+                          id="new-billing" min="19.90" step="0.01">
+                    </div>
+                </div>
+
+                <hr>
+              {% endif %}
+
+              <h3 style="margin-bottom: 25px;">
+                Credit card information
+              </h3>
               <div class="form-group">
                   <label for="first_name" class="col-sm-3 control-label">
                     First name
                   </label>
                   <div class="col-sm-9">
                       <input type="text" class="form-control required" name="first_name"
-                        id="first_name" placeholder="First name (as it appears on card)" autofocus>
+                        id="first_name" placeholder="First name (as it appears on card)"
+                        {% if not pagetitle %} autofocus {% endif %}>
                   </div>
               </div>
 
@@ -51,7 +103,7 @@
                   Card type
                 </label>
                 <div class="col-sm-9">
-                  <select class="form-control col-sm-2" name="cardtype" id="cardtype">
+                  <select class="form-control col-sm-2 required" name="cardtype" id="cardtype">
                     <option value="">Select</option>
                     <option value="0">Visa</option>
                     <option value="1">MasterCard</option>
@@ -67,7 +119,7 @@
                   Card Number
                 </label>
                 <div class="col-sm-9">
-                  <input type="text" class="form-control" name="acct"
+                  <input type="text" class="form-control required" name="acct"
                     id="ACCT" placeholder="Debit/Credit Card Number"
                     value="4032034487575998">
                 </div>
@@ -79,7 +131,7 @@
                 <div class="col-sm-9">
                   <div class="row">
                     <div class="col-xs-3">
-                      <select class="form-control col-sm-2" name="exp_month" id="exp_month">
+                      <select class="form-control col-sm-2 required" name="exp_month" id="exp_month">
                         <option>Month</option>
                         <option value="01">Jan</option>
                         <option value="02">Feb</option>
@@ -96,7 +148,7 @@
                       </select>
                     </div>
                     <div class="col-xs-3">
-                      <select class="form-control" name="exp_year">
+                      <select class="form-control required" name="exp_year">
                         {% set currentYear = "now"|date("Y") %}
                         {% set year = "now"|date("y") %}
                         <option value="{{ year }}">{{ currentYear }}</option>
@@ -117,18 +169,22 @@
                   Card CVV
                 </label>
                 <div class="col-sm-3">
-                  <input type="text" class="form-control" name="cvv2" id="cvv2"
+                  <input type="text" class="form-control required" name="cvv2" id="cvv2"
                     placeholder="Security Code">
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="col-sm-3 control-label" for="amt">
-                  Amount
+                  {% if pagetitle == 'Add agents' %}
+                    New monthly charge
+                  {% else %}
+                    Amount
+                  {% endif %}
                 </label>
                 <div class="col-sm-3">
-                  <input type="number" class="form-control" name="amt" id="amt"
-                    placeholder="Amount" value="9.95" step="0.01">
+                  <input type="number" class="form-control required" name="amt" id="amt"
+                    placeholder="Amount" step="0.01">
                 </div>
               </div>
 
@@ -136,13 +192,14 @@
                     <div class="col-sm-offset-3 col-sm-9">
                         <div class="checkbox">
                           <label for="agree">
-                              <input type="checkbox" name="agree" id="agree">
+                              <input type="checkbox" class="required" name="agree" id="agree">
                               I agree to recurring monthly billing.
                               <a href="#">
                                   Read terms &amp; conditions
                               </a>
                           </label>
-                          <small>
+                          <small style="margin-left: 25px;">
+                              <br>
                               *American Biz Trader does not store credit card information.
                           </small>
                         </div>
@@ -154,7 +211,11 @@
               <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-9">
                   <button type="submit" id="pay-now-btn" class="btn btn-primary">
-                    Pay Now
+                    {% if pagetitle == 'Add agents' %}
+                      Update membership
+                    {% else %}
+                      Pay Now
+                    {% endif %}
                   </button>
                 </div>
               </div>
@@ -170,11 +231,37 @@
 <script>
 $(document).ready(function(){
 
+  // $("#payment-form").validate();
+
   $("#payment-form").submit(function(){
       $("#pay-now-btn").text("Sending data. Please wait...");
   });
 
-});
+  $("#agent_qty").blur(function(){
+      var qty = $(this).val();
+      console.log("qty:" + qty);
 
+      var newAgents = (9.95 * qty);
+
+      newAgents = parseFloat(newAgents).toFixed(2);
+      console.log("newAgents: " + newAgents);
+
+      $("#new-agents-cost").val(newAgents);
+
+      var currentBilling = parseFloat($("#current-billing").val()).toFixed(2);
+      console.log("current billing: " + currentBilling);
+
+      var total = parseFloat(currentBilling) + parseFloat(newAgents);
+      total = parseFloat(total).toFixed(2);
+      console.log(total);
+
+      $("#new-billing").val(total);
+
+      $("#amt").val(total);
+
+
+  });
+
+});
 </script>
 {% endblock %}

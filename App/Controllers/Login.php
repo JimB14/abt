@@ -122,10 +122,11 @@ use \App\Models\State;
             // get states for drop-down
             $states = State::getStates();
 
-            // send for payment
+            // send for payment; pass action for new subscription
             View::renderTemplate('Paypal/index.html', [
                 'user'   => $user,
-                'states' => $states
+                'states' => $states,
+                'action' => '/subscribe/process-payment?id='.$user->id
             ]);
             exit();
         }
