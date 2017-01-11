@@ -39,11 +39,13 @@
             <form method="get"
                 action="/admin/brokers/search-listings-by-last-name-or-client-id">
               <div class="input-group">
-                <input style="width:175px;"  type="text" class="form-control" name="last_name" id="listings_last_name"
-                    placeholder="Enter agent last name">
+                <input style="width:175px;"  type="text" class="form-control" name="last_name"
+                    id="listings_last_name" placeholder="Enter agent last name">
                 <input type="hidden" name="id" value="{{ session.broker_id}}">
                 <span style="display:inline-block;margin-left:0px;"  class="input-group-btn">
-                  <button class="btn btn-secondary btn-default" type="submit">Go</button>
+                  <button class="btn btn-secondary btn-default" type="submit">
+                    Go
+                  </button>
                 </span>
               </div>
               <div class="checkbox" style="margin-left:10px;">
@@ -131,7 +133,7 @@
                           <td><a id="edit-ad" class="btn btn-default btn-sm" href="/admin/brokers/edit-listing?id={{ listing.listing_id }}&amp;broker_id={{ session.broker_id}}">Edit</a></td>
                           <td>
                               <a id="delete-ad" class="btn btn-danger btn-sm" href="/admin/brokers/delete-listing?id={{ listing.listing_id }}&amp;broker_id={{ session.broker_id}}"
-                                onclick="return confirm('You can edit this listing so it will not display on the website by changing the Display Status to 0. \n\nTo change Display Status, click Cancel & then click the Edit button. \n\n\If this listing is sold, consider changing its Listing Status to Sold and it will display in the Recently Sold section of your Company Page. \n\n\To change Listing Status, click Cancel & then click the Edit button. \n\n\TO PERMANENTLY DELETE THIS LISTING, click OK. \n\n\WARNING! DELETED DATA CANNOT BE RECOVERED.');">
+                                onclick="return confirm('You can edit this listing so it will not display on the website by changing the Display Status to hide. \n\nTo change Display Status, click Cancel & then click the Edit button. \n\n\If this listing is sold, consider changing its Listing Status to Sold and it will display in the Recently Sold section of your Company Page. \n\n\To change Listing Status, click Cancel & then click the Edit button. \n\n\TO PERMANENTLY DELETE THIS LISTING, click OK. \n\n\WARNING! DELETED DATA CANNOT BE RECOVERED.');">
                                 &times;
                               </a>
                           </td>

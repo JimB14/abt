@@ -681,7 +681,7 @@ class Brokers extends \Core\Controller
         $broker_type = Broker::getBrokerCompanyType($broker_id);
 
         // render view, pass $listings object
-        View::renderTemplate('Admin/Show/realty-listings.html', [
+        View::renderTemplate('Admin/Show/listings.html', [
             'listings'    => $results['listings'],
             'pagetitle'   => $results['pagetitle'],
             'agents'      => $agents,
@@ -1424,7 +1424,7 @@ class Brokers extends \Core\Controller
 
         if($result)
         {
-            $message = "Listing successfully deleted!";
+            $message = "Business listing successfully deleted!";
 
             // display success message
             echo '<script>';
@@ -1794,7 +1794,11 @@ class Brokers extends \Core\Controller
         $broker_type = Broker::getBrokerCompanyType($broker_id);
 
         // get agents for drop-down
-        $agents = BrokerAgent::getAllBrokerAgents($limit=null, $broker_id, $orderby = 'broker_agents.last_name');
+        //$agents = BrokerAgent::getAllBrokerAgents($limit=null, $broker_id, $orderby = 'broker_agents.last_name');
+
+        // get all agents who are real estate brokers or business & real estate brokers
+        //$agents = BrokerAgent::getAllBrokerAgents($limit=null, $broker_id, $orderby = 'broker_agents.last_name');
+        $agents = BrokerAgent::getAllBrokerAgentsByType($type=[2,3], $limit=null, $broker_id, $orderby = 'broker_agents.last_name');
 
         // test
         // echo "<pre>";

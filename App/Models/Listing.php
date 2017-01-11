@@ -1697,6 +1697,12 @@ class Listing extends \Core\Model
       // echo '$country => ' . $country . '<br>';
       // echo '$state => ' . $state . '<br>';
 
+      // test
+      // echo '$listing_agent_id: ' . $listing_agent_id . '<br>';
+      // echo '<pre>';
+      // print_r($_POST);
+      // exit();
+
         // Update data for listing in `listing` table
         try
         {

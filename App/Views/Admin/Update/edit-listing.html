@@ -30,7 +30,7 @@
                     <select class="form-control p1" name="listing_agent_id" id="listing_agent_id" autofocus>
                         <option value="{{ listing.listing_agent_id}}">{{ listing.listing_agent_id }}</option>
                         {% for agent in agents %}
-                        <option value="{{ agent.id }}">{{ agent.agent_last_name}},  {{ agent.agent_first_name }} (ID = {{ agent.agent_id }})</option>
+                        <option value="{{ agent.agent_id }}">{{ agent.agent_last_name}},  {{ agent.agent_first_name }} (ID = {{ agent.agent_id }})</option>
                         {% endfor %}
                     </select>
                         <span class="glyphicon form-control-feedback" id="listing_agent_id1"></span>

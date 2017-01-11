@@ -107,7 +107,7 @@
                           <td><a id="edit-ad" class="btn btn-default btn-sm" href="/admin/brokers/edit-real-estate-listing?id={{ listing.id }}&amp;broker_id={{ session.broker_id}}">Edit</a></td>
                           <td>
                               <a id="delete-ad" class="btn btn-danger btn-sm" href="/admin/brokers/delete-real-estate-listing?id={{ listing.id }}&amp;broker_id={{ session.broker_id}}"
-                                onclick="return confirm('TO PERMANENTLY DELETE THIS LISTING, click OK. \n\n\WARNING! DELETED DATA CANNOT BE RECOVERED.');">
+                                onclick="return confirm('You can edit this listing so it will not display on the website by changing the Display Status to hide. \n\nTo change Display Status, click Cancel & then click the Edit button. \n\n\If this listing is sold, consider changing its Listing Status to Sold and it will display in the Recently Sold section of your Company Page. \n\n\To change Listing Status, click Cancel & then click the Edit button. \n\n\TO PERMANENTLY DELETE THIS LISTING, click OK. \n\n\WARNING! DELETED DATA CANNOT BE RECOVERED.');">
                                 &times;
                               </a>
                           </td>
