@@ -19,29 +19,39 @@
           <hr>
                 <form class="form-horizontal">
 
-                    <h3 style="margin-bottom: 15px;">Account information</h3>
+                    <h3 style="margin-bottom: 15px;">
+                      Account information
+                    </h3>
 
                     <div class="form-group">
-                        <label for="regDate" class="control-label col-sm-3">Registration date</label>
+                        <label for="regDate" class="control-label col-sm-3">
+                          Registration date
+                        </label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="regDate" id="regDate" placeholder="Registration date" value="{{ user.regDate|date("Y-m-d")}}" >
+                            <input type="text" class="form-control" name="regDate"
+                            id="regDate" placeholder="Registration date"
+                            value="{{ user.regDate|date("Y-m-d")}}">
                         </div>
                     </div>
 
 
 
                     <div class="form-group">
-                        <label for="first_name" class="control-label col-sm-3"> First name </label>
+                        <label for="first_name" class="control-label col-sm-3">
+                          First name
+                        </label>
                         <div class="col-sm-9">
-                            <input type="text" name="first_name" class="form-control" id="first_name" placeholder="First name" value="{{ user.first_name }}" >
+                            <input type="text" name="first_name" class="form-control"
+                            id="first_name" placeholder="First name"
+                            value="{{ user.first_name }}" >
                         </div>
                     </div>
 
 
 
                     <div class="form-group">
-                        <label for="last_name" class="control-label col-sm-3"
-                        >Last name
+                        <label for="last_name" class="control-label col-sm-3">
+                          Last name
                       </label>
                         <div class="col-sm-9">
                             <input type="text" name="last_name" class="form-control"
@@ -74,7 +84,7 @@
 
                     <div class="form-group">
                         <div class="col-sm-offset-3 col-sm-9">
-                           <a href="/subscribe/cancel-payment?user_id={{ user.id }}&amp;profileid={{ profileid }}"
+                           <a href="/subscribe/cancel-payment?user_id={{ user.id }}&amp;profileid={{ ppProfile.PROFILEID }}"
                             role="button" class="btn btn-danger" id="cancel_account"
                             onclick="return confirm('Are you sure you want to permanently delete all of your listings and related data?');">
                             Cancel account
@@ -85,49 +95,103 @@
                    <hr>
 
 
-                    <h3 style="margin-bottom: 15px;">Payment information</h3>
+                    <h3 style="margin-bottom: 15px;">
+                      Payment information
+                    </h3>
 
                     <div class="form-group">
-                        <label for="next_payment_amount" class="control-label col-sm-3">
+                        <label for="status" class="control-label col-sm-3">
                           Status
                         </label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="next_payment_amount"
-                              id="next_payment_amount" placeholder="Next payment amount"
-                              value="{% if user.current == 1 %}Current{% else %}Suspended{% endif %}">
+                            <input type="text" class="form-control" name="status"
+                              id="status" placeholder="Account status"
+                              value="{{ ppProfile.STATUS }}">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="last_payment_date" class="control-label col-sm-3">
-                          Last payment
+                        <label for="amt" class="control-label col-sm-3">
+                          Amount / month
                         </label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="last_payment_date"
-                              id="last_payment_date" placeholder="Last payment"
-                              value="{{ last_trx }}" >
+                            <input type="text" class="form-control" name="amt"
+                              id="amt" placeholder="Recurring amount" value="{{ ppProfile.AMT }}">
+                              <small>
+                                *Account changes take effect on your Next payment (see Next payment date)
+                              </small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="creation_date" class="control-label col-sm-3">
+                          Creation date
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="creation_date"
+                              id="creation_date" placeholder="Creation date"
+                              value="{{ creation_date }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="last_changed" class="control-label col-sm-3">
+                          Last changed
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="last_changed"
+                              id="last_changed" placeholder="Last changed"
+                              value="{{ last_changed }}">
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="next_payment_amount" class="control-label col-sm-3">
-                          Recurring bill amount
+                          Next payment
                         </label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" name="next_payment_amount"
                               id="next_payment_amount" placeholder="Next payment amount"
-                              value="{{ user.sub_amt }}" >
+                              value="{{ next_payment }}" >
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="agents" class="control-label col-sm-3">
-                          Agents
+                        <label for="last_four" class="control-label col-sm-3">
+                          Last 4 digits of card used
                         </label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="agents"
-                              id="agents" placeholder="Number of agents"
-                              value="{{ agent_count }}">
+                            <input type="text" class="form-control" name="last_four"
+                              id="last_four" placeholder="Last 4 digits of card"
+                              value="{{ last_four }}">
+                              <small>
+                                *Information for reference only. American Biz Trader does not store credit card information
+                              </small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="expiration" class="control-label col-sm-3">
+                          Expiration (mmyy)
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="expiration"
+                              id="expiration" placeholder="Expiration mm/YYYY"
+                              value="{{ ppProfile.EXPDATE }}">
+                              <small>
+                                *Information for reference only. American Biz Trader does not store credit card information
+                              </small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="next_payment_subscription_period" class="control-label col-sm-3">
+                          Profile ID
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="profileid"
+                            id="profileid" placeholder="Profile ID"
+                            value="{{ ppProfile.PROFILEID }}">
                         </div>
                     </div>
 
@@ -139,112 +203,198 @@
                             <input type="text" class="form-control" name="agent-limit"
                               id="agent-limit" placeholder="Max number of agents"
                               value="{{ user.max_agents }}">
+                              <small>
+                                *If agent limit exceeds number of agents, you can reduce
+                                the amount of your monthly bill (changes take effect at next payment date)
+                              </small>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="payment_type" class="control-label col-sm-3">
-                          Next payment
+                        <label for="agents" class="control-label col-sm-3">
+                          Number of agents
                         </label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="payment_type"
-                              id="payment_type" placeholder="Payment type" value="Recurring monthly" >
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="next_payment_subscription_period" class="control-label col-sm-3">
-                          Profile ID
-                        </label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" name="profileid"
-                            id="profileid" placeholder="Profile ID"
-                            value="{{ profileid }}" >
+                            <input type="text" class="form-control" name="agents"
+                              id="agents" placeholder="Number of agents"
+                              value="{{ agent_count }}">
                         </div>
                     </div>
                 </form>
 
-                <hr>
 
+                {% if user.max_agents - agent_count >= 1 %}
+                  <hr>
+                  <h3 style="margin-bottom: 15px;">Reduce my bill</h3>
+
+                    <form class="form-horizontal" method="post"
+                      action="/subscribe/process-payment-reduction?user_id={{ user.id }}&amp;profileid={{ ppProfile.PROFILEID }}"
+                        name="reduce-bill-form" id="reduce-bill-form">
+
+                        <input type="hidden" name="current_amt" value="{{ ppProfile.AMT }}">
+
+                        <div class="form-group">
+                            <label for="reduce_my_bill" class="control-label col-sm-3">
+                              Reduce my bill
+                            </label>
+                            <div class="col-sm-9">
+                                <small>
+                                  Because you are paying for {{ user.max_agents }}
+                                  agents but using {{ agent_count }}, you can
+                                  remove up to {{ extra_agents }} agents
+                                  and reduce your monthly bill (changes take effect
+                                  at next payment date). Select the number of agents
+                                  that you are eligible to remove, and click
+                                  "Reduce my bill"
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="remove_agent_count" class="control-label col-sm-3">
+                              Agents to remove
+                            </label>
+                            <div class="col-sm-9">
+                                <select class="form-control" name="remove_agent_count" id="remove_agent_count">
+                                  <!-- resource: http://twig.sensiolabs.org/doc/1.x/tags/for.html -->
+                                  <option value="">Select</option>
+                                  {% for i in 1..extra_agents %}
+                                    <option value={{ i }}>{{ i }}</option>
+                                  {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-3 col-sm-9">
+                               <button type="submit" class="btn btn-primary btn-sm"
+                                role="submit" id="change-password-btn">
+                                 Reduce my bill
+                               </button>
+                            </div>
+                        </div>
+                    </form>
+                {% endif %}
+
+                <hr>
 
                 <h3 style="margin-bottom: 15px;">Change password</h3>
 
                 <form style="border-bottom: 1px solid #eee; margin-bottom:20px;"
                 class="form-horizontal required" method="post"
-                action="/admin/brokers/change-password?user_id={{ user.id }}" id="change-password-form">
+                action="/admin/brokers/change-password?user_id={{ user.id }}"
+                  id="change-password-form">
 
                    <div class="form-group">
-                       <label for="current_password" class="control-label col-sm-3">Current password</label>
+                       <label for="current_password" class="control-label col-sm-3">
+                         Current password
+                       </label>
                        <div class="col-sm-9">
-                           <input type="text" class="form-control required" name="current_password" id="current_password" placeholder="Current password">
+                           <input type="text" class="form-control required" name="current_password"
+                            id="current_password" placeholder="Current password">
                        </div>
                    </div>
 
                    <div class="form-group">
-                       <label for="confirm_password" class="control-label col-sm-3">Confirm password</label>
+                       <label for="confirm_password" class="control-label col-sm-3">
+                         Confirm password
+                       </label>
                        <div class="col-sm-9">
-                           <input type="text" class="form-control required" name="confirm_password" id="confirm_password" placeholder="Confirm password">
+                           <input type="text" class="form-control required"
+                            name="confirm_password" id="confirm_password"
+                            placeholder="Confirm password">
                        </div>
                    </div>
 
                    <div class="form-group">
-                       <label for="new_password" class="control-label col-sm-3">New password</label>
+                       <label for="new_password" class="control-label col-sm-3">
+                         New password
+                       </label>
                        <div class="col-sm-9">
-                           <input type="text" class="form-control required" name="new_password" id="new_password" placeholder="New password - at least 6 characters">
+                           <input type="text" class="form-control required" name="new_password"
+                            id="new_password" placeholder="New password - at least 6 characters">
                        </div>
                    </div>
 
                    <div class="form-group">
-                       <label for="confirm_new_password" class="control-label col-sm-3">Confirm new password</label>
+                       <label for="confirm_new_password" class="control-label col-sm-3">
+                         Confirm new password
+                       </label>
                        <div class="col-sm-9">
-                           <input type="text" class="form-control required" name="confirm_new_password" id="confirm_new_password" placeholder="Confirm new password">
+                           <input type="text" class="form-control required" name="confirm_new_password"
+                            id="confirm_new_password" placeholder="Confirm new password">
                        </div>
                    </div>
 
                    <div class="form-group">
                        <div class="col-sm-offset-3 col-sm-9">
-                          <button type="submit" class="btn btn-primary btn-lg" id="change-password-btn">Change password</button>
+                          <button type="submit" class="btn btn-primary btn-lg" id="change-password-btn">
+                            Change password
+                          </button>
                        </div>
                    </div>
                 </form>
 
 
 
-                <h3 style="margin-bottom: 15px;">Change login email</h3>
+                <h3 style="margin-bottom: 15px;">
+                  Change login email
+                </h3>
 
-                <form class="form-horizontal" method="post" action="/admin/brokers/change-login-email?user_id={{ user.id }}" id="change-login-email-form">
+                <form class="form-horizontal" method="post"
+                  action="/admin/brokers/change-login-email?user_id={{ user.id }}"
+                  id="change-login-email-form">
 
                    <div class="form-group">
-                       <label for="current_login_email" class="control-label col-sm-3">Current login email</label>
+                       <label for="current_login_email" class="control-label col-sm-3">
+                         Current login email
+                       </label>
                        <div class="col-sm-9">
-                           <input type="email" class="form-control required" name="current_login_email" id="current_login_email" placeholder="Current login email" value="{{ user.email }}">
+                           <input type="email" class="form-control required"
+                            name="current_login_email" id="current_login_email"
+                            placeholder="Current login email" value="{{ user.email }}">
                        </div>
                    </div>
 
                    <div class="form-group">
-                       <label for="new_login_email" class="control-label col-sm-3">New login email</label>
+                       <label for="new_login_email" class="control-label col-sm-3">
+                         New login email
+                       </label>
                        <div class="col-sm-9">
-                           <input type="email" class="form-control required" name="new_login_email" id="new_login_email" placeholder="New login email">
+                           <input type="email" class="form-control required"
+                            name="new_login_email" id="new_login_email"
+                            placeholder="New login email">
                        </div>
                    </div>
 
                    <div class="form-group">
-                       <label for="confirm_new_login_email" class="control-label col-sm-3">Confirm new login email</label>
+                       <label for="confirm_new_login_email" class="control-label col-sm-3">
+                         Confirm new login email
+                       </label>
                        <div class="col-sm-9">
-                           <input type="email" class="form-control required" name="confirm_new_login_email" id="confirm_new_login_email" placeholder="Confirm new login email">
+                           <input type="email" class="form-control required"
+                            name="confirm_new_login_email" id="confirm_new_login_email"
+                            placeholder="Confirm new login email" autocomplete="off">
                        </div>
                    </div>
 
                    <div class="form-group">
-                       <label for="password" class="control-label col-sm-3">Current password</label>
+                       <label for="password" class="control-label col-sm-3">
+                         Current password
+                       </label>
                        <div class="col-sm-9">
-                           <input type="password" class="form-control required" name="password" id="password" placeholder="Current password">
+                           <input type="password" class="form-control required"
+                           name="password" id="password" placeholder="Current password"
+                           autocomplete="off">
                        </div>
                    </div>
 
                    <div class="form-group">
                        <div class="col-sm-offset-3 col-sm-9">
-                          <button type="submit" class="btn btn-primary btn-lg" id="change-login-email-btn">Change login email</button>
+                          <button type="submit" class="btn btn-primary btn-lg"
+                            id="change-login-email-btn">
+                            Change login email
+                          </button>
                        </div>
                    </div>
 
@@ -265,6 +415,19 @@ $(document).ready(function(){
 
     $("#change-password-form").validate();
     $("#change-login-email-form").validate();
+
+
+    $("#reduce-bill-form").submit(function(){
+        var agent_count = $("#remove_agent_count").val();
+        console.log(agent_count);
+
+        if(agent_count < 1)
+        {
+            alert("Please select an amount in 'Agents to remove' drop-down.");
+            return false;
+        }
+
+    });
 
 });
 </script>

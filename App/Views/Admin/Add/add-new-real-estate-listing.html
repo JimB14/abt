@@ -40,7 +40,7 @@
                     </label>
                     <div class="col-sm-9">
                         <select class="form-control p1 required"
-                        name="listing_agent_id" id="listing_agent_id">
+                        name="listing_agent_id" id="listing_agent_id" required>
                             <option value="">Select agent</option>
                             {% for agent in agents %}
                                 <option value="{{ agent.agent_id }} ">
@@ -513,7 +513,7 @@
 $(document).ready(function(){
 
     // form validation
-    //$("#new-real-estate-listing-form").validate();
+    $("#new-real-estate-listing-form").validate();
 
     // modify button text on submission
     $("#new-real-estate-listing-form").submit(function(){

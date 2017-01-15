@@ -112,22 +112,19 @@ class Brokers extends \Core\Controller
         // get number of agents
         $agent_count = BrokerAgent::getCountOfAgents($broker_id);
 
-        // get paypal_log data
-        $data = Paypallog::getTransactionData($user->id);
-
-        if($data)
+        // if max_agents > agent_count store value in variable (bill reduction)
+        if($user->max_agents - $agent_count >= 1)
         {
-            // store PP data in variables for use @Views/Admin/Show/my-account.html
-            $last_trx = $data[0]->TRANSTIME;
-            $amount = $data[0]->AMT;
-            $profileid = $data[0]->PROFILEID;
+            $extra_agents = $user->max_agents - $agent_count;
         }
         else
         {
-          $last_trx = '';
-          $amount = '';
-          $profileid = '';
+            $extra_agents = '';
         }
+
+
+        // get paypal_log data
+        $data = Paypallog::getTransactionData($user->id);
 
         // test
         // echo $amount;
@@ -136,17 +133,62 @@ class Brokers extends \Core\Controller
         // echo '</pre>';
         // exit();
 
+        if($data)
+        {
+            // store profileid in vaiable
+            $profileid = $data[0]->PROFILEID;
+        }
+        else
+        {
+            echo "Error occurred while fetching profileID.";
+            exit();
+        }
+
+        // get paypal profile data from payflow gateway
+        $ppProfile = Paypal::profileStatusInquiry($profileid);
+
+        $last_four = substr($ppProfile['ACCT'], -4);
+
+        // store RegExp values in variables
+        $pattern     = '/(\d{2})(\d{2})(\d{4})/';
+        $replacement = '\1-\2-\3';
+
+        // store PayPal returned values in variables
+        $creation_date = $ppProfile['CREATIONDATE'];
+        $last_changed  = $ppProfile['LASTCHANGED'];
+        $next_payment  = $ppProfile['NEXTPAYMENT'];
+
+        // re-format (add hyphens) using RegExp for better readability
+        $creation_date = preg_replace($pattern, $replacement, $creation_date);
+        $last_changed  = preg_replace($pattern, $replacement, $last_changed);
+        $next_payment  = preg_replace($pattern, $replacement, $next_payment);
+
+        // test
+        // echo $last_four . '<br>';
+        // echo $creation_date . '<br>';
+        // echo $last_changed . '<br>';
+        // echo $next_payment . '<br>';
+        // exit();
+
+        // test
+        // echo '<pre>';
+        // print_r($ppProfile);
+        // echo '</pre>';
+        // exit();
+
         // render view
         View::renderTemplate('Admin/Show/my-account.html', [
             'agents'        => $agents,
             'company_name'  => $company_name,
             'user'          => $user,
-            'last_trx'      => $last_trx,
-            'amount'        => $amount,
-            'profileid'     => $profileid,
             'agent_count'   => $agent_count,
             'broker_type'   => $broker_type,
-            'data'          => $data
+            'ppProfile'     => $ppProfile,
+            'last_four'     => $last_four,
+            'creation_date' => $creation_date,
+            'last_changed'  => $last_changed,
+            'next_payment'  => $next_payment,
+            'extra_agents'  => $extra_agents
         ]);
     }
 
@@ -254,13 +296,17 @@ class Brokers extends \Core\Controller
         $broker_id = (isset($_REQUEST['id'])) ? filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING) : '';
 
         // get count of agents
-        $number_agents = BrokerAgent::getCountOfAllBrokerAgents($broker_id);
+        $number_agents = BrokerAgent::getCountOfAgents($broker_id);
 
         // get user record
         $user = User::getUser($_SESSION['user_id']);
 
         // store max_agents value in variable
         $max_agents = $user->max_agents;
+
+        // echo '$max_agents: '. $max_agents . '<br>';
+        // echo '$number_agents: ' . $number_agents;
+        // exit();
 
         // check if current number of agents is less than agents paid for
         if($number_agents < $max_agents)
@@ -312,7 +358,7 @@ class Brokers extends \Core\Controller
                 'user'      => $user,
                 'pagetitle' => $pagetitle,
                 'profileid' => $profileid,
-                'action'    => '/subscribe/process-payment-for-new-agents?id='.$user_id.'&profileid='.$profileid
+                'action'    => '/subscribe/process-payment-for-new-agents?id='.$user_id.'&profileid='.$profileid.'&maxagents='.$max_agents
             ]);
         }
     }
@@ -322,8 +368,11 @@ class Brokers extends \Core\Controller
 
     public function postNewAgent()
     {
-        // retrieve GET variable
+        // retrieve query string variables
         $broker_id = (isset($_REQUEST['broker_id'])) ? filter_var($_REQUEST['broker_id'], FILTER_SANITIZE_STRING) : '';
+        $broker_user_id = (isset($_REQUEST['user_id'])) ? filter_var($_REQUEST['user_id'], FILTER_SANITIZE_STRING) : '';
+
+        echo $broker_user_id; exit();
 
         // retrieve first and last name for quick db check
         $first_name = ( isset($_POST['first_name']) )? filter_var($_POST['first_name'], FILTER_SANITIZE_STRING): '';
@@ -346,7 +395,7 @@ class Brokers extends \Core\Controller
         if(!empty($_FILES['profile_photo']['tmp_name']))
         {
             // add new agent (with photo) to broker_agents table
-            $result = BrokerAgent::postNewAgent($broker_id);
+            $result = BrokerAgent::postNewAgent($broker_id, $broker_user_id);
 
             if($result)
             {
@@ -383,7 +432,7 @@ class Brokers extends \Core\Controller
         else
         {
             // add new agent (without) photo to broker_agents table
-            $result = BrokerAgent::postNewAgentNoPhoto($broker_id);
+            $result = BrokerAgent::postNewAgentNoPhoto($broker_id, $broker_user_id);
 
             if($result)
             {
@@ -1092,10 +1141,6 @@ class Brokers extends \Core\Controller
             echo 'window.location.href="/admin/brokers/show-agents?id='.$broker_id.'"';
             echo '</script>';
             exit();
-
-            // optional php redirect - no msg
-            // header("Location: /admin/brokers/show-agents?id=$broker_id");
-            // exit();
         }
         else
         {

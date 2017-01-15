@@ -430,7 +430,7 @@ class BrokerAgent extends \Core\Model
 
 
 
-    public static function postNewAgent($broker_id)
+    public static function postNewAgent($broker_id, $broker_user_id)
     {
         // Displayed fields
         $first_name = ( isset($_POST['first_name']) )? filter_var($_POST['first_name'], FILTER_SANITIZE_STRING): '';
@@ -646,6 +646,7 @@ class BrokerAgent extends \Core\Model
 
             $sql = "INSERT INTO broker_agents SET
                     broker_id       = :broker_id,
+                    broker_user_id  = :broker_user_id,
                     status          = :status,
                     type            = :type,
                     first_name      = :first_name,
@@ -674,6 +675,7 @@ class BrokerAgent extends \Core\Model
             $stmt = $db->prepare($sql);
             $parameters = [
                 ':broker_id'       => $broker_id,
+                ':broker_user_id'  => $broker_user_id,
                 ':status'          => $status,
                 ':type'            => $type,
                 ':first_name'      => $first_name,
@@ -717,7 +719,7 @@ class BrokerAgent extends \Core\Model
 
 
 
-    public static function postNewAgentNoPhoto($broker_id)
+    public static function postNewAgentNoPhoto($broker_id, $broker_user_id)
     {
         // Displayed fields
         $first_name = ( isset($_POST['first_name']) )? filter_var($_POST['first_name'], FILTER_SANITIZE_STRING): '';

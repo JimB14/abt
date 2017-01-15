@@ -32,12 +32,32 @@
 
               {% if pagetitle == 'Add agents' %}
                 <div class="form-group">
-                    <label for="first_name" class="col-sm-3 control-label">
+                    <label for="agent_qty" class="col-sm-3 control-label">
                       Agents to add
                     </label>
                     <div class="col-sm-9">
                         <input type="number" class="form-control required" name="agent_qty"
-                          id="agent_qty" value="1" min="1" step="1" autofocus>
+                          id="agent_qty" value="0" min="0" step="1" tabindex="1" autofocus>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="current_agent_count" class="col-sm-3 control-label">
+                      Current agents
+                    </label>
+                    <div class="col-sm-9 current-agents-input">
+                        <input style="background-color:#fff;" type="number" class="form-control required" name="current_agent_count"
+                          id="current_agent_count" value="{{ user.max_agents }}" readonly>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="total_agents" class="col-sm-3 control-label">
+                      Total
+                    </label>
+                    <div class="col-sm-9">
+                        <input style="background-color:#fff;" type="number" class="form-control" name="total_agents"
+                          id="total_agents" readonly>
                     </div>
                 </div>
 
@@ -46,8 +66,8 @@
                       Current monthly billing
                     </label>
                     <div class="col-sm-9">
-                        <input type="number" class="form-control required" name="current-billing"
-                          id="current-billing" value="{{ user.sub_amt }}">
+                        <input style="background-color:#fff;" type="number" class="form-control required" name="current-billing"
+                          id="current-billing" value="{{ user.sub_amt }}" readonly>
                     </div>
                 </div>
 
@@ -56,8 +76,8 @@
                       Cost of new agents
                     </label>
                     <div class="col-sm-9">
-                        <input type="number" class="form-control required" name="new-agents-cost"
-                          id="new-agents-cost" min="9.95" step="0.01">
+                        <input style="background-color:#fff;" type="number" class="form-control" name="new-agents-cost"
+                          id="new-agents-cost" readonly>
                     </div>
                 </div>
 
@@ -66,8 +86,8 @@
                       New monthly billing
                     </label>
                     <div class="col-sm-9">
-                        <input type="number" class="form-control required" name="new-billing"
-                          id="new-billing" min="19.90" step="0.01">
+                        <input style="background-color:#fff;" type="number" class="form-control" name="new-billing"
+                          id="new-billing" readonly>
                     </div>
                 </div>
 
@@ -84,6 +104,7 @@
                   <div class="col-sm-9">
                       <input type="text" class="form-control required" name="first_name"
                         id="first_name" placeholder="First name (as it appears on card)"
+                        {% if pagetitle == 'Add agents' %}tabindex="2"{% endif %}
                         {% if not pagetitle %} autofocus {% endif %}>
                   </div>
               </div>
@@ -94,7 +115,8 @@
                   </label>
                   <div class="col-sm-9">
                       <input type="text" class="form-control required" name="last_name"
-                        id="last_name" placeholder="Last name (as it appears on card)" autofocus>
+                        id="last_name" placeholder="Last name (as it appears on card)"
+                        {% if pagetitle == 'Add agents' %}tabindex="3"{% endif %}>
                   </div>
               </div>
 
@@ -103,7 +125,8 @@
                   Card type
                 </label>
                 <div class="col-sm-9">
-                  <select class="form-control col-sm-2 required" name="cardtype" id="cardtype">
+                  <select class="form-control col-sm-2 required" name="cardtype" id="cardtype"
+                    {% if pagetitle == 'Add agents' %}tabindex="3"{% endif %}>
                     <option value="">Select</option>
                     <option value="0">Visa</option>
                     <option value="1">MasterCard</option>
@@ -121,7 +144,8 @@
                 <div class="col-sm-9">
                   <input type="text" class="form-control required" name="acct"
                     id="ACCT" placeholder="Debit/Credit Card Number"
-                    value="4032034487575998">
+                    value="4032034487575998"
+                    {% if pagetitle == 'Add agents' %}tabindex="4"{% endif %}>
                 </div>
               </div>
               <div class="form-group">
@@ -131,7 +155,8 @@
                 <div class="col-sm-9">
                   <div class="row">
                     <div class="col-xs-3">
-                      <select class="form-control col-sm-2 required" name="exp_month" id="exp_month">
+                      <select class="form-control col-sm-2 required" name="exp_month" id="exp_month"
+                      {% if pagetitle == 'Add agents' %}tabindex="5"{% endif %}>>
                         <option>Month</option>
                         <option value="01">Jan</option>
                         <option value="02">Feb</option>
@@ -148,7 +173,8 @@
                       </select>
                     </div>
                     <div class="col-xs-3">
-                      <select class="form-control required" name="exp_year">
+                      <select class="form-control required" name="exp_year"
+                        {% if pagetitle == 'Add agents' %}tabindex="6"{% endif %}>>
                         {% set currentYear = "now"|date("Y") %}
                         {% set year = "now"|date("y") %}
                         <option value="{{ year }}">{{ currentYear }}</option>
@@ -170,7 +196,8 @@
                 </label>
                 <div class="col-sm-3">
                   <input type="text" class="form-control required" name="cvv2" id="cvv2"
-                    placeholder="Security Code">
+                    placeholder="Security Code"
+                    {% if pagetitle == 'Add agents' %}tabindex="7"{% endif %}>
                 </div>
               </div>
 
@@ -184,7 +211,7 @@
                 </label>
                 <div class="col-sm-3">
                   <input type="number" class="form-control required" name="amt" id="amt"
-                    placeholder="Amount" step="0.01">
+                    placeholder="Amount">
                 </div>
               </div>
 
@@ -192,7 +219,8 @@
                     <div class="col-sm-offset-3 col-sm-9">
                         <div class="checkbox">
                           <label for="agree">
-                              <input type="checkbox" class="required" name="agree" id="agree">
+                              <input type="checkbox" class="required" name="agree" id="agree"
+                                {% if pagetitle == 'Add agents' %}tabindex="8"{% endif %}>
                               I agree to recurring monthly billing.
                               <a href="#">
                                   Read terms &amp; conditions
@@ -210,7 +238,8 @@
 
               <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-9">
-                  <button type="submit" id="pay-now-btn" class="btn btn-primary">
+                  <button type="submit" id="pay-now-btn" class="btn btn-primary"
+                    {% if pagetitle == 'Add agents' %}tabindex="9"{% endif %}>
                     {% if pagetitle == 'Add agents' %}
                       Update membership
                     {% else %}
@@ -231,33 +260,62 @@
 <script>
 $(document).ready(function(){
 
-  // $("#payment-form").validate();
+  $("#payment-form").validate();
 
   $("#payment-form").submit(function(){
+      var qty = $("#agent_qty").val();
+      if(qty < 1)
+      {
+        alert("Error. You must add at least one agent in 'Agents to add'.");
+        $("#agent_qty").focus();
+        return false;
+      }
       $("#pay-now-btn").text("Sending data. Please wait...");
   });
 
-  $("#agent_qty").blur(function(){
-      var qty = $(this).val();
-      console.log("qty:" + qty);
+  $("#agent_qty").change(function(){
+      // store number to agents to add in variable
+      var numberNewAgents = $(this).val();
 
-      var newAgents = (9.95 * qty);
+      // format value to numeric for use in calculations
+      numberNewAgents = parseFloat(numberNewAgents);
 
-      newAgents = parseFloat(newAgents).toFixed(2);
-      console.log("newAgents: " + newAgents);
+      // store current number of agents in variable
+      var currentAgentCount = parseFloat($("#current_agent_count").val());
+      console.log("currentAgentCount: " + currentAgentCount);
+      console.log("numberNewAgents:" + numberNewAgents);
 
-      $("#new-agents-cost").val(newAgents);
+      // sum currentAgentCount + qty (agents being added)
+      var newTotalAgents = currentAgentCount + numberNewAgents;
+      console.log("newTotalAgents: " + newTotalAgents);
 
+      // display new agent total
+      $("#total_agents").val(newTotalAgents);
+
+      // calculate additional charges based on number of agents being added
+      var newAgentsCost = (9.95 * numberNewAgents);
+
+      // format newAgentsCost value to numeric for use in calculations
+      newAgentsCost = parseFloat(newAgentsCost).toFixed(2);
+      console.log("newAgentsCost: " + newAgentsCost);
+
+      // format currentBilling value to currency for calculations & PayPal use
       var currentBilling = parseFloat($("#current-billing").val()).toFixed(2);
-      console.log("current billing: " + currentBilling);
+      console.log("currentBilling: " + currentBilling);
 
-      var total = parseFloat(currentBilling) + parseFloat(newAgents);
-      total = parseFloat(total).toFixed(2);
-      console.log(total);
+      // display new additional cost in another field
+      $("#new-agents-cost").val(newAgentsCost);
 
-      $("#new-billing").val(total);
+      // calculate new total billing as sum of current cost + new agents cost
+      var newTotal = parseFloat(currentBilling) + parseFloat(newAgentsCost);
+      newTotal = parseFloat(newTotal).toFixed(2);
+      console.log("newTotal:" + newTotal);
 
-      $("#amt").val(total);
+      // display new billing total
+      $("#new-billing").val(newTotal);
+
+      // display new billing total
+      $("#amt").val(newTotal);
 
 
   });

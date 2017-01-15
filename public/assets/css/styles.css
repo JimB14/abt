@@ -1395,3 +1395,8 @@ table.display-broker-agents{
 .h5bold h5 {
   font-weight: bold;
 }
+
+/* readonly styles paypal/index.html */
+.current-agents-input input[readonly] {
+  background-color: #fff;
+}

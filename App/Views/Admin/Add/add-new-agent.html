@@ -18,7 +18,7 @@
           <h2>Add new agent / broker</h2>
           <hr>
 
-          <form method="post" action="/admin/brokers/post-new-agent?broker_id={{ session.broker_id }}"
+          <form method="post" action="/admin/brokers/post-new-agent?broker_id={{ session.broker_id }}&amp;user_id={{ session.user_id }}"
             id="add-an-agent-form" class="form-horizontal" name="add-an-agent-form"
             enctype="multipart/form-data">
 

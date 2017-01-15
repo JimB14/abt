@@ -89,7 +89,7 @@ class Paypal extends \Core\Model
             'PAYPERIOD'       => 'MONT',
             'TERM'            => '0',
             'OPTIONALTRX'     => 'S',
-            'OPTIONALTRXAMT'  => '9.95',
+            'OPTIONALTRXAMT'  => Config::SUBSCRIPTION,
             'FIRSTNAME'       => $FIRSTNAME,
             'LASTNAME'        => $LASTNAME,
             'CVV2'            => $CVV2, // for cvv validation response
@@ -204,8 +204,9 @@ class Paypal extends \Core\Model
     /**
      * process payment modification
      *
-     * @param  Integer  $user_id  The users ID
-     * @return String             Key/Value pairs from PayPal
+     * @param  Integer  $user_id    The users ID
+     * @param  String   $profileid  The users PayPal profile ID
+     * @return String               Key/Value pairs from PayPal
      */
     public static function processPaymentModification($user_id, $profileid)
     {
@@ -310,8 +311,8 @@ class Paypal extends \Core\Model
         // echo '<br><br>';
         // exit();
 
-        // call sale_transaction() of Payflow object & store results in $response
-        $response = $payflow->modify_transaction($vendor, $user, $partner, $password, $ACCT, $EXPDATE, $AMT, $CURRENCY='USD', $data_array);
+        // call modifyTransaction() of Payflow object & store results in $response
+        $response = $payflow->modifyTransaction($vendor, $user, $partner, $password, $ACCT, $EXPDATE, $AMT, $CURRENCY='USD', $data_array);
 
 
         if (!$payflow->get_errors())
@@ -338,6 +339,86 @@ class Paypal extends \Core\Model
             echo $payflow->get_errors();
         }
     }
+
+
+    /**
+     * process payment reduction
+     *
+     * @param  Integer    $user_id      The users ID
+     * @param  String     $profileid    The users PayPal profile ID
+     * @param  Integer    $agent_count  Number of agents to remove
+     * @return String                   Key/Value pairs from PayPal
+     */
+    public static function processPaymentReduction($user_id, $profileid, $new_amt)
+    {
+        // test
+        echo "Connected to public static function processPaymentReduction() in PayPal Model!<br><br>";
+        echo $user_id . '<br>';
+        echo $profileid . '<br>';
+        echo $new_amt . '<br>';
+        // exit();
+
+        // store PP credentials in variables
+        $vendor   = Config::PAYPAL_VENDOR;
+        $user     = Config::PAYPAL_USER;
+        $partner  = Config::PAYPAL_PARTNER;
+        $password = Config::PAYPAL_PWD;
+
+        // create new instance of Payflow object
+        $payflow = new Payflow();
+
+        // test
+        // if(is_object($payflow)) {echo '$payflow is an object';} else {echo "False";};
+        // exit();
+
+        if ($payflow->get_errors())
+        {
+            echo $payflow->get_errors();
+            exit;
+        }
+
+        // extra parameters to pass to PP
+        $data_array = [
+            'TRXTYPE'         => 'R',         // required   'R' = recurring
+            'ACTION'          => 'M',         // required   'M' = modify
+            'TENDER'          => 'C',         // required   'C' = credit card
+            'ORIGPROFILEID'   => $profileid,  // required   user's PayPal profile ID
+            'AMT'             => $new_amt,
+            'COMMENT1'        => 'Reduce max agent count',  // optional
+            'IPADDRESS'       => $_SERVER['REMOTE_ADDR']    // optional
+            ];
+
+        // test
+        echo '<br>Data array<br>';
+        echo '<pre>';
+        print_r($data_array);
+        echo '</pre>';
+        echo '<br><br>';
+        // exit();
+
+        // call reduce_bill() of Payflow object & store results in $response
+        $response = $payflow->reduceBill($vendor, $user, $partner, $password, $data_array);
+
+        if (!$payflow->get_errors())
+        {
+            // test
+            // echo 'Response array<br>';
+            // echo '<pre>';
+            // print_r($response);
+            // echo '</pre>';
+            // exit();
+
+            // return to Subscribe Controller
+            return $response;
+        }
+        else
+        {
+            echo $payflow->get_errors();
+        }
+
+    }
+
+
 
     /**
      * retrieves profile status response

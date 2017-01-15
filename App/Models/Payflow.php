@@ -259,18 +259,18 @@ class Payflow extends \Core\Model
     // Modification of recurring billing profile
       /**
        * Recurring billing sale transaction; accepts 9 parameters (one is an array)
-       * @param  string   $vendor       PP credential
-       * @param  string   $user         PP credential
-       * @param  string   $partner      PayPal or merchant
-       * @param  string   $password     Account password
-       * @param  string   $card_number  Payment card number
-       * @param  string   $card_expire  Card expiration date
-       * @param  integer  $amount       Total amount of charge
-       * @param  string   $currency     Type of currency
-       * @param  array    $data_array   Additional data
-       * @return [type]                 Name-value pair string
+       * @param  string   $vendor         PP credential
+       * @param  string   $user           PP credential
+       * @param  string   $partner        PayPal or merchant
+       * @param  string   $password       Account password
+       * @param  string   $card_number    Payment card number
+       * @param  string   $card_expire    Card expiration date
+       * @param  integer  $amount         Total amount of charge
+       * @param  string   $currency       Type of currency
+       * @param  array    $data_array     Additional data
+       * @return String                   Name-value pair string
        */
-      function modify_transaction($vendor, $user, $partner, $password, $card_number, $card_expire, $amount, $currency, $data_array)
+      function modifyTransaction($vendor, $user, $partner, $password, $card_number, $card_expire, $amount, $currency, $data_array)
       {
           $this->vendor = $vendor;
           $this->user = $user;
@@ -397,6 +397,107 @@ class Payflow extends \Core\Model
       }
 
 
+      /**
+       * [reduceBill description]
+       * @param  String   $vendor       PP vendor credential
+       * @param  String   $user         PP user credential
+       * @param  String   $partner      PP partner credential
+       * @param  String   $password     PP password credential
+       * @param  Array    $data_array   Additional parameters
+       * @return String                 Name-value pairs of PayPal's stored values
+       */
+      public function reduceBill($vendor, $user, $partner, $password, $data_array)
+      {
+          // test
+          // echo $vendor . '<br>';
+          // echo $user . '<br>';
+          // echo $partner . '<br>';
+          // echo $password . '<br>';
+          // exit();
+
+          $this->vendor = $vendor;
+          $this->user = $user;
+          $this->partner = $partner;
+          $this->password = $password;
+
+          // set submit URL (endpoint)
+          if ($this->test_mode == 1)
+          {
+              $this->submiturl = 'https://pilot-payflowpro.paypal.com';
+          }
+          else
+          {
+              $this->submiturl = 'https://payflowpro.paypal.com';
+          }
+
+          // create request_id for use in headers
+          $tempstr = $vendor . date('YmdGis') . "1";
+          $request_id = md5($tempstr);
+
+          // build query string for recurring billing to pass to PP
+          $plist  = 'USER=' . $this->user . '&';
+          $plist .= 'VENDOR=' . $this->vendor . '&';
+          $plist .= 'PARTNER=' . $this->partner . '&';
+          $plist .= 'PWD=' . $this->password . '&';
+          $plist .= 'TRXTYPE=' . 'R' . '&'; //  R = Recurring, S = Sale transaction, A = Authorisation, C = Credit, D = Delayed Capture, V = Void
+          $plist .= 'ACTION=' . $data_array['ACTION'] . '&';
+          $plist .= 'AMT=' . $data_array['AMT'] . '&';
+          $plist .= 'TENDER=' . 'C' . '&'; // C = credit card, P = PayPal
+          $plist .= 'ORIGPROFILEID=' . $data_array['ORIGPROFILEID'] . '&';
+          $plist .= 'COMMENT1=' . $data_array['COMMENT1'] . '&';
+          $plist .= 'IPADDRESS=' . $data_array['IPADDRESS'] . '&';
+          $plist .= 'VERBOSITY=HIGH';
+
+          // call method for headers
+          $headers = $this->get_curl_headers();
+          $headers[] = "X-VPS-Request-ID: " . $request_id;
+
+          $user_agent = "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)"; // play as Mozilla
+
+          $ch = curl_init();
+          curl_setopt($ch, CURLOPT_URL, $this->submiturl);
+          curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+          curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
+          curl_setopt($ch, CURLOPT_HEADER, 1); // tells curl to include headers in response
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // return into a variable
+          curl_setopt($ch, CURLOPT_TIMEOUT, 45); // times out after 45 secs
+          curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // this line makes it work under https
+          curl_setopt($ch, CURLOPT_POSTFIELDS, $plist); //adding POST data
+          curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,  2); //verifies ssl certificate
+          curl_setopt($ch, CURLOPT_FORBID_REUSE, TRUE); //forces closure of connection when done
+          curl_setopt($ch, CURLOPT_POST, 1); //data sent as POST
+
+          $result = curl_exec($ch);
+          $headers = curl_getinfo($ch);
+          curl_close($ch);
+
+          $pfpro = $this->get_curl_result($result); //result arrray
+
+          // parse query string & store name-value pairs in array $response[]
+          parse_str($pfpro, $response);
+
+          // test
+          // echo 'Response array<br>';
+          // echo '<pre>';
+          // print_r($response);
+          // echo '</pre>';
+          // exit();
+
+          // if successful return PP response
+          if (isset($response['RESULT']) && $response['RESULT'] == 0)
+          {
+              // return to Paypal Controller
+              return $response;
+          }
+          else
+          {
+              $this->set_errors($response['RESPMSG'] . ' ['. $response['RESULT'] . ']');
+              return false;
+          }
+      }
+
+
 
       /**
        * retrives inquiry status response from PayPal
@@ -406,7 +507,7 @@ class Payflow extends \Core\Model
        * @param  String   $partner      PP credential
        * @param  String   $password     PP credential
        * @param  Array    $data_array   Required parameters (includes PROFILEID)
-       * @return String                 Response string
+       * @return String                 Name-value pairs of PayPal's stored values
        */
       function profileStatusInquiry($vendor, $user, $partner, $password, $data_array)
       {

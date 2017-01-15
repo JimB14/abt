@@ -154,7 +154,7 @@ class Paypallog extends \Core\Model
 
             $sql = "SELECT * FROM paypal_log
                     WHERE user_id = :user_id
-                    ORDER BY TRANSTIME DESC";
+                    ORDER BY created_at DESC";
             $parameters = [
                 ':user_id'  => $user_id
             ];

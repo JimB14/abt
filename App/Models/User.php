@@ -788,7 +788,7 @@ class User extends \Core\Model
      * @param  Integer   $agents_added Number of agents added
      * @return boolean
      */
-    public static function updateUserAfterAddingAgents($user_id, $agents_added, $new_amount)
+    public static function updateUserAfterAddingAgents($user_id, $new_max_agents, $returned_amount)
     {
         try
         {
@@ -801,8 +801,46 @@ class User extends \Core\Model
                     WHERE id = :id";
             $stmt = $db->prepare($sql);
             $parameters = [
-                ':max_agents' => $agents_added,
-                ':sub_amt'    => $new_amount,
+                ':max_agents' => $new_max_agents,
+                ':sub_amt'    => $returned_amount,
+                ':id'         => $user_id
+            ];
+            $result = $stmt->execute($parameters);
+
+            // return to Controller
+            return $result;
+        }
+        catch (PDOException $e)
+        {
+            echo $e-getMessage();
+            exit();
+        }
+    }
+
+
+    /**
+     * updates user's table after removing x number of agents
+     *
+     * @param  Integer   $user_id      The user's ID
+     * @param  Integer   $new_amount   New monthly billing amount
+     * @param  Integer   $agents_added Number of agents added
+     * @return boolean
+     */
+    public static function updateUserAfterDeductingAgents($user_id, $new_max_agents, $returned_amount)
+    {
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            $sql = "UPDATE users SET
+                    max_agents = :max_agents,
+                    sub_amt    = :sub_amt
+                    WHERE id = :id";
+            $stmt = $db->prepare($sql);
+            $parameters = [
+                ':max_agents' => $new_max_agents,
+                ':sub_amt'    => $returned_amount,
                 ':id'         => $user_id
             ];
             $result = $stmt->execute($parameters);
