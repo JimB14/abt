@@ -248,7 +248,7 @@ class Subscribe extends \Core\Controller
 
     public function processPaymentReduction()
     {
-        echo "Connect to processPaymentReduction() in Subscribe Controller!<br><br>";
+        // echo "Connect to processPaymentReduction() in Subscribe Controller!<br><br>";
 
         // retrieve user ID from query string & form post data ($agent_count)
         $user_id       = (isset($_REQUEST['user_id'])) ? filter_var($_REQUEST['user_id'], FILTER_SANITIZE_NUMBER_INT) : '';
@@ -268,21 +268,21 @@ class Subscribe extends \Core\Controller
         $new_amt = number_format( ($current_amt - $reduction), 2);
 
         // test
-        echo 'user_id: ' . $user_id . '<br>';
-        echo 'profileid: ' . $profileid . '<br>';
-        echo 'agent_count: ' . $agent_count . '<br>';
-        echo 'current_amt: ' . $current_amt . '<br>';
-        echo 'reduction: ' . $reduction . '<br>';
-        echo 'new_amt: ' . $new_amt . '<br><br>';
+        // echo 'user_id: ' . $user_id . '<br>';
+        // echo 'profileid: ' . $profileid . '<br>';
+        // echo 'agent_count: ' . $agent_count . '<br>';
+        // echo 'current_amt: ' . $current_amt . '<br>';
+        // echo 'reduction: ' . $reduction . '<br>';
+        // echo 'new_amt: ' . $new_amt . '<br><br>';
 
         // process the new payment amount using passed parameters; get back response
         $results = Paypal::processPaymentReduction($user_id, $profileid, $new_amt);
 
         // test
-        echo "PayPal response:";
-        echo '<pre>';
-        print_r($results);
-        echo '</pre>';
+        // echo "PayPal response:";
+        // echo '<pre>';
+        // print_r($results);
+        // echo '</pre>';
 
         // if successful
         if($results)
@@ -304,11 +304,11 @@ class Subscribe extends \Core\Controller
             $next_payment  = preg_replace($pattern, $replacement, $next_payment);
 
             // test if PayPal AMT equals expected amount
-            echo 'PP INQUIRY AMT: ' . $returned_amount . '<br>';
-            echo '$new_amt: ' . $new_amt . '<br>';
-            echo '<pre>';
-            print_r($inquiryResponse);
-            echo '</pre>';
+            // echo 'PP INQUIRY AMT: ' . $returned_amount . '<br>';
+            // echo '$new_amt: ' . $new_amt . '<br>';
+            // echo '<pre>';
+            // print_r($inquiryResponse);
+            // echo '</pre>';
             // exit();
 
             // store PayPal response data in array
@@ -332,16 +332,16 @@ class Subscribe extends \Core\Controller
                 $current_agent_count = $user->max_agents;
 
                 // calculate number of agents deducted ( (new billing amount / cost per agent) - 1 (free))
-                $agents_deducted = ($returned_amount/Config::SUBSCRIPTION) - 1;
+                //$agents_deducted = ($returned_amount/Config::SUBSCRIPTION) - 1;
 
                 // calculate new max_agents value to update `users`.`max_agents`
-                $new_max_agents = $current_agent_count - $agents_deducted;
+                $new_max_agents = $current_agent_count - $agent_count;
 
                 // test
-                echo $current_agent_count . '<br>';
-                echo $returned_amount . '<br>';
-                echo $agents_deducted . '<br>';
-                echo $new_max_agents . '<br>';
+                // echo $current_agent_count . '<br>';
+                // echo $returned_amount . '<br>';
+                // echo $agent_count . '<br>';
+                // echo $new_max_agents . '<br>';
                 // exit();
 
                 // update users table
@@ -355,20 +355,21 @@ class Subscribe extends \Core\Controller
                     // define message based on number of agents
                     if($user->max_agents < 2)
                     {
-                        $subscribe_msg1 = "You have successfully decreased your agent limit
-                        to $user->max_agents agent!";
+                        $subscribe_msg1 = "You have successfully decreased your
+                        agent limit to $user->max_agents agent!";
                     }
                     else
                     {
-                        $subscribe_msg1 = "You have successfully decreased your agent limit
-                        to $user->max_agents agents!";
+                        $subscribe_msg1 = "You have successfully decreased your
+                        agent limit to $user->max_agents agents!";
                     }
 
                     $subscribe_msg2 = "Your credit card will be charged $$returned_amount
                     on $next_payment and each month after unless you cancel your
                     subscription.";
 
-                    $subscribe_msg3 = "You can verify these changes in 'My account'.";
+                    $subscribe_msg3 = "You can verify these changes in the Admin
+                    Panel by clicking on 'My account' under 'Company'.";
 
                     View::renderTemplate('Success/index.html', [
                         'subscribe_success' => 'true',
@@ -396,10 +397,6 @@ class Subscribe extends \Core\Controller
             echo "An error occurred while processing your payment.";
             exit();
         }
-
-
-
-
     }
 
 

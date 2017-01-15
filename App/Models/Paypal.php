@@ -352,10 +352,10 @@ class Paypal extends \Core\Model
     public static function processPaymentReduction($user_id, $profileid, $new_amt)
     {
         // test
-        echo "Connected to public static function processPaymentReduction() in PayPal Model!<br><br>";
-        echo $user_id . '<br>';
-        echo $profileid . '<br>';
-        echo $new_amt . '<br>';
+        // echo "Connected to public static function processPaymentReduction() in PayPal Model!<br><br>";
+        // echo $user_id . '<br>';
+        // echo $profileid . '<br>';
+        // echo $new_amt . '<br>';
         // exit();
 
         // store PP credentials in variables
@@ -389,11 +389,11 @@ class Paypal extends \Core\Model
             ];
 
         // test
-        echo '<br>Data array<br>';
-        echo '<pre>';
-        print_r($data_array);
-        echo '</pre>';
-        echo '<br><br>';
+        // echo '<br>Data array<br>';
+        // echo '<pre>';
+        // print_r($data_array);
+        // echo '</pre>';
+        // echo '<br><br>';
         // exit();
 
         // call reduce_bill() of Payflow object & store results in $response
