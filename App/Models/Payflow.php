@@ -593,6 +593,220 @@ class Payflow extends \Core\Model
 
 
 
+      /**
+       * authorizes credit card for use
+       *
+       * @param  String   $vendor       PP credential
+       * @param  String   $user         PP credential
+       * @param  String   $partner      PP credential
+       * @param  String   $password     PP credential
+       * @param  Array    $data_array   Required parameters (includes PROFILEID)
+       * @return String                 Name-value pairs of PayPal's stored values
+       */
+      function authorizeCreditCard($vendor, $user, $partner, $password, $data_array)
+      {
+          $this->vendor = $vendor;
+          $this->user = $user;
+          $this->partner = $partner;
+          $this->password = $password;
+
+          // validate credit card data
+          if ($this->validate_card_number($data_array['ACCT']) == false)
+          {
+              $this->set_errors('Card Number not valid');
+              return;
+          }
+          if ($this->validate_card_expire($data_array['EXPDATE']) == false)
+          {
+              $this->set_errors('Card Expiration Date not valid');
+              return;
+          }
+
+          // set submit URL (endpoint)
+          if ($this->test_mode == 1)
+          {
+              $this->submiturl = 'https://pilot-payflowpro.paypal.com';
+          }
+          else
+          {
+              $this->submiturl = 'https://payflowpro.paypal.com';
+          }
+
+          // create request_id for use in headers - see line #210
+          $tempstr = $data_array['FIRSTNAME'] . date('YmdGis') . "1";
+          $request_id = md5($tempstr);
+
+          // build query string for recurring billing to pass to PP
+          $plist  = 'USER=' . $this->user . '&';
+          $plist .= 'VENDOR=' . $this->vendor . '&';
+          $plist .= 'PARTNER=' . $this->partner . '&';
+          $plist .= 'PWD=' . $this->password . '&';
+          $plist .= 'FIRSTNAME=' . $data_array['FIRSTNAME'] . '&';
+          $plist .= 'LASTNAME=' . $data_array['LASTNAME'] . '&';
+          $plist .= 'CARDTYPE=' . $data_array['CARDTYPE'] . '&';
+          $plist .= 'ACCT=' . $data_array['ACCT'] . '&';
+          $plist .= 'EXPDATE=' . $data_array['EXPDATE'] . '&';
+          $plist .= 'TENDER=' . $data_array['TENDER'] . '&';
+          $plist .= 'TRXTYPE=' . $data_array['TRXTYPE'] . '&'; //  R = Recurring, S = Sale transaction, A = Authorisation, C = Credit, D = Delayed Capture, V = Void
+          $plist .= 'CURRENCY=' . $data_array['CURRENCY'] . '&';
+          $plist .= 'AMT=' . $data_array['AMT'] . '&';
+          if (isset($data_array['CVV2']))
+          {
+              $plist .= 'CVV2=' . $data_array['CVV2'] . '&';
+          }
+          $plist .= 'IPADDRESS=' . $data_array['IPADDRESS'] . '&';
+          $plist .= 'VERBOSITY=HIGH';
+
+
+          // call method for headers
+          $headers = $this->get_curl_headers();
+          $headers[] = "X-VPS-Request-ID: " . $request_id;
+
+          $user_agent = "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)"; // play as Mozilla
+
+          $ch = curl_init();
+          curl_setopt($ch, CURLOPT_URL, $this->submiturl);
+          curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+          curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
+          curl_setopt($ch, CURLOPT_HEADER, 1); // tells curl to include headers in response
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // return into a variable
+          curl_setopt($ch, CURLOPT_TIMEOUT, 45); // times out after 45 secs
+          curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // this line makes it work under https
+          curl_setopt($ch, CURLOPT_POSTFIELDS, $plist); //adding POST data
+          curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,  2); //verifies ssl certificate
+          curl_setopt($ch, CURLOPT_FORBID_REUSE, TRUE); //forces closure of connection when done
+          curl_setopt($ch, CURLOPT_POST, 1); //data sent as POST
+
+          $result = curl_exec($ch);
+          $headers = curl_getinfo($ch);
+          curl_close($ch);
+
+          $pfpro = $this->get_curl_result($result); //result arrray
+
+          // echo $pfpro; exit();
+
+          // parse query string & store name-value pairs in array $response[]
+          parse_str($pfpro, $response);
+
+          // test
+          // echo 'Response array<br>';
+          // echo '<pre>';
+          // print_r($response);
+          // echo '</pre>';
+          // exit();
+
+          // if successful return PP response
+          if (isset($response['RESULT']) && $response['RESULT'] == 0)
+          {
+              // return to Paypal Controller
+              return $response;
+          }
+          else
+          {
+              $this->set_errors($response['RESPMSG'] . ' ['. $response['RESULT'] . ']');
+              return false;
+          }
+      }
+
+
+
+      /**
+       * updates user profile with new credit card data
+       *
+       * @param  String $vendor       PP credential
+       * @param  String $user         PP credential
+       * @param  String $partner      PP credential
+       * @param  String $password     PP credential
+       * @param  Array $data_array    Additional required parameters
+       * @return String               PP response name-value string
+       */
+      function updateUserProfileWithNewCardData($vendor, $user, $partner, $password, $data_array)
+      {
+        $this->vendor = $vendor;
+        $this->user = $user;
+        $this->partner = $partner;
+        $this->password = $password;
+
+        // set submit URL (endpoint)
+        if ($this->test_mode == 1)
+        {
+            $this->submiturl = 'https://pilot-payflowpro.paypal.com';
+        }
+        else
+        {
+            $this->submiturl = 'https://payflowpro.paypal.com';
+        }
+
+        // create request_id for use in headers - see line #210
+        $tempstr = $data_array['ORIGPROFILEID'] . date('YmdGis') . "1";
+        $request_id = md5($tempstr);
+
+        // build query string for recurring billing to pass to PP
+        $plist  = 'USER=' . $this->user . '&';
+        $plist .= 'VENDOR=' . $this->vendor . '&';
+        $plist .= 'PARTNER=' . $this->partner . '&';
+        $plist .= 'PWD=' . $this->password . '&';
+        $plist .= 'TRXTYPE=' . $data_array['TRXTYPE'] . '&'; //  R = Recurring, S = Sale transaction, A = Authorisation, C = Credit, D = Delayed Capture, V = Void
+        $plist .= 'TENDER=' . $data_array['TENDER'] . '&';
+        $plist .= 'ACTION=' . $data_array['ACTION'] . '&';
+        $plist .= 'ORIGID=' . $data_array['ORIGID'] . '&'; // ORIGID is the PNREF value (length=12) of an original transaction used to update credit card account information.
+        $plist .= 'ORIGPROFILEID=' . $data_array['ORIGPROFILEID'] . '&';
+        $plist .= 'VERBOSITY=HIGH';
+
+        // call method for headers
+        $headers = $this->get_curl_headers();
+        $headers[] = "X-VPS-Request-ID: " . $request_id;
+
+        $user_agent = "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)"; // play as Mozilla
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->submiturl);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
+        curl_setopt($ch, CURLOPT_HEADER, 1); // tells curl to include headers in response
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // return into a variable
+        curl_setopt($ch, CURLOPT_TIMEOUT, 45); // times out after 45 secs
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // this line makes it work under https
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $plist); //adding POST data
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,  2); //verifies ssl certificate
+        curl_setopt($ch, CURLOPT_FORBID_REUSE, TRUE); //forces closure of connection when done
+        curl_setopt($ch, CURLOPT_POST, 1); //data sent as POST
+
+        $result = curl_exec($ch);
+        $headers = curl_getinfo($ch);
+        curl_close($ch);
+
+        $pfpro = $this->get_curl_result($result); //result arrray
+
+        // echo $pfpro; exit();
+
+        // parse query string & store name-value pairs in array $response[]
+        parse_str($pfpro, $response);
+
+        // test
+        // echo 'Response array<br>';
+        // echo '<pre>';
+        // print_r($response);
+        // echo '</pre>';
+        // exit();
+
+        // if successful return PP response
+        if (isset($response['RESULT']) && $response['RESULT'] == 0)
+        {
+            // return to Paypal Controller
+            return $response;
+        }
+        else
+        {
+            $this->set_errors($response['RESPMSG'] . ' ['. $response['RESULT'] . ']');
+            return false;
+        }
+      }
+
+
+
   /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
   // Cancel recurring billing
 

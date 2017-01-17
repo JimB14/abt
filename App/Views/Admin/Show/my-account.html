@@ -223,6 +223,8 @@
                 </form>
 
 
+                <!-- - - - - - - Reduce my bill - - - - - - -  - - - - - - - -->
+
                 {% if user.max_agents - agent_count >= 1 %}
                   <hr>
                   <h3 style="margin-bottom: 15px;">Reduce my bill</h3>
@@ -268,7 +270,7 @@
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-9">
                                <button type="submit" class="btn btn-primary btn-sm"
-                                role="submit" id="change-password-btn">
+                                role="submit" id="reduce-my-bill-btn">
                                  Reduce my bill
                                </button>
                             </div>
@@ -278,11 +280,39 @@
 
                 <hr>
 
+
+
+                <!-- - - - - - Modify credit card  - - - - - - - - - - - - - -->
+
+                <h3 style="margin-bottom: 15px;" id="paymentDetails">Credit card modification</h3>
+
+                  <div class="form-group">
+                      <label for="update-credit-card" class="control-label col-sm-3 text-right">
+                        Authorize new card
+                      </label>
+                      <div class="col-sm-9">
+                         <a href="/subscribe/authorize-new-credit-card?user_id={{ user.id }}&amp;profileid={{ ppProfile.PROFILEID }}"
+                          type="submit" class="btn btn-primary btn-lg" role="button"
+                          id="update-credit-card-btn">
+                            Authorize new card
+                         </a>
+                         <small>
+                           <br>
+                           *Once authorized, your recurring bill amount will be charged against this card, on your next payment date
+                         </small>
+                      </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <hr>
+                  </div>
+
+                <!-- - - - - - Change password - - - - - - - - - - - - - - - -->
+
                 <h3 style="margin-bottom: 15px;">Change password</h3>
 
                 <form style="border-bottom: 1px solid #eee; margin-bottom:20px;"
-                class="form-horizontal required" method="post"
-                action="/admin/brokers/change-password?user_id={{ user.id }}"
+                  class="form-horizontal required" method="post"
+                  action="/admin/brokers/change-password?user_id={{ user.id }}"
                   id="change-password-form">
 
                    <div class="form-group">
@@ -336,6 +366,7 @@
                 </form>
 
 
+                <!-- - - - - - - Change login email - - - - -  - - - - - - - -->
 
                 <h3 style="margin-bottom: 15px;">
                   Change login email
@@ -428,6 +459,10 @@ $(document).ready(function(){
         }
 
     });
+
+    // $("#payment-history-form").submit(function(){
+    //     $("#view-payment-history-btn").hide();
+    // });
 
 });
 </script>

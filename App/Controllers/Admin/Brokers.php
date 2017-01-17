@@ -147,49 +147,61 @@ class Brokers extends \Core\Controller
         // get paypal profile data from payflow gateway
         $ppProfile = Paypal::profileStatusInquiry($profileid);
 
-        $last_four = substr($ppProfile['ACCT'], -4);
+        if($ppProfile)
+        {
+            $last_four = substr($ppProfile['ACCT'], -4);
 
-        // store RegExp values in variables
-        $pattern     = '/(\d{2})(\d{2})(\d{4})/';
-        $replacement = '\1-\2-\3';
+            // store RegExp values in variables
+            $pattern     = '/(\d{2})(\d{2})(\d{4})/';
+            $replacement = '\1-\2-\3';
 
-        // store PayPal returned values in variables
-        $creation_date = $ppProfile['CREATIONDATE'];
-        $last_changed  = $ppProfile['LASTCHANGED'];
-        $next_payment  = $ppProfile['NEXTPAYMENT'];
+            // store PayPal returned values in variables
+            $creation_date = $ppProfile['CREATIONDATE'];
+            $last_changed  = $ppProfile['LASTCHANGED'];
+            $next_payment  = $ppProfile['NEXTPAYMENT'];
 
-        // re-format (add hyphens) using RegExp for better readability
-        $creation_date = preg_replace($pattern, $replacement, $creation_date);
-        $last_changed  = preg_replace($pattern, $replacement, $last_changed);
-        $next_payment  = preg_replace($pattern, $replacement, $next_payment);
+            // re-format (add hyphens) using RegExp for better readability
+            $creation_date = preg_replace($pattern, $replacement, $creation_date);
+            $last_changed  = preg_replace($pattern, $replacement, $last_changed);
+            $next_payment  = preg_replace($pattern, $replacement, $next_payment);
 
-        // test
-        // echo $last_four . '<br>';
-        // echo $creation_date . '<br>';
-        // echo $last_changed . '<br>';
-        // echo $next_payment . '<br>';
-        // exit();
+            // test
+            // echo $last_four . '<br>';
+            // echo $creation_date . '<br>';
+            // echo $last_changed . '<br>';
+            // echo $next_payment . '<br>';
+            // exit();
 
-        // test
-        // echo '<pre>';
-        // print_r($ppProfile);
-        // echo '</pre>';
-        // exit();
+            // test
+            // echo '<pre>';
+            // print_r($ppProfile);
+            // echo '</pre>';
+            // exit();
 
-        // render view
-        View::renderTemplate('Admin/Show/my-account.html', [
-            'agents'        => $agents,
-            'company_name'  => $company_name,
-            'user'          => $user,
-            'agent_count'   => $agent_count,
-            'broker_type'   => $broker_type,
-            'ppProfile'     => $ppProfile,
-            'last_four'     => $last_four,
-            'creation_date' => $creation_date,
-            'last_changed'  => $last_changed,
-            'next_payment'  => $next_payment,
-            'extra_agents'  => $extra_agents
-        ]);
+            // get last transaction data
+            //$results = Paypal::processPaymentHistory($profileid);
+
+
+            // render view
+            View::renderTemplate('Admin/Show/my-account.html', [
+                'agents'        => $agents,
+                'company_name'  => $company_name,
+                'user'          => $user,
+                'agent_count'   => $agent_count,
+                'broker_type'   => $broker_type,
+                'ppProfile'     => $ppProfile,
+                'last_four'     => $last_four,
+                'creation_date' => $creation_date,
+                'last_changed'  => $last_changed,
+                'next_payment'  => $next_payment,
+                'extra_agents'  => $extra_agents
+            ]);
+        }
+        else
+        {
+            echo "You appear to not have a payment profile.";
+            exit();
+        }
     }
 
 

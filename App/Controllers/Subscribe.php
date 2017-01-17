@@ -401,6 +401,156 @@ class Subscribe extends \Core\Controller
 
 
 
+    public function authorizeNewCreditCard()
+    {
+        // echo "Connect to authorizeNewCreditCard() in Subscribe Controller!<br><br>";
+
+        // retrieve user ID & profileid from post data
+        $user_id   = (isset($_REQUEST['user_id'])) ? filter_var($_REQUEST['user_id'], FILTER_SANITIZE_NUMBER_INT) : '';
+        $profileid = (isset($_REQUEST['profileid'])) ? filter_var($_REQUEST['profileid'], FILTER_SANITIZE_STRING) : '';
+
+        if($user_id == '' || $profileid == '')
+        {
+            echo '<script>';
+            echo 'alert("Error. You must refresh the window before re-submitting another \'View details\' request.")';
+            echo '</script>';
+
+            echo '<script>';
+            echo 'window.location.href="/admin/brokers/my-account?id={{ session.broker_id }}"</script>';
+            echo '</script>';
+        }
+
+        // test
+        // echo 'user_id: ' . $user_id . '<br>';
+        // echo 'profileid: ' . $profileid . '<br><br>';
+        // exit();
+
+        // set page title
+        $pagetitle = 'Authorize new credit card';
+
+        $explain = 'If approved, this card will be charged on the same monthly billing date.';
+
+        View::renderTemplate('Paypal/index.html', [
+            'user_id'     => $user_id,
+            'profileid'   => $profileid,
+            'update-card' => 'true',
+            'pagetitle'   => $pagetitle,
+            'explain'     => $explain,
+            'action'      => '/subscribe/process-credit-card-authorization?user_id='.$user_id.'&profileid='.$profileid
+        ]);
+    }
+
+
+
+    public function processCreditCardAuthorization()
+    {
+        // retrieve query string data
+        $user_id = (isset($_REQUEST['user_id'])) ? filter_var($_REQUEST['user_id'], FILTER_SANITIZE_NUMBER_INT) : '';
+        $profileid = (isset($_REQUEST['profileid'])) ? filter_var($_REQUEST['profileid'], FILTER_SANITIZE_STRING) : '';
+
+        // get user data
+        $user = User::getUser($user_id);
+
+        // message and redirect if query string data incomplete
+        if($user_id == '' || $profileid == '')
+        {
+            echo '<script>';
+            echo 'alert("Error. Data missing.';
+            echo '</script>';
+
+            echo '<script>';
+            echo 'window.location.href="/admin/brokers/my-account?id={{ session.broker_id }}"</script>';
+            echo '</script>';
+        }
+
+        // test
+        // echo $user_id . '<br>';
+        // echo $profileid . '<br>';
+        // exit();
+
+        // process credit card authorization (need PNREF)
+        $result = Paypal::authorizeCreditCard();
+
+        if($result)
+        {
+            // test
+            // echo '<pre>';
+            // print_r($result);
+            // echo '</pre>';
+
+            // store PNREF value in variable
+            $pnref = $result['PNREF']; // PNREF value is the ORIGID of an original transaction used to update credit card account information
+
+            // test
+            // echo $pnref . '<br>';
+            // echo $profileid . '<br>';
+
+            // update user with new credit card data
+            $result = Paypal::updateUserProfileWithNewCardData($profileid, $pnref);
+
+            if($result)
+            {
+                // test
+                // echo '<pre>';
+                // print_r($result);
+                // echo '</pre>';
+                // exit();
+
+                // store PayPal response values in array
+                $data_array = [
+                    'RESULT'    => $result['RESULT'],
+                    'RPREF'     => $result['RPREF'],
+                    'PROFILEID' => $result['PROFILEID'],
+                    'RESPMSG'   => $result['RESPMSG']
+                ];
+
+                // update Paypal log
+                $result = Paypallog::addTransactionDataForCreditCardUpdate($user_id, $data_array);
+
+                if($result)
+                {
+                    // store message to display to user
+                    $new_card_authorized1 = "Your new card is authorized for use!";
+
+                    // store message to display to user
+                    $new_card_authorized2 = "On your recurring billing date, your
+                    next payment will be charged against this card.";
+
+                    // store message to display to user
+                    $new_card_authorized3 = "You can change credit cards at any
+                      time in the Admin Panel in 'My account.'";
+
+                    // rendier view
+                    View::renderTemplate("Success/index.html", [
+                        'new_card_authorized1'  => $new_card_authorized1,
+                        'new_card_authorized2'  => $new_card_authorized2,
+                        'new_card_authorized3'  => $new_card_authorized3,
+                        'first_name'            => $user->first_name,
+                        'last_name'             => $user->last_name,
+                        'new_card_authorized'   => 'true'
+                    ]);
+                }
+                else
+                {
+                    echo "Error updating log with transaction data.";
+                    exit();
+                }
+            }
+            else
+            {
+                echo "Error updating profile with new credit card data.";
+                exit();
+            }
+        }
+        else
+        {
+            echo "Error authorizing credit card.";
+            exit();
+        }
+    }
+
+
+
     public function cancelPayment()
     {
         // echo "Successfully connected to cancelPayment() method in Subscribe Controller <br><br>";
@@ -431,9 +581,9 @@ class Subscribe extends \Core\Controller
             // resource: https://developer.paypal.com/docs/classic/payflow/recurring-billing/#returned-values-for-the-cancel-action
             $data_array = [
                 'RESULT'    => $response['RESULT'],
-                'RPREF'     => $response['RPREF'],  // Reference number to this particular action request.
+                'RPREF'     => $response['RPREF'],     // Reference number to this particular action request.
                 'PROFILEID' => $response['PROFILEID'], // profile ID of the original profile
-                'RESPMSG'   => $response['RESPMSG']  // Optional response message.
+                'RESPMSG'   => $response['RESPMSG']    // Optional response message.
                 //'AUTHCODE'  => $response['AUTHCODE']
             ];
 

@@ -140,6 +140,48 @@ class Paypallog extends \Core\Model
 
 
     /**
+     * adds credit card update transaction data to `paypal_log` table
+     *
+     * @param integer $user_id      The user's ID
+     * @param array   $data_array   Required and addtional data for PP
+     * @return boolean
+     */
+    public static function addTransactionDataForCreditCardUpdate($user_id, $data_array)
+    {
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            // insert paypal transaction data into paypal_log
+            $sql = "INSERT INTO paypal_log SET
+                    user_id       = :user_id,
+                    RESULT        = :RESULT,
+                    RESPMSG       = :RESPMSG,
+                    PROFILEID     = :PROFILEID,
+                    RPREF         = :RPREF";
+            $parameters = [
+                ':user_id'        => $user_id,
+                ':RESULT'         => $data_array['RESULT'],
+                ':RESPMSG'        => $data_array['RESPMSG'],
+                ':PROFILEID'      => $data_array['PROFILEID'],
+                ':RPREF'          => $data_array['RPREF']
+            ];
+            $stmt = $db->prepare($sql);
+            $result = $stmt->execute($parameters);
+
+            // return boolean to Subscribe Controller
+            return $result;
+        }
+        catch (PDOException $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
+    }
+
+
+    /**
      * gets transaction data from paypal_log
      *
      * @param  int $user->id    The user ID

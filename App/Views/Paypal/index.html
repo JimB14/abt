@@ -201,19 +201,22 @@
                 </div>
               </div>
 
-              <div class="form-group">
-                <label class="col-sm-3 control-label" for="amt">
-                  {% if pagetitle == 'Add agents' %}
-                    New monthly charge
-                  {% else %}
-                    Amount
-                  {% endif %}
-                </label>
-                <div class="col-sm-3">
-                  <input type="number" class="form-control required" name="amt" id="amt"
-                    placeholder="Amount">
+              <!-- Do not display 'Amount' for credit card update -->
+              {% if pagetitle != 'Authorize new credit card' %}
+                <div class="form-group">
+                  <label class="col-sm-3 control-label" for="amt">
+                    {% if pagetitle == 'Add agents' %}
+                      New monthly charge
+                    {% else %}
+                      Amount
+                    {% endif %}
+                  </label>
+                  <div class="col-sm-3">
+                    <input type="number" class="form-control required" name="amt"
+                      id="amt" placeholder="Amount" value="{% if new_subscription == 'true' %}9.95{% endif %}">
+                  </div>
                 </div>
-              </div>
+              {% endif %}
 
               <div class="form-group has-feedback has-feedback">
                     <div class="col-sm-offset-3 col-sm-9">
@@ -242,10 +245,17 @@
                     {% if pagetitle == 'Add agents' %}tabindex="9"{% endif %}>
                     {% if pagetitle == 'Add agents' %}
                       Update membership
+                    {% elseif pagetitle == 'Authorize new credit card' %}
+                      Authorize Now
                     {% else %}
                       Pay Now
                     {% endif %}
                   </button>
+                  {% if pagetitle == 'Authorize new credit card' %}
+                    <small style="display:block; margin-top: 10px;">
+                      *{{ explain }}
+                    </small>
+                  {% endif %}
                 </div>
               </div>
 

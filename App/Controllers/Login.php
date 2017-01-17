@@ -137,8 +137,9 @@ use \App\Models\State;
 
             // send for payment
             View::renderTemplate('Paypal/index.html', [
-                'user'   => $user,
-                'states' => $states
+                'user'              => $user,
+                'states'            => $states,
+                'new_subscription'  => 'true'                
             ]);
             exit();
         }

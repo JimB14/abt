@@ -72,6 +72,22 @@
               </h4>
               <br><br><br><br>
             {% endif %}
+
+            {% if new_card_authorized == 'true' %}
+              <h3 style="margin-top: 0px">
+                Thank you {{ first_name }} {{ last_name}}!
+              </h3>
+              <h4 style="margin-top: 15px">
+                {{ new_card_authorized1 }}
+              </h4>
+              <p style="margin-top: 15px">
+                {{ new_card_authorized2 }}
+              </p>
+              <h4 style="margin-top: 15px">
+                {{ new_card_authorized3 }}
+              </h4>
+              <br><br><br><br>
+            {% endif %}
         </div>
 
         <div class="col-md-4">

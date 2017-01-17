@@ -96,7 +96,7 @@ class Paypal extends \Core\Model
             'COMMENT1'        => 'Subscription',
             'RETRYNUMDAYS'    => '3',  // The number of consecutive days that PayPal should attempt to process a failed transaction until Approved status is received; maximum value is 4.
             'IPADDRESS'       => $_SERVER['REMOTE_ADDR']
-            ];
+        ];
 
         // test
         //  echo 'VENDOR: ' . $vendor . '<br>';
@@ -160,9 +160,9 @@ class Paypal extends \Core\Model
         $password = Config::PAYPAL_PWD;
 
         // store required parameters for Cancel Action in variables
-        $trxtype = 'R';
-        $tender  = 'C';
-        $action  = 'C';
+        $trxtype = 'R';  // R = recurring
+        $tender  = 'C';  // C = credit card
+        $action  = 'C';  // C = cancel
         // origprofileid passed to function above
 
         // create new instance of Payflow object
@@ -289,7 +289,7 @@ class Paypal extends \Core\Model
             'COMMENT1'        => 'Add agents',
             'RETRYNUMDAYS'    => '3',  // The number of consecutive days that PayPal should attempt to process a failed transaction until Approved status is received; maximum value is 4.
             'IPADDRESS'       => $_SERVER['REMOTE_ADDR']
-            ];
+        ];
 
         // test
         // echo 'VENDOR: ' . $vendor . '<br>';
@@ -386,7 +386,7 @@ class Paypal extends \Core\Model
             'AMT'             => $new_amt,
             'COMMENT1'        => 'Reduce max agent count',  // optional
             'IPADDRESS'       => $_SERVER['REMOTE_ADDR']    // optional
-            ];
+        ];
 
         // test
         // echo '<br>Data array<br>';
@@ -449,27 +449,162 @@ class Paypal extends \Core\Model
             'TRXTYPE'       => 'R',  //  R = Recurring, S = Sale transaction, A = Authorisation, C = Credit, D = Delayed Capture, V = Void
             'TENDER'        => 'C',  //  C = credit card, P = PayPal
             'ACTION'        => 'I'   //  I = Inquiry
+        ];
+
+        // call sale_transaction() of Payflow object & store results in $response
+        $inquiryResponse = $payflow->profileStatusInquiry($vendor, $user, $partner, $password, $data_array);
+
+        if (!$payflow->get_errors())
+        {
+            // test
+            // echo 'Response array<br>';
+            // echo '<pre>';
+            // print_r($response);
+            // echo '</pre>';
+            // exit();
+
+            // return to Subscribe Controller
+            return $inquiryResponse;
+        }
+        else
+        {
+            echo $payflow->get_errors();
+        }
+    }
+
+
+
+    /**
+     * authorizes new credit card
+     *
+     * @param  String   $profileid    The use's PayPal PROFILEID
+     * @return String                 Need the PNREF
+     */
+    public static function authorizeCreditCard()
+    {
+        // retrieve post data from form, sanitize & store in variables
+        $FIRSTNAME  = (isset($_POST['first_name'])) ? filter_var($_POST['first_name'], FILTER_SANITIZE_STRING) : '';
+        $LASTNAME   = (isset($_POST['last_name'])) ? filter_var($_POST['last_name'], FILTER_SANITIZE_STRING) : '';
+        $CARDTYPE   = (isset($_POST['cardtype'])) ? filter_var($_POST['cardtype'], FILTER_SANITIZE_STRING) : '';
+        $ACCT       = (isset($_POST['acct'])) ? filter_var($_POST['acct'], FILTER_SANITIZE_STRING) : '';
+        $exp_month  = (isset($_POST['exp_month'])) ? filter_var($_POST['exp_month'], FILTER_SANITIZE_STRING) : '';
+        $exp_year   = (isset($_POST['exp_year'])) ? filter_var($_POST['exp_year'], FILTER_SANITIZE_STRING) : '';
+        $EXPDATE    = $exp_month.$exp_year;
+        $CVV2       = (isset($_POST['cvv2'])) ? filter_var($_POST['cvv2'], FILTER_SANITIZE_STRING) : '';
+        $agree      = (isset($_POST['agree'])) ? filter_var($_POST['agree'], FILTER_SANITIZE_STRING) : '';
+
+        // check for empty fields - backup for JavaScript failure
+        if( ($FIRSTNAME == '') || ($LASTNAME == '') || ($CARDTYPE == '')
+            || ($ACCT == '') || ($EXPDATE == '') || ($CVV2 == '') || ($agree != 'on') )
+        {
+            $payflow->set_errors("All fields required. Please login and try again.");
+            exit();
+        }
+
+        // store PP credentials in variables
+        $vendor   = Config::PAYPAL_VENDOR;
+        $user     = Config::PAYPAL_USER;
+        $partner  = Config::PAYPAL_PARTNER;
+        $password = Config::PAYPAL_PWD;
+
+        // create new instance of Payflow object
+        $payflow = new Payflow();
+
+        if ($payflow->get_errors())
+        {
+            echo $payflow->get_errors();
+            exit;
+        }
+
+        // four required parameters to pass to PP (along with four credentials above)
+        $data_array = [
+            'TRXTYPE'       => 'A',   //  R = Recurring, S = Sale transaction, A = Authorisation, C = Credit, D = Delayed Capture, V = Void
+            'TENDER'        => 'C',   //  C = Credit card
+            'FIRSTNAME'     => $FIRSTNAME,
+            'LASTNAME'      => $LASTNAME,
+            'CARDTYPE'      => $CARDTYPE,
+            'ACCT'          => $ACCT,
+            'EXPDATE'       => $EXPDATE,
+            'CVV2'          => $CVV2,
+            'CURRENCY'      => 'USD',
+            'AMT'           => 0,
+            'IPADDRESS'     => $_SERVER['REMOTE_ADDR']
             ];
 
-            // call sale_transaction() of Payflow object & store results in $response
-            $inquiryResponse = $payflow->profileStatusInquiry($vendor, $user, $partner, $password, $data_array);
+        // call paymentInquiry() of Payflow object & store results in $response
+        $response = $payflow->authorizeCreditCard($vendor, $user, $partner, $password, $data_array);
 
-            if (!$payflow->get_errors())
-            {
-                // test
-                // echo 'Response array<br>';
-                // echo '<pre>';
-                // print_r($response);
-                // echo '</pre>';
-                // exit();
+        if (!$payflow->get_errors())
+        {
+            // test
+            // echo 'Response array<br>';
+            // echo '<pre>';
+            // print_r($inquiryResponse);
+            // echo '</pre>';
+            // exit();
 
-                // return to Subscribe Controller
-                return $inquiryResponse;
-            }
-            else
-            {
-                echo $payflow->get_errors();
-            }
+            // return to Subscribe Controller
+            return $response;
+        }
+        else
+        {
+            echo $payflow->get_errors();
+        }
+    }
+
+
+    /**
+     * update profileid with new credit card data
+     *
+     * @param  String   $profileid    PayPal's profile ID
+     * @param  String   $pnref        PP's transaction reference from authorization approval
+     * @return String                 PP's response
+     */
+    public static function updateUserProfileWithNewCardData($profileid, $pnref)
+    {
+        // store PP credentials in variables
+        $vendor   = Config::PAYPAL_VENDOR;
+        $user     = Config::PAYPAL_USER;
+        $partner  = Config::PAYPAL_PARTNER;
+        $password = Config::PAYPAL_PWD;
+
+        // create new instance of Payflow object
+        $payflow = new Payflow();
+
+        if ($payflow->get_errors())
+        {
+            echo $payflow->get_errors();
+            exit;
+        }
+
+        // four required parameters to pass to PP (along with four credentials above)
+        $data_array = [
+            'TRXTYPE'       => 'R',   //  R = Recurring, S = Sale transaction, A = Authorisation, C = Credit, D = Delayed Capture, V = Void
+            'TENDER'        => 'C',   //  C = Credit card
+            'ACTION'        => 'M',   //  M = Modify
+            'ORIGID'        => $pnref,
+            'ORIGPROFILEID' => $profileid
+        ];
+
+        // call paymentInquiry() of Payflow object & store results in $response
+        $response = $payflow->updateUserProfileWithNewCardData($vendor, $user, $partner, $password, $data_array);
+
+        if (!$payflow->get_errors())
+        {
+            // test
+            // echo 'Response array<br>';
+            // echo '<pre>';
+            // print_r($response);
+            // echo '</pre>';
+            // exit();
+
+            // return to Subscribe Controller
+            return $response;
+        }
+        else
+        {
+            echo $payflow->get_errors();
+        }
     }
 
 }
