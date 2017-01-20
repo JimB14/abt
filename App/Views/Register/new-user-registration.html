@@ -34,8 +34,8 @@
                       First name
                   </label>
                   <div class="col-sm-9">
-                      <input type="text" name="first_name" class="form-control"
-                      id="first_name" placeholder="First name"
+                      <input type="text" name="first_name" class="form-control required"
+                        id="first_name" placeholder="First name"
                       value="{{ user.first_name }}">
                       <span class="glyphicon form-control-feedback" id="first_name1"></span>
                   </div>
@@ -48,7 +48,7 @@
                       Last name
                   </label>
                   <div class="col-sm-9">
-                      <input type="text" name="last_name" class="form-control"
+                      <input type="text" name="last_name" class="form-control required"
                         id="last_name" placeholder="Last name"
                         value="{{ user.last_name }}">
                         <span class="glyphicon form-control-feedback" id="last_name1"></span>
@@ -61,8 +61,8 @@
                       Title
                   </label>
                   <div class="col-sm-9">
-                      <input type="text" name="title" class="form-control"
-                      id="title" placeholder="Title" value="{{ user.title }}" autofocus>
+                      <input type="text" name="title" class="form-control required"
+                        id="title" placeholder="Title" value="{{ user.title }}" autofocus>
                       <span class="glyphicon form-control-feedback" id="title1"></span>
                   </div>
               </div>
@@ -73,10 +73,10 @@
                       Email
                   </label>
                   <div class="col-sm-9">
-                      <input type="broker_email" name="broker_email" class="form-control"
-                      id="email" placeholder="Email"
+                      <input type="text" name="broker_email" class="form-control required"
+                        id="email" placeholder="Email"
                       value="{% if user.email %}{{ user.email }}{% endif %}">
-                      <span class="glyphicon form-control-feedback" id="email1"></span>
+                      <span class="glyphicon form-control-feedback" id="broker_email1"></span>
                   </div>
               </div>
 
@@ -86,7 +86,7 @@
                       Cell
                   </label>
                   <div class="col-sm-9">
-                      <input type="broker_cell" name="broker_cell" class="form-control required">
+                      <input type="text" name="broker_cell" class="form-control required">
                       <span class="glyphicon form-control-feedback" id="broker_cell1"></span>
                   </div>
               </div>

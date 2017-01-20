@@ -227,13 +227,13 @@ class User extends \Core\Model
 
 
     /**
-     * updates value in users.current after successful payment or cancellation
+     * updates value in users.current after successful payment
      *
      * @param  integer $user_id  The user ID
      *
      * @return boolean
      */
-    public static function updateCurrent($user_id, $status)
+    public static function updateCurrent($user_id, $current, $sub_amt, $max_agents)
     {
         // establish db connection
         $db = static::getDB();
@@ -241,16 +241,63 @@ class User extends \Core\Model
         try
         {
             $sql = "UPDATE users SET
-                    current = :current
+                    current = :current,
+                    sub_amt = :sub_amt,
+                    max_agents = :max_agents
                     WHERE id = :id";
             $stmt = $db->prepare($sql);
             $parameters = [
-                ':id'      => $user_id,
-                ':current' => $status
+                ':id'         => $user_id,
+                ':current'    => $current,
+                ':sub_amt'    => $sub_amt,
+                ':max_agents' => $max_agents
             ];
             $result = $stmt->execute($parameters);
 
-            // return to Subscribe Controller
+            // return boolean to Subscribe Controller
+            return $result;
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
+    }
+
+
+
+    /**
+     * updates value in users account after cancellation
+     *
+     * @param  integer  $user_id  The user ID
+     * @param  integer  $user_id  The payment status
+     * @param  decimal  $user_id  The subscription amount
+     * @param  integer  $user_id  The number of agents
+     *
+     * @return boolean
+     */
+    public static function updateUserAccount($user_id, $current, $sub_amt, $max_agents)
+    {
+        // establish db connection
+        $db = static::getDB();
+
+        try
+        {
+            $sql = "UPDATE users SET
+                    current = :current,
+                    sub_amt = :sub_amt,
+                    max_agents = :max_agents
+                    WHERE id = :id";
+            $stmt = $db->prepare($sql);
+            $parameters = [
+                ':id'         => $user_id,
+                ':current'    => $current,
+                ':sub_amt'    => $sub_amt,
+                ':max_agents' => $max_agents
+            ];
+            $result = $stmt->execute($parameters);
+
+            // return boolean to Subscribe Controller
             return $result;
         }
         catch(PDOException $e)
@@ -710,6 +757,7 @@ class User extends \Core\Model
             ];
             $result = $stmt->execute($parameters);
 
+            // return boolean to Register Controller
             return $result;
         }
         catch(PDOException $e)
@@ -887,5 +935,82 @@ class User extends \Core\Model
         }
     }
 
+
+    /**
+     * retrieves PROFILEID from `paypal_log`
+     *
+     * @param  Integer   $user_id   The user's ID
+     * @return String               The user's PayPal PROFILEID
+     */
+    public static function getProfileId($user_id)
+    {
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            $sql = "SELECT * FROM paypal_log
+                    WHERE user_id = :user_id
+                    LIMIT 1";
+            $stmt = $db->prepare($sql);
+            $parameters = [
+                ':user_id' => $user_id
+            ];
+            $stmt->execute($parameters);
+            $result = $stmt->fetch(PDO::FETCH_OBJ);
+
+            // store profileid in variable
+            $profileid = $result->PROFILEID;
+
+            // return PROFILEID to Subscribe Controller
+            return $profileid;
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
+    }
+
+
+    /**
+     * updates user data after reactivation
+     *
+     * @param  Integer  $user_id      The user's ID
+     * @param  Integer  $current      The payment status
+     * @param  Decimal  $sub_amt      The subscription amount
+     * @param  Integer  $max_agents   The number of agents
+     * @return boolean
+     */
+    public static function updateAfterReactivation($user_id, $current, $sub_amt, $max_agents)
+    {
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            $sql = "UPDATE users SET
+                    current = :current,
+                    sub_amt = :sub_amt,
+                    max_agents = :max_agents
+                    WHERE id = :id";
+            $stmt = $db->prepare($sql);
+            $parameters = [
+                ':id'         => $user_id,
+                ':current'    => $current,
+                ':sub_amt'    => $sub_amt,
+                ':max_agents' => $max_agents
+            ];
+            $result = $stmt->execute($parameters);
+
+            // return booelan to Subscribe Controller
+            return $result;
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
+    }
 
 }

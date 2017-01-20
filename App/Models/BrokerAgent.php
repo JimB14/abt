@@ -155,7 +155,11 @@ class BrokerAgent extends \Core\Model
     {
         if($broker_id != null)
         {
-            $broker_id = "WHERE brokers.broker_id = $broker_id";
+            $broker_id = "WHERE brokers.broker_id = $broker_id AND broker_agents.display = 1";
+        }
+        else
+        {
+            $broker_id = "WHERE broker_agents.display = 1";
         }
         if($limit != null)
         {
@@ -829,6 +833,7 @@ class BrokerAgent extends \Core\Model
 
             $sql = "INSERT INTO broker_agents SET
                     broker_id       = :broker_id,
+                    broker_user_id  = :broker_user_id,
                     status          = :status,
                     type            = :type,
                     first_name      = :first_name,
@@ -855,31 +860,32 @@ class BrokerAgent extends \Core\Model
                     counties_serv05 = :counties_serv05";
             $stmt = $db->prepare($sql);
             $parameters = [
-                ':broker_id'       => $broker_id,
-                ':status'          => $status,
-                ':type'            => $type,
-                ':first_name'      => $first_name,
-                ':last_name'       => $last_name,
-                ':about_me'        => $about_me,
-                ':cell'            => $cell,
-                ':agent_email'     => $agent_email,
-                ':agent_telephone' => $agent_telephone,
-                ':address1'        => $address1,
-                ':address2'        => $address2,
-                ':city'            => $city,
-                ':state'           => $state,
-                ':zip'             => $zip,
-                ':affiliations'    => $affiliations,
-                ':state_serv01'    => $state_serv01,
-                ':state_serv02'    => $state_serv02,
-                ':state_serv03'    => $state_serv03,
-                ':state_serv04'    => $state_serv04,
-                ':state_serv05'    => $state_serv05,
-                ':counties_serv01' => $counties_serv01,
-                ':counties_serv02' => $counties_serv02,
-                ':counties_serv03' => $counties_serv03,
-                ':counties_serv04' => $counties_serv04,
-                ':counties_serv05' => $counties_serv05
+                ':broker_id'        => $broker_id,
+                ':broker_user_id'   => $broker_user_id,
+                ':status'           => $status,
+                ':type'             => $type,
+                ':first_name'       => $first_name,
+                ':last_name'        => $last_name,
+                ':about_me'         => $about_me,
+                ':cell'             => $cell,
+                ':agent_email'      => $agent_email,
+                ':agent_telephone'  => $agent_telephone,
+                ':address1'         => $address1,
+                ':address2'         => $address2,
+                ':city'             => $city,
+                ':state'            => $state,
+                ':zip'              => $zip,
+                ':affiliations'     => $affiliations,
+                ':state_serv01'     => $state_serv01,
+                ':state_serv02'     => $state_serv02,
+                ':state_serv03'     => $state_serv03,
+                ':state_serv04'     => $state_serv04,
+                ':state_serv05'     => $state_serv05,
+                ':counties_serv01'  => $counties_serv01,
+                ':counties_serv02'  => $counties_serv02,
+                ':counties_serv03'  => $counties_serv03,
+                ':counties_serv04'  => $counties_serv04,
+                ':counties_serv05'  => $counties_serv05
             ];
             $result = $stmt->execute($parameters);
 
@@ -1592,6 +1598,69 @@ class BrokerAgent extends \Core\Model
         catch(PDOException $e)
         {
             echo $e-getMessage();
+            exit();
+        }
+    }
+
+
+    public static function updateAgentsDisplayToFalse($broker_id)
+    {
+        // establish db connection
+        $db = static::getDB();
+
+        // set value in variable
+        $display = 0;
+
+        try
+        {
+            $sql = "UPDATE broker_agents SET
+                    display = :display
+                    WHERE broker_id = :broker_id";
+            $stmt = $db->prepare($sql);
+            $parameters = [
+                ':display'   => $display,
+                ':broker_id' => $broker_id
+            ];
+            $result = $stmt->execute($parameters);
+
+            // return boolean to Subscribe Controller
+            return $result;
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
+    }
+
+
+
+    public static function setAgentsToDisplay($broker_id)
+    {
+        // estblish db connection
+        $db = static::getDB();
+
+        // set display value to variable
+        $display = 1;
+
+        try
+        {
+            $sql = "UPDATE broker_agents SET
+                    display = :display
+                    WHERE broker_id = :broker_id";
+            $stmt = $db->prepare($sql);
+            $parameters = [
+                ':display'    => $display,
+                ':broker_id'  => $broker_id
+            ];
+            $result = $stmt->execute($parameters);
+
+            // return boolean to Subscribe Controller
+            return $result;
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
             exit();
         }
     }

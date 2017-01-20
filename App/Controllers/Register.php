@@ -211,44 +211,52 @@ class Register extends \Core\Controller
         // store security answers in users table
         $result = User::storeSecurityAnswers($user_id);
 
+        // get user data
+        $user = User::getUser($user_id);
+
         if($result)
         {
             // update first_login status to false (first_login = 0)
             $result = User::updateFirstLoginStatus($user_id);
-        }
 
-        if($result)
-        {
-          $message = "Information successfully uploaded! You can now log in.
-           To post listings, click 'Admin' and then 'Admin Panel' in the Menu.";
+            if($result)
+            {
+              $register_success1 = "Your registration is complete!";
 
-          // display success message
-          echo '<script>';
-          echo 'alert("'.$message.'")';
-          echo '</script>';
+              $register_success2 = "To begin, Log In. On the next screen, click
+                'Admin' in the top right part of the Menu. Then, click
+                'Admin Panel'. You must add a new agent before posting your
+                first listing.";
 
-          // redirect user to "Manage agents" page
-          echo '<script>';
-          echo 'window.location.href="/login"';
-          echo '</script>';
-          exit();
+              $register_success3 = "Click here to Log In.";
+
+              $register_success4 = "Remember, on the next screen, click 'Admin'
+                in the Menu.";
+
+                $register_success5 = "Remember, you must add a new agent before
+                  you can post a listing.";
+
+              View::renderTemplate('Success/index.html', [
+                  'register_success'  => 'true',
+                  'register_success1' => $register_success1,
+                  'register_success2' => $register_success2,
+                  'register_success3' => $register_success3,
+                  'register_success4' => $register_success4,
+                  'register_success5' => $register_success5,
+                  'first_name'        => $user->first_name,
+                  'last_name'         => $user->last_name
+              ]);
+            }
+            else
+            {
+                echo "Error updating user login status.";
+                exit();
+            }
         }
         else
         {
-            $message = "Error. Please try again.";
-
-            // display success message
-            echo '<script>';
-            echo 'alert("'.$message.'")';
-            echo '</script>';
-
-            // redirect user to "Manage agents" page
-            echo '<script>';
-            echo 'window.location.href="/login"';
-            echo '</script>';
+            echo "Error inserting security data.";
             exit();
         }
     }
-
-
 }

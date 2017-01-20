@@ -56,7 +56,7 @@ class Brokers extends \Core\Controller
         else
         {
             // get broker data from User model
-            $broker = Broker::getBrokerData($user_id);
+            $broker = Broker::getBrokerByUserId($user_id);
 
             // get broker type & store in variable
             $broker_type = $broker->type;
@@ -94,7 +94,7 @@ class Brokers extends \Core\Controller
 
     public function myAccountAction()
     {
-        // retrieve GET variable
+        // query string variable
         $broker_id = (isset($_REQUEST['id'])) ? filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING) : '';
 
         // get agents id, last name, first name & broker ID only for drop-down
@@ -123,20 +123,20 @@ class Brokers extends \Core\Controller
         }
 
 
-        // get paypal_log data
+        // get paypal_log data (LIMIT 1)
         $data = Paypallog::getTransactionData($user->id);
 
         // test
-        // echo $amount;
         // echo '<pre>';
         // print_r($data);
         // echo '</pre>';
+        // echo $data->PROFILEID;
         // exit();
 
         if($data)
         {
             // store profileid in vaiable
-            $profileid = $data[0]->PROFILEID;
+            $profileid = $data->PROFILEID;
         }
         else
         {
@@ -146,6 +146,11 @@ class Brokers extends \Core\Controller
 
         // get paypal profile data from payflow gateway
         $ppProfile = Paypal::profileStatusInquiry($profileid);
+
+        // echo '<pre>';
+        // print_r($ppProfile);
+        // echo '</pre>';
+        // exit();
 
         if($ppProfile)
         {
@@ -180,7 +185,6 @@ class Brokers extends \Core\Controller
 
             // get last transaction data
             //$results = Paypal::processPaymentHistory($profileid);
-
 
             // render view
             View::renderTemplate('Admin/Show/my-account.html', [
@@ -316,6 +320,7 @@ class Brokers extends \Core\Controller
         // store max_agents value in variable
         $max_agents = $user->max_agents;
 
+        // test
         // echo '$max_agents: '. $max_agents . '<br>';
         // echo '$number_agents: ' . $number_agents;
         // exit();
@@ -323,19 +328,15 @@ class Brokers extends \Core\Controller
         // check if current number of agents is less than agents paid for
         if($number_agents < $max_agents)
         {
-            // get agents id, last name, first name & broker ID only for drop-down
-            $agents = BrokerAgent::getNamesOfAllBrokerAgents($_SESSION['broker_id'], $orderby = 'broker_agents.last_name');
-
             // get states array for drop-down
             $states = State::getStates();
 
-            // get company type (broker type = business(1), realty(2), both(3))
+            // get company type for menu display (broker type = business(1), realty(2), both(3))
             $broker_type = Broker::getBrokerCompanyType($broker_id);
 
             // render view
             View::renderTemplate('Admin/Add/add-new-agent.html', [
                 'broker_id'     => $broker_id,
-                'agents'        => $agents,
                 'states'        => $states,
                 'broker_type'   => $broker_type
             ]);
@@ -356,7 +357,7 @@ class Brokers extends \Core\Controller
             // store user ID in variable
             $user_id = $user->id;
 
-            // get user's PayPal data to modify recurring billing profile
+            // get user's PayPal data 
             $profile = Paypallog::getPaypalData($user->id);
 
             // store user's PayPal profile ID in variable
@@ -365,11 +366,17 @@ class Brokers extends \Core\Controller
             // create page title for payment view
             $pagetitle = "Add agents";
 
+            // store explain data in variable
+            $explain = 'Your credit card will be billed the "New monthly charge"
+            amount on your next recurring payment date.';
+
             // render payment view & pass action for adding new agent
             View::renderTemplate('Paypal/index.html', [
                 'user'      => $user,
                 'pagetitle' => $pagetitle,
                 'profileid' => $profileid,
+                'explain'   => $explain,
+                'add_agent' => 'true',
                 'action'    => '/subscribe/process-payment-for-new-agents?id='.$user_id.'&profileid='.$profileid.'&maxagents='.$max_agents
             ]);
         }
@@ -384,7 +391,7 @@ class Brokers extends \Core\Controller
         $broker_id = (isset($_REQUEST['broker_id'])) ? filter_var($_REQUEST['broker_id'], FILTER_SANITIZE_STRING) : '';
         $broker_user_id = (isset($_REQUEST['user_id'])) ? filter_var($_REQUEST['user_id'], FILTER_SANITIZE_STRING) : '';
 
-        echo $broker_user_id; exit();
+        // echo $broker_user_id; exit();
 
         // retrieve first and last name for quick db check
         $first_name = ( isset($_POST['first_name']) )? filter_var($_POST['first_name'], FILTER_SANITIZE_STRING): '';

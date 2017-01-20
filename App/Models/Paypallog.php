@@ -10,7 +10,7 @@ use PDO;
 class Paypallog extends \Core\Model
 {
     /**
-     * retrieves Paypal's profile id store in table
+     * retrieves Paypal's profile id stored in `paypal_log` table
      *
      * @param  Integer  $user_id  The user ID
      * @return String             The profile ID
@@ -23,7 +23,8 @@ class Paypallog extends \Core\Model
             $db = static::getDB();
 
             $sql = "SELECT * FROM paypal_log
-                    WHERE user_id = :user_id";
+                    WHERE user_id = :user_id
+                    LIMIT 1";
             $parameters = [
               ':user_id' => $user_id
             ];
@@ -196,7 +197,7 @@ class Paypallog extends \Core\Model
 
             $sql = "SELECT * FROM paypal_log
                     WHERE user_id = :user_id
-                    ORDER BY created_at DESC";
+                    LIMIT 1";
             $parameters = [
                 ':user_id'  => $user_id
             ];
@@ -204,7 +205,7 @@ class Paypallog extends \Core\Model
             $stmt->execute($parameters);
 
             // store record in variable as object
-            $results = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $results = $stmt->fetch(PDO::FETCH_OBJ);
 
             // return results (object) to Admin/Brokers Controlller
             return $results;

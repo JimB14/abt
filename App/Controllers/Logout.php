@@ -31,8 +31,19 @@ class Logout extends \Core\Controller
 
             $message = "You have been logged out";
 
-            View::renderTemplate('Success/index.html', [
-                'message' => $message
+            // $usubscribe_message1 = "You have successfully cancelled
+            // your subscription. Sorry to see you go.";
+            //
+            // $usubscribe_message2 = "Your listings might be deleted
+            // in 3 - 4 days. If you want to reactivate your account now to avoid
+            // having to re-enter your listings and/or agent data in the future, please
+            // Log In now and follow the reactivate account instructions.";
+
+            View::renderTemplate("Success/index.html", [
+                'message'               => $message,
+                // 'unsubscribe_message1'  => $usubscribe_message1,
+                // 'unsubscribe_message2'  => $usubscribe_message2,
+                'unsubscribe'           => 'true'
             ]);
         }
     }

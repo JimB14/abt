@@ -11,6 +11,7 @@ use \Core\View;
 use \App\Models\Broker;
 use \App\Models\Listing;
 use \App\Models\Realtylisting;
+use \App\Models\BrokerAgent;
 
 
 class Subscribe extends \Core\Controller
@@ -47,62 +48,81 @@ class Subscribe extends \Core\Controller
         // process the payment; get back response
         $response = Paypal::processPayment($user_id);
 
+        // test
+        // echo '<pre>';
+        // print_r($response);
+        // echo '</pre>';
+        // exit();
+
         // if successful
         if($response)
         {
-          // store PP response data in array
-          $data_array = [
-              'RESULT'        => $response['RESULT'],
-              'RESPMSG'       => $response['RESPMSG'],
-              'RPREF'         => $response['RPREF'],
-              'TRXPNREF'      => $response['TRXPNREF'],
-              'PPREF'         => $response['PPREF'],
-              'PROFILEID'     => $response['PROFILEID'],
-              'CORRELATIONID' => $response['CORRELATIONID'],
-              'TRANSTIME'     => $response['TRANSTIME'],
-              'AMT'           => $response['AMT']
-          ];
+            // store PP response data in array
+            $data_array = [
+                'RESULT'        => $response['RESULT'],
+                'RESPMSG'       => $response['RESPMSG'],
+                'RPREF'         => $response['RPREF'],
+                'TRXPNREF'      => $response['TRXPNREF'],
+                'PPREF'         => $response['PPREF'],
+                'PROFILEID'     => $response['PROFILEID'],
+                'CORRELATIONID' => $response['CORRELATIONID'],
+                'TRANSTIME'     => $response['TRANSTIME'],
+                'AMT'           => $response['AMT']
+            ];
 
-          // store transaction response data in paypal_log
-          $result = Paypallog::addTransactionData($user_id, $data_array);
+            // store subscription amount in variable
+            $sub_amt = $data_array['AMT'];
 
-          if(!$result)
-          {
-              // if error occurs
-              echo "Error inserting transaction data.";
-              exit();
-          }
-          else
-          {
-              // modify users.current field to true (1)
-              $result = User::updateCurrent($user_id, $status=1);
+            // store transaction response data in paypal_log
+            $result = Paypallog::addTransactionData($user_id, $data_array);
 
-              // get user data
-              $user = User::getUser($user_id);
+            if($result)
+            {
+                // modify users.current field to true (1)
+                $result = User::updateCurrent($user_id, $current=1, $sub_amt, $max_agents=1);
 
-              // define message
-              $subscribe_msg1 = "You have successfully paid for your first
-              month's subscription!";
+                if($result)
+                {
+                    // get user data
+                    $user = User::getUser($user_id);
 
-              $subscribe_msg2 = "Your credit card will be charged for the same
-              amount ($9.95) one month from tomorrow and each month thereafter unless
-              you cancel your subscription.";
+                    // define message
+                    $subscribe_msg1 = "You have successfully paid for your first
+                    month's subscription!";
 
-              $subscribe_msg3 = "You can now log in to complete the registration
-              process and begin posting your listings.";
+                    $subscribe_msg2 = "Your credit card will be charged for the same
+                    amount ($$sub_amt) one month from tomorrow and each month thereafter unless
+                    you cancel your subscription.";
 
-              $subscribe_msg4 = "Congratulations and welcome to American Biz Trader!";
+                    $subscribe_msg3 = "You can now Log In to complete the registration
+                    process and begin posting your listings.";
 
-              View::renderTemplate('Success/index.html', [
-                  'subscribe_success'  => 'true',
-                  'subscribe_msg1'     => $subscribe_msg1,
-                  'subscribe_msg2'     => $subscribe_msg2,
-                  'subscribe_msg3'     => $subscribe_msg3,
-                  'subscribe_msg4'     => $subscribe_msg4,
-                  'first_name'         => $user->first_name,
-                  'last_name'          => $user->last_name
-              ]);
-          }
+                    $subscribe_msg4 = "Congratulations and welcome to American Biz Trader!";
+
+                    $subscribe_msg5 = "You can Log In here.";
+
+                    View::renderTemplate('Success/index.html', [
+                        'subscribe_success' => 'true',
+                        'subscribe_msg1'    => $subscribe_msg1,
+                        'subscribe_msg2'    => $subscribe_msg2,
+                        'subscribe_msg3'    => $subscribe_msg3,
+                        'subscribe_msg4'    => $subscribe_msg4,
+                        'subscribe_msg5'    => $subscribe_msg5,
+                        'first_name'        => $user->first_name,
+                        'last_name'         => $user->last_name
+                    ]);
+                }
+                else
+                {
+                    echo "Error updating user data.";
+                    exit();
+                }
+            }
+            else
+            {
+                echo "Error inserting transaction data.";
+                exit();
+            }
         }
     }
 
@@ -117,7 +137,7 @@ class Subscribe extends \Core\Controller
         // retrieve user ID from query string
         $user_id = (isset($_GET['id'])) ? filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT) : '';
         $profileid = (isset($_GET['profileid'])) ? filter_var($_GET['profileid'], FILTER_SANITIZE_STRING) : '';
-        $current_agent_count = (isset($_GET['maxagents'])) ? filter_var($_GET['maxagents'], FILTER_SANITIZE_STRING) : '';
+        $current_max_agent_value = (isset($_GET['maxagents'])) ? filter_var($_GET['maxagents'], FILTER_SANITIZE_STRING) : '';
 
         // test
         // echo "Connected to processPaymentForNewAgents() method in Subscribe Controller!<br><br>";
@@ -128,18 +148,32 @@ class Subscribe extends \Core\Controller
         // exit();
 
         // process the payment; get back response
-        $results = Paypal::processPaymentModification($user_id, $profileid);
+        $results = Paypal::processPaymentForNewAgents($profileid);
 
         // store array content in variables
         $response = $results['response'];
         $agents_added = $results['agents_added'];
         $new_amount = $results['new_amount'];
 
+        // test
+        // echo 'PP results:';
+        // echo '<pre>';
+        // echo print_r($results);
+        // echo '</pre>';
+        // exit();
+
         // if successful
         if($response)
         {
             // get new amount from PayPal for this profileid
             $inquiryResponse = Paypal::profileStatusInquiry($profileid);
+
+            // test
+            // echo 'Inquiry response:';
+            // echo '<pre>';
+            // print_r($inquiryResponse);
+            // echo '</pre>';
+            // exit();
 
             // store AMT from response associative array in variable
             $returned_amount = $inquiryResponse['AMT'];
@@ -176,14 +210,14 @@ class Subscribe extends \Core\Controller
 
             if($result)
             {
-                // calculate number of agents added ( (new billing / cost per agent) - 1 (free))
-                $agents_added = ($returned_amount/Config::SUBSCRIPTION) - 1;
+                // calculate number to update in max_agents ( (new billing / cost per agent)
+                $new_max_agents = $returned_amount/Config::SUBSCRIPTION;
 
                 // calculate new max_agents value to update `users`.`max_agents`
-                $new_max_agents = $current_agent_count + $agents_added;
+                //$new_max_agents = $current_max_agent_value + $agents_added;
 
                 // test
-                // echo $current_agent_count . '<br>';
+                // echo $current_max_agent_value . '<br>';
                 // echo $returned_amount . '<br>';
                 // echo $agents_added . '<br>';
                 // echo $new_max_agents . '<br>';
@@ -194,34 +228,44 @@ class Subscribe extends \Core\Controller
 
                 if($result)
                 {
+                    // get broker data
+                    $broker = Broker::getBrokerByUserId($user_id);
+
+                    // store broker ID in variable
+                    $broker_id = $broker->broker_id;
+
                     // get updated user data
                     $user = User::getUser($user_id);
 
                     // define message based on number of agents
                     if($user->max_agents < 2)
                     {
-                        $subscribe_msg1 = "You have successfully increased your agent limit
+                        $added_agent_success1 = "You have successfully increased your agent limit
                         to $user->max_agents additional agent!";
                     }
                     else
                     {
-                        $subscribe_msg1 = "You have successfully increased your agent limit
+                        $added_agent_success1 = "You have successfully increased your agent limit
                         to $user->max_agents agents!";
                     }
 
-                    $subscribe_msg2 = "Your credit card will be charged $$returned_amount
-                    on $next_payment and each month after unless you cancel your
-                    subscription.";
+                    $added_agent_success2 = "Your credit card will be charged $$returned_amount
+                    on $next_payment and each month on the same date unless you
+                    cancel your subscription.";
 
-                    $subscribe_msg3 = "You can now add a new agent profile.";
+                    $added_agent_success3 = "You can now add a new agent profile.";
+
+                    $added_agent_success4 = "Add new agent.";
 
                     View::renderTemplate('Success/index.html', [
-                        'subscribe_success' => 'true',
-                        'subscribe_msg1'    => $subscribe_msg1,
-                        'subscribe_msg2'    => $subscribe_msg2,
-                        'subscribe_msg3'    => $subscribe_msg3,
-                        'first_name'        => $user->first_name,
-                        'last_name'         => $user->last_name
+                        'added_agent_success'   => 'true',
+                        'added_agent_success1'  => $added_agent_success1,
+                        'added_agent_success2'  => $added_agent_success2,
+                        'added_agent_success3'  => $added_agent_success3,
+                        'added_agent_success4'  => $added_agent_success4,
+                        'first_name'            => $user->first_name,
+                        'last_name'             => $user->last_name,
+                        'broker_id'             => $broker_id
                     ]);
                 }
                 else
@@ -329,16 +373,16 @@ class Subscribe extends \Core\Controller
                 $user = User::getUser($user_id);
 
                 // store value of max_agents in variable
-                $current_agent_count = $user->max_agents;
+                $current_max_agent_value = $user->max_agents;
 
                 // calculate number of agents deducted ( (new billing amount / cost per agent) - 1 (free))
                 //$agents_deducted = ($returned_amount/Config::SUBSCRIPTION) - 1;
 
                 // calculate new max_agents value to update `users`.`max_agents`
-                $new_max_agents = $current_agent_count - $agent_count;
+                $new_max_agents = $current_max_agent_value - $agent_count;
 
                 // test
-                // echo $current_agent_count . '<br>';
+                // echo $current_max_agent_value . '<br>';
                 // echo $returned_amount . '<br>';
                 // echo $agent_count . '<br>';
                 // echo $new_max_agents . '<br>';
@@ -400,7 +444,11 @@ class Subscribe extends \Core\Controller
     }
 
 
-
+    /**
+     * sends user to page to change credit cards
+     *
+     * @return view
+     */
     public function authorizeNewCreditCard()
     {
         // echo "Connect to authorizeNewCreditCard() in Subscribe Controller!<br><br>";
@@ -590,27 +638,15 @@ class Subscribe extends \Core\Controller
             // store transaction response data in paypal_log
             $result = Paypallog::addCancelTransactionData($user_id, $data_array);
 
-            if(!$result)
+            if($result)
             {
-                // if error occurs
-                echo "Error inserting transaction data.";
-                exit();
-            }
-            else
-            {
-                // update users.current to false ('0')
-                $result = User::updateCurrent($user_id, $status=0);
+                // update users.current to false ('0') & sub_amt to $0.00
+                $result = User::updateUserAccount($user_id, $current=0, $sub_amt=0, $max_agents=0);
 
-                if(!$result)
-                {
-                    // if error occurs
-                    echo "Error updating current status.";
-                    exit();
-                }
-                else
+                if($result)
                 {
                     // get broker data
-                    $broker = Broker::getBrokerData($user_id);
+                    $broker = Broker::getBrokerByUserId($user_id);
 
                     // store broker ID in variable
                     $broker_id = $broker->broker_id;
@@ -618,43 +654,183 @@ class Subscribe extends \Core\Controller
                     // set business listings to not display
                     $result = Listing::updateBusinessListingsDisplayToFalse($broker_id);
 
-                    if(!$result)
+                    if($result)
                     {
-                        // if error occurs
-                        echo "Error updating listing display status.";
-                        exit();
-                    }
-                    else
-                    {
-                        // set realty listings to not display
-                        $result = Realtylisting::updateRealtyListingsDisplayToFalse($broker_id);
+                        // set agents to not display
+                        $result = BrokerAgent::updateAgentsDisplayToFalse($broker_id);
 
-                        if(!$result)
+                        if($result)
                         {
-                            // if error occurs
-                            echo "Error updating real estate listings display status.";
-                            exit();
+                            // set realty listings to not display
+                            $result = Realtylisting::updateRealtyListingsDisplayToFalse($broker_id);
+
+                            if($result)
+                            {
+                                // log user out
+                                header("Location: /logout");
+                                exit();
+                            }
+                            else
+                            {
+                                echo "Error updating realty listing data.";
+                                exit();
+                            }
                         }
                         else
                         {
-                            $usubscribe_message1 = "You have successfully cancelled
-                            your subscription.";
-
-                            $usubscribe_message2 = "Your listings will be deleted
-                            in 3 - 4 days. If you want to re-subscribe without
-                            re-entering your listings and/or agent data, please
-                            contact us as soon as possible to re-instate your
-                            subscription.";
-
-                            View::renderTemplate("Success/index.html", [
-                                'unsubscribe_message1'  => $usubscribe_message1,
-                                'unsubscribe_message2'  => $usubscribe_message2,
-                                'unsubscribe'           => 'true'
-                            ]);
+                            echo "Error updating agents data.";
+                            exit();
                         }
                     }
+                    else
+                    {
+                        echo "Error updating listings data.";
+                        exit();
+                    }
+                }
+                else
+                {
+                    echo "Error updating user data.";
+                    exit();
                 }
             }
+            else
+            {
+                echo "Error adding data to log.";
+                exit();
+            }
+        }
+        else
+        {
+            echo "Error cancelling payment.";
+            exit();
+        }
+    }
+
+
+
+    public function processReactivation()
+    {
+        // echo "Connected to processReactivation() in Subscribe Controller.<br><br>";
+
+        $user_id = (isset($_REQUEST['user_id']))? filter_var($_REQUEST['user_id'],FILTER_SANITIZE_NUMBER_INT) : '';
+
+        // get user data
+        $user = User::getUser($user_id);
+
+        // get broker data
+        $broker = Broker::getBrokerByUserId($user_id);
+
+        // assign broker ID to variable
+        $broker_id = $broker->broker_id;
+
+        // get broker agent count & store in $max_agents
+        $agent_count = BrokerAgent::getCountOfAgents($broker_id);
+
+        // get PROFILEID for user
+        $profileid = User::getProfileId($user_id);
+
+        // process reactivation
+        $result = Paypal::processReactivation($profileid);
+
+        if($result)
+        {
+            // test
+            // echo '<pre>';
+            // print_r($result);
+            // echo '</pre>';
+            // exit;
+
+            // store PayPal response values in array
+            $data_array = [
+                'RESULT'    => $result['RESULT'],
+                'RPREF'     => $result['RPREF'],
+                'PROFILEID' => $result['PROFILEID'],
+                'RESPMSG'   => $result['RESPMSG']
+            ];
+
+            // update Paypal log
+            $result = Paypallog::addTransactionDataForCreditCardUpdate($user_id, $data_array);
+
+            if($result)
+            {
+                // account inquiry
+                $inquiryResponse = Paypal::profileStatusInquiry($profileid);
+
+                if($inquiryResponse)
+                {
+                    // test
+                    // echo '<pre>';
+                    // print_r($inquiryResponse);
+                    // echo '</pre>';
+                    // exit();
+
+                    // update user table
+                    $result = User::updateAfterReactivation($user_id, $current=1, $sub_amt=$inquiryResponse['AMT'], $max_agents=$agent_count);
+
+                    if($result)
+                    {
+                        // update broker_agents table & set display to true
+                        $result = BrokerAgent::setAgentsToDisplay($broker_id);
+
+                        if($result)
+                        {
+                            // store message to display to user
+                            $account_reactivated1 = "Your account has been reactivated! You
+                              can Log In and manage your data.";
+
+                            // store message to display to user
+                            $account_reactivated2 = "Your next payment is due one
+                              month from tomorrow. On that day and in each month afterward
+                              your credit card will be charged unless you cancel
+                              your subscription.";
+
+                            // store message to display to user
+                            $account_reactivated3 = "You can change credit cards at any
+                              time in the Admin Panel in 'My account.'";
+
+                            // store message to display to user
+                            $account_reactivated4 = "Welcome back! You may now Log In.";
+
+                            // rendier view
+                            View::renderTemplate("Success/index.html", [
+                                'account_reactivated1'  => $account_reactivated1,
+                                'account_reactivated2'  => $account_reactivated2,
+                                'account_reactivated3'  => $account_reactivated3,
+                                'account_reactivated4'  => $account_reactivated4,
+                                'first_name'            => $user->first_name,
+                                'last_name'             => $user->last_name,
+                                'account_reactivated'   => 'true'
+                            ]);
+                        }
+                        else
+                        {
+                            echo "Error updating agent data.";
+                            exit();
+                        }
+                    }
+                    else
+                    {
+                        echo "Error updating user data.";
+                        exit();
+                    }
+                }
+                else
+                {
+                    echo "Error retrieving inquiry request.";
+                    exit();
+                }
+            }
+            else
+            {
+                echo "Error updating log with transaction data.";
+                exit();
+            }
+        }
+        else
+        {
+            echo "Error reactivating your account.";
+            exit();
         }
     }
 

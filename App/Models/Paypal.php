@@ -23,8 +23,13 @@ class Paypal extends \Core\Model
         // echo "Connected to static function processPayment() in PayPal model!<br><br>";
 
         // get tomorrow's date and format for PP for recurring billing commencement date
-        $datetime = new \DateTime('tomorrow'); // DateTime in root (no namespace), needs preceding backslash
-        $tomorrow = $datetime->format('mdY');
+        // $datetime = new \DateTime('tomorrow'); // DateTime in root (no namespace), needs preceding backslash
+        // $tomorrow = $datetime->format('mdY');
+
+        // create date for recurring billing & format for PayPal
+        $tomorrow = new \DateTime('tomorrow');
+        $billDate = $tomorrow->modify('+1 month');
+        $billDate = $billDate->format('mdY');  // for PayPal
 
         // store PP credentials in variables
         $vendor   = Config::PAYPAL_VENDOR;
@@ -84,8 +89,9 @@ class Paypal extends \Core\Model
             'TRXTYPE'         => 'R',
             'TENDER'          => 'C',
             'ACTION'          => 'A',
+            'AMT'             => Config::SUBSCRIPTION,
             'PROFILENAME'     => $FIRSTNAME.$LASTNAME.$user_id,
-            'START'           => $tomorrow,
+            'START'           => $billDate,
             'PAYPERIOD'       => 'MONT',
             'TERM'            => '0',
             'OPTIONALTRX'     => 'S',
@@ -208,19 +214,15 @@ class Paypal extends \Core\Model
      * @param  String   $profileid  The users PayPal profile ID
      * @return String               Key/Value pairs from PayPal
      */
-    public static function processPaymentModification($user_id, $profileid)
+    public static function processPaymentForNewAgents($profileid)
     {
         // test
-        // echo "Connected to public static function processPaymentModification() in PayPal model!<br><br>";
+        // echo "Connected to public static function processPaymentForNewAgents() in PayPal model!<br><br>";
         // echo $user_id . '<br>';
         // echo $profileid . '<br>';
         // echo $agent_count . '<br>';
         // echo $max_agents . '<br>';
         // exit();
-
-        // get tomorrow's date and format for PP for recurring billing commencement date
-        $datetime = new \DateTime('tomorrow'); // DateTime in root (no namespace), needs preceding backslash
-        $tomorrow = $datetime->format('mdY');
 
         // store PP credentials in variables
         $vendor   = Config::PAYPAL_VENDOR;
@@ -242,35 +244,22 @@ class Paypal extends \Core\Model
         }
 
         // retrieve post data from form, sanitize & store in variables
-        $AGENTS     = (isset($_POST['agent_qty'])) ? filter_var($_POST['agent_qty'], FILTER_SANITIZE_STRING) : '';
-        $FIRSTNAME  = (isset($_POST['first_name'])) ? filter_var($_POST['first_name'], FILTER_SANITIZE_STRING) : '';
-        $LASTNAME   = (isset($_POST['last_name'])) ? filter_var($_POST['last_name'], FILTER_SANITIZE_STRING) : '';
-        $CARDTYPE   = (isset($_POST['cardtype'])) ? filter_var($_POST['cardtype'], FILTER_SANITIZE_STRING) : '';
-        $AMT        = (isset($_POST['amt'])) ? number_format($_POST['amt'], 2) : '';
-        $ACCT       = (isset($_POST['acct'])) ? filter_var($_POST['acct'], FILTER_SANITIZE_STRING) : '';
-        $exp_month  = (isset($_POST['exp_month'])) ? filter_var($_POST['exp_month'], FILTER_SANITIZE_STRING) : '';
-        $exp_year   = (isset($_POST['exp_year'])) ? filter_var($_POST['exp_year'], FILTER_SANITIZE_STRING) : '';
-        $EXPDATE    = $exp_month.$exp_year;
-        $CVV2       = (isset($_POST['cvv2'])) ? filter_var($_POST['cvv2'], FILTER_SANITIZE_STRING) : '';
-        $agree      = (isset($_POST['agree'])) ? filter_var($_POST['agree'], FILTER_SANITIZE_STRING) : '';
+        $AGENTS = (isset($_POST['agent_qty'])) ? filter_var($_POST['agent_qty'], FILTER_SANITIZE_STRING) : '';
+        $AMT    = (isset($_POST['amt'])) ? number_format($_POST['amt'], 2) : '';
+        $agree  = (isset($_POST['agree'])) ? filter_var($_POST['agree'], FILTER_SANITIZE_STRING) : '';
 
         // test
+        // echo $profileid.'<br>';
         // echo '<pre>';
         // print_r($_POST);
         // echo '</pre>';
-        // echo $FIRSTNAME.'<br>';
-        // echo $LASTNAME.'<br>';
-        // echo $CARDTYPE.'<br>';
-        // echo $ACCT.'<br>';
-        // echo $EXPDATE.'<br>';
-        // echo $CVV2.'<br>';
+        // echo $AGENTS.'<br>';
         // echo $AMT.'<br>';
         // echo $agree.'<br>';
         // exit();
 
         // check for empty fields - backup for JavaScript failure
-        if( ($FIRSTNAME == '') || ($LASTNAME == '') || ($CARDTYPE == '') || ($AMT == '')
-            || ($ACCT == '') || ($EXPDATE == '') || ($CVV2 == '') || ($agree != 'on') )
+        if( ($AMT == '') || ($agree != 'on') )
         {
             $payflow->set_errors("All fields required. Please login and try again.");
             exit();
@@ -278,17 +267,11 @@ class Paypal extends \Core\Model
 
         // extra parameters to pass to PP
         $data_array = [
-            'ORIGPROFILEID'   => $profileid,
-            'TRXTYPE'         => 'R',
-            'TENDER'          => 'C',
-            'ACTION'          => 'M',
-            'PROFILENAME'     => $FIRSTNAME.$LASTNAME.$user_id,
-            'FIRSTNAME'       => $FIRSTNAME,
-            'LASTNAME'        => $LASTNAME,
-            'CVV2'            => $CVV2, // for cvv validation response
-            'COMMENT1'        => 'Add agents',
-            'RETRYNUMDAYS'    => '3',  // The number of consecutive days that PayPal should attempt to process a failed transaction until Approved status is received; maximum value is 4.
-            'IPADDRESS'       => $_SERVER['REMOTE_ADDR']
+            'ORIGPROFILEID' => $profileid,
+            'TRXTYPE'       => 'R',  // R = Recurring
+            'TENDER'        => 'C',  // C = Credit card
+            'ACTION'        => 'M',  // M = Modify
+            'AMT'           => $AMT  // new monthly billing amount
         ];
 
         // test
@@ -296,7 +279,6 @@ class Paypal extends \Core\Model
         // echo 'USER: ' . $user . '<br>';
         // echo 'PARTNER: ' . $partner . '<br>';
         // echo 'PWD: ' . $password . '<br>';
-        // echo 'EXPDATE: ' . $EXPDATE . '<br><br>';
         // echo 'POST array<br>';
         // echo '<pre>';
         // print_r($_POST);
@@ -311,8 +293,8 @@ class Paypal extends \Core\Model
         // echo '<br><br>';
         // exit();
 
-        // call modifyTransaction() of Payflow object & store results in $response
-        $response = $payflow->modifyTransaction($vendor, $user, $partner, $password, $ACCT, $EXPDATE, $AMT, $CURRENCY='USD', $data_array);
+        // call processPaymentForNewAgents() of Payflow object & store results in $response
+        $response = $payflow->processPaymentForNewAgents($vendor, $user, $partner, $password, $data_array);
 
 
         if (!$payflow->get_errors())
@@ -529,7 +511,7 @@ class Paypal extends \Core\Model
             'CURRENCY'      => 'USD',
             'AMT'           => 0,
             'IPADDRESS'     => $_SERVER['REMOTE_ADDR']
-            ];
+        ];
 
         // call paymentInquiry() of Payflow object & store results in $response
         $response = $payflow->authorizeCreditCard($vendor, $user, $partner, $password, $data_array);
@@ -554,7 +536,7 @@ class Paypal extends \Core\Model
 
 
     /**
-     * update profileid with new credit card data
+     * updates profileid with new credit card data
      *
      * @param  String   $profileid    PayPal's profile ID
      * @param  String   $pnref        PP's transaction reference from authorization approval
@@ -595,6 +577,95 @@ class Paypal extends \Core\Model
             // echo 'Response array<br>';
             // echo '<pre>';
             // print_r($response);
+            // echo '</pre>';
+            // exit();
+
+            // return to Subscribe Controller
+            return $response;
+        }
+        else
+        {
+            echo $payflow->get_errors();
+        }
+    }
+
+
+
+    public static function processReactivation($profileid)
+    {
+        // echo "Connected to processReactivation() in Paypal Model.";
+
+        // retrieve post data from form, sanitize & store in variables
+        $FIRSTNAME  = (isset($_POST['first_name'])) ? filter_var($_POST['first_name'], FILTER_SANITIZE_STRING) : '';
+        $LASTNAME   = (isset($_POST['last_name'])) ? filter_var($_POST['last_name'], FILTER_SANITIZE_STRING) : '';
+        $CARDTYPE   = (isset($_POST['cardtype'])) ? filter_var($_POST['cardtype'], FILTER_SANITIZE_STRING) : '';
+        $ACCT       = (isset($_POST['acct'])) ? filter_var($_POST['acct'], FILTER_SANITIZE_STRING) : '';
+        $exp_month  = (isset($_POST['exp_month'])) ? filter_var($_POST['exp_month'], FILTER_SANITIZE_STRING) : '';
+        $exp_year   = (isset($_POST['exp_year'])) ? filter_var($_POST['exp_year'], FILTER_SANITIZE_STRING) : '';
+        $EXPDATE    = $exp_month.$exp_year;
+        $CVV2       = (isset($_POST['cvv2'])) ? filter_var($_POST['cvv2'], FILTER_SANITIZE_STRING) : '';
+        $AMT        = (isset($_POST['amt'])) ? number_format($_POST['amt'], 2) : '';
+        $agree      = (isset($_POST['agree'])) ? filter_var($_POST['agree'], FILTER_SANITIZE_STRING) : '';
+
+        // check for empty fields - backup for JavaScript failure
+        if( ($FIRSTNAME == '') || ($LASTNAME == '') || ($CARDTYPE == '')
+            || ($ACCT == '') || ($EXPDATE == '') || ($CVV2 == '') || ($agree != 'on') )
+        {
+            $payflow->set_errors("All fields required. Please login and try again.");
+            exit();
+        }
+
+        // store PP credentials in variables
+        $vendor   = Config::PAYPAL_VENDOR;
+        $user     = Config::PAYPAL_USER;
+        $partner  = Config::PAYPAL_PARTNER;
+        $password = Config::PAYPAL_PWD;
+
+        // create new instance of Payflow object
+        $payflow = new Payflow();
+
+        if ($payflow->get_errors())
+        {
+            echo $payflow->get_errors();
+            exit;
+        }
+
+        // get tomorrow's date and format for PP for recurring billing commencement date
+        // $datetime = new \DateTime('tomorrow'); // DateTime in root (no namespace), needs preceding backslash
+        // $tomorrow = $datetime->format('mdY');
+
+        // create date for recurring billing & format for PayPal
+        $tomorrow = new \DateTime('tomorrow');
+        $billDate = $tomorrow->modify('+1 month');
+        $billDate = $billDate->format('mdY');  // for PayPal
+
+        // four required parameters to pass to PP (along with four credentials above)
+        $data_array = [
+            'TRXTYPE'       => 'R',   //  R = Recurring
+            'TENDER'        => 'C',   //  C = Credit card
+            'ACTION'        => 'R',   //  R = Reactivate
+            'ORIGPROFILEID' => $profileid,
+            'FIRSTNAME'     => $FIRSTNAME,
+            'LASTNAME'      => $LASTNAME,
+            'CARDTYPE'      => $CARDTYPE,
+            'ACCT'          => $ACCT,
+            'EXPDATE'       => $EXPDATE,
+            'CVV2'          => $CVV2,
+            'CURRENCY'      => 'USD',
+            'AMT'           => $AMT,
+            'START'         => $tomorrow,
+            'IPADDRESS'     => $_SERVER['REMOTE_ADDR']
+        ];
+
+        // call paymentInquiry() of Payflow object & store results in $response
+        $response = $payflow->processReactivation($vendor, $user, $partner, $password, $data_array);
+
+        if (!$payflow->get_errors())
+        {
+            // test
+            // echo 'Response array<br>';
+            // echo '<pre>';
+            // print_r($inquiryResponse);
             // echo '</pre>';
             // exit();
 

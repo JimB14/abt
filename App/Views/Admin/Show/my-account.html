@@ -10,7 +10,6 @@
 
 
 {% block content %}
-
 <div class="container-fluid">
     <div class="row">
         <div id="dashboard-toggle" class="col-md-8" style="margin-top:-20px;margin-left:254px;">
@@ -35,7 +34,6 @@
                     </div>
 
 
-
                     <div class="form-group">
                         <label for="first_name" class="control-label col-sm-3">
                           First name
@@ -48,7 +46,6 @@
                     </div>
 
 
-
                     <div class="form-group">
                         <label for="last_name" class="control-label col-sm-3">
                           Last name
@@ -58,7 +55,6 @@
                               id="last_name" placeholder="Last name" value="{{ user.last_name }}" >
                         </div>
                     </div>
-
 
 
                     <div class="form-group">
@@ -218,64 +214,73 @@
                             <input type="text" class="form-control" name="agents"
                               id="agents" placeholder="Number of agents"
                               value="{{ agent_count }}">
+                              {% if agent_count < 1 %}
+                                <small>
+                                  *Please add an agent / broker. You cannot add
+                                  a listing without an agent to assign it to.
+                                  Click 'Add new agent / broker' under Agent/Broker
+                                  in the side Menu.
+                                </small>
+                              {% endif %}
                         </div>
                     </div>
                 </form>
 
 
                 <!-- - - - - - - Reduce my bill - - - - - - -  - - - - - - - -->
+                {% if user.max_agents > 1 %}
+                  {% if user.max_agents - agent_count >= 1 %}
+                    <hr>
+                    <h3 style="margin-bottom: 15px;">Reduce my bill</h3>
 
-                {% if user.max_agents - agent_count >= 1 %}
-                  <hr>
-                  <h3 style="margin-bottom: 15px;">Reduce my bill</h3>
+                      <form class="form-horizontal" method="post"
+                        action="/subscribe/process-payment-reduction?user_id={{ user.id }}&amp;profileid={{ ppProfile.PROFILEID }}"
+                          name="reduce-bill-form" id="reduce-bill-form">
 
-                    <form class="form-horizontal" method="post"
-                      action="/subscribe/process-payment-reduction?user_id={{ user.id }}&amp;profileid={{ ppProfile.PROFILEID }}"
-                        name="reduce-bill-form" id="reduce-bill-form">
+                          <input type="hidden" name="current_amt" value="{{ ppProfile.AMT }}">
 
-                        <input type="hidden" name="current_amt" value="{{ ppProfile.AMT }}">
+                          <div class="form-group">
+                              <label for="reduce_my_bill" class="control-label col-sm-3">
+                                Reduce my bill
+                              </label>
+                              <div class="col-sm-9">
+                                  <small>
+                                    Because you are paying for {{ user.max_agents }}
+                                    agents but using {{ agent_count }}, you can
+                                    remove up to {{ extra_agents }} {% if extra_agents == 1 %}agent{% else %}agents{% endif %}
+                                    and reduce your monthly bill (changes take effect
+                                    at next payment date). Select the number of agents
+                                    that you are eligible to remove, and click
+                                    "Reduce my bill"
+                                  </small>
+                              </div>
+                          </div>
 
-                        <div class="form-group">
-                            <label for="reduce_my_bill" class="control-label col-sm-3">
-                              Reduce my bill
-                            </label>
-                            <div class="col-sm-9">
-                                <small>
-                                  Because you are paying for {{ user.max_agents }}
-                                  agents but using {{ agent_count }}, you can
-                                  remove up to {{ extra_agents }} agents
-                                  and reduce your monthly bill (changes take effect
-                                  at next payment date). Select the number of agents
-                                  that you are eligible to remove, and click
-                                  "Reduce my bill"
-                                </small>
-                            </div>
-                        </div>
+                          <div class="form-group">
+                              <label for="remove_agent_count" class="control-label col-sm-3">
+                                Agents to remove
+                              </label>
+                              <div class="col-sm-9">
+                                  <select class="form-control" name="remove_agent_count" id="remove_agent_count">
+                                    <!-- resource: http://twig.sensiolabs.org/doc/1.x/tags/for.html -->
+                                    <option value="">Select</option>
+                                    {% for i in 1..extra_agents %}
+                                      <option value={{ i }}>{{ i }}</option>
+                                    {% endfor %}
+                                  </select>
+                              </div>
+                          </div>
 
-                        <div class="form-group">
-                            <label for="remove_agent_count" class="control-label col-sm-3">
-                              Agents to remove
-                            </label>
-                            <div class="col-sm-9">
-                                <select class="form-control" name="remove_agent_count" id="remove_agent_count">
-                                  <!-- resource: http://twig.sensiolabs.org/doc/1.x/tags/for.html -->
-                                  <option value="">Select</option>
-                                  {% for i in 1..extra_agents %}
-                                    <option value={{ i }}>{{ i }}</option>
-                                  {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-sm-offset-3 col-sm-9">
-                               <button type="submit" class="btn btn-primary btn-sm"
-                                role="submit" id="reduce-my-bill-btn">
-                                 Reduce my bill
-                               </button>
-                            </div>
-                        </div>
-                    </form>
+                          <div class="form-group">
+                              <div class="col-sm-offset-3 col-sm-9">
+                                 <button type="submit" class="btn btn-primary btn-sm"
+                                  role="submit" id="reduce-my-bill-btn">
+                                   Reduce my bill
+                                 </button>
+                              </div>
+                          </div>
+                      </form>
+                  {% endif %}
                 {% endif %}
 
                 <hr>
@@ -298,7 +303,9 @@
                          </a>
                          <small>
                            <br>
-                           *Once authorized, your recurring bill amount will be charged against this card, on your next payment date
+                           *Once authorized, your recurring bill amount will be
+                           charged against this card on your next payment
+                           date ({{ next_payment }})
                          </small>
                       </div>
                   </div>
@@ -372,7 +379,7 @@
                   Change login email
                 </h3>
 
-                <form class="form-horizontal" method="post"
+                <form style="margin-bottom:50px;" class="form-horizontal" method="post"
                   action="/admin/brokers/change-login-email?user_id={{ user.id }}"
                   id="change-login-email-form">
 
@@ -431,12 +438,9 @@
 
                 </form>
 
-
         </div><!--  // col  -->
     </div><!--  // .row  -->
 </div><!-- // .container-fluid  -->
-
-
 {% endblock %}
 
 
@@ -446,7 +450,6 @@ $(document).ready(function(){
 
     $("#change-password-form").validate();
     $("#change-login-email-form").validate();
-
 
     $("#reduce-bill-form").submit(function(){
         var agent_count = $("#remove_agent_count").val();
@@ -466,5 +469,4 @@ $(document).ready(function(){
 
 });
 </script>
-
 {% endblock %}

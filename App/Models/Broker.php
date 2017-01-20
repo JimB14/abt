@@ -36,8 +36,13 @@ class Broker extends \Core\Model
 
 
 
-
-    public static function getBrokerData($user_id)
+    /**
+     * retrieves broker data with user ID
+     *
+     * @param  Integer  $user_id  The user's ID
+     * @return Object             The broker's data
+     */
+    public static function getBrokerByUserId($user_id)
     {
         try
         {
@@ -523,7 +528,7 @@ class Broker extends \Core\Model
           || ($services == '') || ($company_bio == '') || ($website == '')
         )
         {
-          echo 'All fields except Address2 and Fax are required.';
+          echo '<script>alert("All fields except Address2 and Fax are required.")</script>';
           exit();
         }
 

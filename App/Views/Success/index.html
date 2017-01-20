@@ -25,7 +25,9 @@
               <h4 style="margin-top: 0px">
                 {{ message }}
               </h4>
-            <br><br><br><br>
+              {% if unsubscribe != 'true' %}
+                <br><br><br><br>
+              {% endif %}
             {% endif %}
 
             {% if subscribe_success == 'true' %}
@@ -44,11 +46,14 @@
               <h4 style="margin-top: 20px; font-weight:bold;">
                 {{ subscribe_msg4 }}
               </h4>
+              <h4 style="margin-top: 15px">
+                <a href="/login">{{ subscribe_msg5 }}</a>
+              </h4>
               <br><br><br><br>
             {% endif %}
 
             {% if unsubscribe == 'true' %}
-              <h3 style="margin-top: 0px">
+              <h3 style="margin-top: 10px">
                 {{ unsubscribe_message1 }}
               </h3>
               <p style="margin-top: 15px">
@@ -88,6 +93,67 @@
               </h4>
               <br><br><br><br>
             {% endif %}
+
+            {% if account_reactivated == 'true' %}
+              <h3 style="margin-top: 0px">
+                Thank you {{ first_name }} {{ last_name}}!
+              </h3>
+              <h4 style="margin-top: 15px">
+                {{ account_reactivated1 }}
+              </h4>
+              <p style="margin-top: 15px">
+                {{ account_reactivated2 }}
+              </p>
+              <h4 style="margin-top: 15px">
+                {{ account_reactivated3 }}
+              </h4>
+              <h3 style="margin-top: 15px">
+                <a href="/login">{{ account_reactivated4 }}</a>
+              </h3>
+              <br><br><br><br>
+            {% endif %}
+
+            {% if register_success == 'true' %}
+              <h3 style="margin-top: 0px">
+                Thank you {{ first_name }} {{ last_name}}!
+              </h3>
+              <h4 style="margin-top: 15px">
+                {{ register_success1 }}
+              </h4>
+              <p style="margin-top: 15px">
+                {{ register_success2 }}
+              </p>
+              <h3 style="margin-top: 15px">
+                <a href="/login">{{ register_success3 }}</a>
+              </h3>
+              <h4 style="margin-top: 15px">
+                {{ register_success4 }}
+              </h4>
+              <h4 style="margin-top: 15px">
+                {{ register_success5 }}
+              </h4>
+              <br><br><br><br>
+            {% endif %}
+
+            {% if added_agent_success == 'true' %}
+              <h3 style="margin-top: 0px">
+                Congratulations {{ first_name }} {{ last_name}}!
+              </h3>
+              <h4 style="margin-top: 15px">
+                {{ added_agent_success1 }}
+              </h4>
+              <p style="margin-top: 15px">
+                {{ added_agent_success2 }}
+              </p>
+              <p style="margin-top: 15px">
+                {{ added_agent_success3 }}
+              </p>
+              <h4 style="margin-top: 15px">
+                <a href="/admin/brokers/add-new-agent?id={{ broker_id }}">{{ added_agent_success4 }}</a>
+              </h4>
+              <br><br><br><br>
+            {% endif %}
+
         </div>
 
         <div class="col-md-4">

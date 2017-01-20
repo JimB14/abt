@@ -19,13 +19,11 @@
     <div class="col-md-12">
       {% if pagetitle %}
         <h1>{{ pagetitle }}</h1>
-      {% else %}
-        <h1>Subscribe</h1>
       {% endif %}
         <hr>
     </div>
 
-        <div class="col-md-8" style="margin-bottom: 20px;">
+        <div class="col-md-9" style="margin-bottom: 20px;">
 
           <form class="form-horizontal" role="form" name="payment-form" id="payment-form"
               action="{{ action }}" method="post">
@@ -86,7 +84,7 @@
                       New monthly billing
                     </label>
                     <div class="col-sm-9">
-                        <input style="background-color:#fff;" type="number" class="form-control" name="new-billing"
+                        <input style="background-color:#fff;" type="text" class="form-control" name="new-billing"
                           id="new-billing" readonly>
                     </div>
                 </div>
@@ -94,172 +92,253 @@
                 <hr>
               {% endif %}
 
-              <h3 style="margin-bottom: 25px;">
-                Credit card information
-              </h3>
-              <div class="form-group">
-                  <label for="first_name" class="col-sm-3 control-label">
-                    First name
-                  </label>
-                  <div class="col-sm-9">
-                      <input type="text" class="form-control required" name="first_name"
-                        id="first_name" placeholder="First name (as it appears on card)"
-                        {% if pagetitle == 'Add agents' %}tabindex="2"{% endif %}
-                        {% if not pagetitle %} autofocus {% endif %}>
-                  </div>
-              </div>
+              <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-              <div class="form-group">
-                  <label for="last_name" class="col-sm-3 control-label">
-                    Last name
-                  </label>
-                  <div class="col-sm-9">
-                      <input type="text" class="form-control required" name="last_name"
-                        id="last_name" placeholder="Last name (as it appears on card)"
-                        {% if pagetitle == 'Add agents' %}tabindex="3"{% endif %}>
-                  </div>
-              </div>
+              {% if reactivate == 'true' %}
+                <h3 style="margin-top:0px; margin-bottom:20px;">
+                  Welcome back {{ user.first_name }} {{ user.last_name }}!
+                </h3>
+                <p>
+                  We just checked and your information is intact. After completing
+                  your payment, you can log in and manage your data.
+                </p>
 
-              <div class="form-group">
-                <label class="col-sm-3 control-label" for="card-holder-name">
-                  Card type
-                </label>
-                <div class="col-sm-9">
-                  <select class="form-control col-sm-2 required" name="cardtype" id="cardtype"
-                    {% if pagetitle == 'Add agents' %}tabindex="3"{% endif %}>
-                    <option value="">Select</option>
-                    <option value="0">Visa</option>
-                    <option value="1">MasterCard</option>
-                    <option value="2">Discover</option>
-                    <option value="3">American Express</option>
-                    <option value="4">Diner's Club</option>
-                    <option value="5">JCB</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-3 control-label" for="acct">
-                  Card Number
-                </label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control required" name="acct"
-                    id="ACCT" placeholder="Debit/Credit Card Number"
-                    value="4032034487575998"
-                    {% if pagetitle == 'Add agents' %}tabindex="4"{% endif %}>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-3 control-label" for="exp_month">
-                  Expiration Date
-                </label>
-                <div class="col-sm-9">
-                  <div class="row">
-                    <div class="col-xs-3">
-                      <select class="form-control col-sm-2 required" name="exp_month" id="exp_month"
-                      {% if pagetitle == 'Add agents' %}tabindex="5"{% endif %}>>
-                        <option>Month</option>
-                        <option value="01">Jan</option>
-                        <option value="02">Feb</option>
-                        <option value="03">Mar</option>
-                        <option value="04">Apr</option>
-                        <option value="05">May</option>
-                        <option value="06">Jun</option>
-                        <option value="07">Jul</option>
-                        <option value="08">Aug</option>
-                        <option value="09">Sep</option>
-                        <option value="10">Oct</option>
-                        <option value="11">Nov</option>
-                        <option value="12">Dec</option>
-                      </select>
-                    </div>
-                    <div class="col-xs-3">
-                      <select class="form-control required" name="exp_year"
-                        {% if pagetitle == 'Add agents' %}tabindex="6"{% endif %}>>
-                        {% set currentYear = "now"|date("Y") %}
-                        {% set year = "now"|date("y") %}
-                        <option value="{{ year }}">{{ currentYear }}</option>
-                        <option value="{{ year+1 }}">{{ currentYear+1 }}</option>
-                        <option value="{{ year+2 }}">{{ currentYear+2 }}</option>
-                        <option value="{{ year+3 }}">{{ currentYear+3 }}</option>
-                        <option value="{{ year+4 }}">{{ currentYear+4 }}</option>
-                        <option value="{{ year+5 }}">{{ currentYear+5 }}</option>
-                        <option value="{{ year+6 }}">{{ currentYear+6 }}</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                  {% if agent_count == 1 %}
+                    <p>
+                      Your recurring bill after reactivation is
+                      <strong>${{ reactivation_rate }}</strong> per month.
+                    </p>
+                    <p>
+                      Included in your subscription is <strong>one free Expert
+                      Professional Profile</strong>. Each additional Expert (agent)
+                      Profile is ${{ new_agent_cost }} per month. You can easily
+                      add new agents in 'Add new agent / broker' in the Admin
+                      Panel.
+                    </p>
+                  {% endif %}
 
-              <div class="form-group">
-                <label class="col-sm-3 control-label" for="cvv2">
-                  Card CVV
-                </label>
-                <div class="col-sm-3">
-                  <input type="text" class="form-control required" name="cvv2" id="cvv2"
-                    placeholder="Security Code"
-                    {% if pagetitle == 'Add agents' %}tabindex="7"{% endif %}>
-                </div>
-              </div>
+                  {% if agent_count > 1 %}
+                    <p>
+                      Your data includes {{ agent_count - 1 }} additional
+                      {% if agent_count == 2 %} agent {% else %} agents {% endif %}.
+                      Your recurring bill after reactivation is
+                      <strong>${{ reactivation_rate }}</strong> per month.
+                    </p>
 
-              <!-- Do not display 'Amount' for credit card update -->
-              {% if pagetitle != 'Authorize new credit card' %}
-                <div class="form-group">
-                  <label class="col-sm-3 control-label" for="amt">
-                    {% if pagetitle == 'Add agents' %}
-                      New monthly charge
-                    {% else %}
-                      Amount
-                    {% endif %}
-                  </label>
-                  <div class="col-sm-3">
-                    <input type="number" class="form-control required" name="amt"
-                      id="amt" placeholder="Amount" value="{% if new_subscription == 'true' %}9.95{% endif %}">
-                  </div>
-                </div>
+                    <p>
+                      If you do not need {{ agent_count - 1 }} additional
+                      {% if agent_count == 2 %} agent {% else %} agents {% endif %},
+                      you can remove up to {{ agent_count - 1 }}
+                      {% if agent_count == 2 %} agent {% else %} agents {% endif %}
+                      from your recurring monthly bill.
+                    </p>
+                    <p>
+                        To reduce the number of agents, you must
+                        <ol>
+                           <li>Re-assign any listings assigned to those agents</li>
+                           <li>Go to 'Manage agents / brokers' and delete those agents</li>
+                           <li>Go to the section 'Reduce my bill' in 'My account' and follow the instructions</li>
+                        </ol>
+                    </p>
+                    <p>
+                       <strong>
+                         Please note that changes made to reduce your bill
+                         will not take effect until your next payment one month
+                         from tomorrow.
+                       </strong>
+                    </p>
+                  {% endif %}
+
+                  <p>
+                     <strong>
+                       Please note that your next payment is due one month from
+                       tomorrow. Your credit card will be charged automatically
+                       each month unless you cancel your account.
+                     </strong>
+                  </p>
+                  <p>
+                      You can change credit cards at any time in 'My account'
+                      in the Admin Panel.
+                  </p>
+                <hr>
               {% endif %}
 
-              <div class="form-group has-feedback has-feedback">
-                    <div class="col-sm-offset-3 col-sm-9">
-                        <div class="checkbox">
-                          <label for="agree">
-                              <input type="checkbox" class="required" name="agree" id="agree"
-                                {% if pagetitle == 'Add agents' %}tabindex="8"{% endif %}>
-                              I agree to recurring monthly billing.
-                              <a href="#">
-                                  Read terms &amp; conditions
-                              </a>
-                          </label>
-                          <small style="margin-left: 25px;">
-                              <br>
-                              *American Biz Trader does not store credit card information.
-                          </small>
-                        </div>
+              {% if add_agent != 'true' %}
+                  <h3 style="margin-bottom: 25px;">
+                    Credit card information
+                  </h3>
+                  <div class="form-group">
+                      <label for="first_name" class="col-sm-3 control-label">
+                        First name
+                      </label>
+                      <div class="col-sm-9">
+                          <input type="text" class="form-control required" name="first_name"
+                            id="first_name" placeholder="First name (as it appears on card)"
+                            {% if pagetitle == 'Subscribe' %} autofocus {% endif %}
+                            {% if pagetitle == 'Add agents' %}tabindex="2"{% endif %}
+                            {% if not pagetitle %} autofocus {% endif %}
+                            {% if reactivate == 'true' %} autofocus {% endif %}>
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                      <label for="last_name" class="col-sm-3 control-label">
+                        Last name
+                      </label>
+                      <div class="col-sm-9">
+                          <input type="text" class="form-control required" name="last_name"
+                            id="last_name" placeholder="Last name (as it appears on card)"
+                            {% if pagetitle == 'Add agents' %}tabindex="3"{% endif %}>
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label" for="card-holder-name">
+                      Card type
+                    </label>
+                    <div class="col-sm-9">
+                      <select class="form-control col-sm-2 required" name="cardtype" id="cardtype"
+                        {% if pagetitle == 'Add agents' %}tabindex="3"{% endif %}>
+                        <option value="">Select</option>
+                        <option value="0">Visa</option>
+                        <option value="1">MasterCard</option>
+                        <option value="2">Discover</option>
+                        <option value="3">American Express</option>
+                        <option value="4">Diner's Club</option>
+                        <option value="5">JCB</option>
+                      </select>
                     </div>
-              </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label" for="acct">
+                      Card Number
+                    </label>
+                    <div class="col-sm-9">
+                      <input type="text" class="form-control required" name="acct"
+                        id="ACCT" placeholder="Debit/Credit Card Number"
+                        value="4032034487575998"
+                        {% if pagetitle == 'Add agents' %}tabindex="4"{% endif %}>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label" for="exp_month">
+                      Expiration Date
+                    </label>
+                    <div class="col-sm-9">
+                      <div class="row">
+                        <div class="col-xs-3">
+                          <select class="form-control col-sm-2 required" name="exp_month" id="exp_month"
+                          {% if pagetitle == 'Add agents' %}tabindex="5"{% endif %}>>
+                            <option>Month</option>
+                            <option value="01">Jan</option>
+                            <option value="02">Feb</option>
+                            <option value="03">Mar</option>
+                            <option value="04">Apr</option>
+                            <option value="05">May</option>
+                            <option value="06">Jun</option>
+                            <option value="07">Jul</option>
+                            <option value="08">Aug</option>
+                            <option value="09">Sep</option>
+                            <option value="10">Oct</option>
+                            <option value="11">Nov</option>
+                            <option value="12">Dec</option>
+                          </select>
+                        </div>
+                        <div class="col-xs-3">
+                          <select class="form-control required" name="exp_year"
+                            {% if pagetitle == 'Add agents' %}tabindex="6"{% endif %}>>
+                            {% set currentYear = "now"|date("Y") %}
+                            {% set year = "now"|date("y") %}
+                            <option value="{{ year }}">{{ currentYear }}</option>
+                            <option value="{{ year+1 }}">{{ currentYear+1 }}</option>
+                            <option value="{{ year+2 }}">{{ currentYear+2 }}</option>
+                            <option value="{{ year+3 }}">{{ currentYear+3 }}</option>
+                            <option value="{{ year+4 }}">{{ currentYear+4 }}</option>
+                            <option value="{{ year+5 }}">{{ currentYear+5 }}</option>
+                            <option value="{{ year+6 }}">{{ currentYear+6 }}</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
-              <hr>
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label" for="cvv2">
+                      Card CVV
+                    </label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control required" name="cvv2" id="cvv2"
+                        placeholder="Security Code"
+                        {% if pagetitle == 'Add agents' %}tabindex="7"{% endif %}>
+                    </div>
+                  </div>
+              {% endif %}
 
-              <div class="form-group">
-                <div class="col-sm-offset-3 col-sm-9">
-                  <button type="submit" id="pay-now-btn" class="btn btn-primary"
-                    {% if pagetitle == 'Add agents' %}tabindex="9"{% endif %}>
-                    {% if pagetitle == 'Add agents' %}
-                      Update membership
-                    {% elseif pagetitle == 'Authorize new credit card' %}
-                      Authorize Now
-                    {% else %}
-                      Pay Now
-                    {% endif %}
-                  </button>
-                  {% if pagetitle == 'Authorize new credit card' %}
-                    <small style="display:block; margin-top: 10px;">
-                      *{{ explain }}
-                    </small>
+                  <!-- Do not display 'Amount' for credit card update -->
+                  {% if pagetitle != 'Authorize new credit card' %}
+                      <div class="form-group">
+                        <label class="col-sm-3 control-label" for="amt">
+                          {% if pagetitle == 'Add agents' %}
+                            New monthly charge
+                          {% else %}
+                            Amount
+                          {% endif %}
+                        </label>
+                        <div class="col-sm-3">
+                          <input type="text" class="form-control required" name="amt"
+                            id="amt" placeholder="Amount"
+                            value="{% if new_subscription == 'true' %}9.95{% else %}{{ reactivation_rate }}{% endif %}">
+                        </div>
+                      </div>
                   {% endif %}
-                </div>
-              </div>
 
-          </form>
+                  <div class="form-group has-feedback has-feedback">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <div class="checkbox">
+                              <label for="agree">
+                                  <input type="checkbox" class="required" name="agree" id="agree"
+                                    {% if pagetitle == 'Add agents' %}tabindex="8"{% endif %}>
+                                  I agree to recurring monthly billing.
+                                  <a href="#">
+                                      Read terms &amp; conditions
+                                  </a>
+                              </label>
+                              <small style="margin-left: 25px;">
+                                  <br>
+                                  *American Biz Trader does not store credit card information.
+                              </small>
+                            </div>
+                        </div>
+                  </div>
+
+                  <hr>
+
+                  <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9">
+                      <button type="submit" id="pay-now-btn" class="btn btn-primary"
+                        {% if pagetitle == 'Add agents' %}tabindex="9"{% endif %}>
+                        {% if pagetitle == 'Add agents' %}
+                          Update membership
+                        {% elseif pagetitle == 'Authorize new credit card' %}
+                          Authorize Now
+                        {% else %}
+                          Pay Now
+                        {% endif %}
+                      </button>
+                      {% if pagetitle == 'Authorize new credit card' %}
+                        <small style="display:block; margin-top: 10px;">
+                          *{{ explain }}
+                        </small>
+                      {% endif %}
+                      {% if pagetitle == 'Add agents' %}
+                        <small style="display:block; margin-top: 10px;">
+                          *{{ explain }}
+                        </small>
+                      {% endif %}
+                    </div>
+                  </div>
+
+              </form>
         </div>
 
   </div><!-- // .row  -->
@@ -325,7 +404,7 @@ $(document).ready(function(){
       $("#new-billing").val(newTotal);
 
       // display new billing total
-      $("#amt").val(newTotal);
+      parseFloat($("#amt").val(newTotal)).toFixed(2);
 
 
   });

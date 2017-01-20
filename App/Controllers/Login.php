@@ -6,6 +6,9 @@ use \Core\View;
 use \App\Models\User;
 use \App\Mail;
 use \App\Models\State;
+use \App\Config;
+use \App\Models\Broker;
+use \App\Models\BrokerAgent;
 
   /**
    * Login controller
@@ -72,7 +75,28 @@ use \App\Models\State;
         // test
         // echo '<pre>';
         // print_r($user);
-        // echo "</pr>";
+        // echo "</pre>";
+        // exit();
+
+        // get broker data if available
+        $broker = Broker::getBrokerByUserId($user->id);
+
+        if($broker)
+        {
+          // store broker ID in variable
+          $broker_id = $broker->broker_id;
+
+          // get count of agent records for broker by broker ID
+          $agent_count = BrokerAgent::getCountOfAgents($broker_id);
+        }
+
+
+        // // test
+        // echo '<pre>';
+        // print_r($broker);
+        // echo "</pre>";
+        // echo 'Broker ID: ' . $broker_id . '<br>';
+        // echo 'Agent count: ' . $agent_count . '<br>';
         // exit();
 
         // check if returning user; if true log in
@@ -120,26 +144,62 @@ use \App\Models\State;
         elseif ( ($user) && ($user->first_login == 1 && $user->current == 0) )
         {
             // get states for drop-down
-            $states = State::getStates();
+            //$states = State::getStates();
 
             // send for payment; pass action for new subscription
             View::renderTemplate('Paypal/index.html', [
-                'user'   => $user,
-                'states' => $states,
-                'action' => '/subscribe/process-payment?id='.$user->id
+                'user'              => $user,
+                // 'states'            => $states,
+                'new_subscription'  => 'true',
+                'pagetitle'         => 'Subscribe',
+                'action'            => '/subscribe/process-payment?id='.$user->id
+            ]);
+            exit();
+        }
+        // user who cancelled payment (requires reactivation)
+        elseif ( ($user) && ($user->first_login == 0 && $user->current == 0 && $user->active == 1) )
+        {
+
+            $pagetitle = 'Reactivate account';
+
+            // calculate new rate
+            $reactivation_rate = $agent_count * Config::SUBSCRIPTION;
+
+            // format for PayPal
+            $reactivation_rate = number_format($reactivation_rate, 2);
+
+            // test
+            // echo '<pre>';
+            // print_r($broker);
+            // echo "</pre>";
+            // echo '$broker_id: ' . $broker_id . '<br>';
+            // echo '$agent_count: ' . $agent_count . '<br>';
+            // echo '$reactivation_rate: ' . $reactivation_rate . '<br>';
+            // echo '$pagetitle: ' . $pagetitle . '<br>';
+            // exit();
+
+            // send for payment
+            View::renderTemplate('Paypal/index.html', [
+                'user'              => $user,
+                'pagetitle'         => $pagetitle,
+                'reactivate'        => 'true',
+                'agent_count'       => $agent_count,
+                'reactivation_rate' => $reactivation_rate,
+                'new_agent_cost'    => Config::SUBSCRIPTION,
+                'action'            => '/subscribe/process-reactivation?user_id='.$user->id
             ]);
             exit();
         }
         elseif ( ($user) && ($user->first_login == 0 && $user->current == 0) )
         {
             // get states for drop-down
-            $states = State::getStates();
+            //$states = State::getStates();
 
             // send for payment
             View::renderTemplate('Paypal/index.html', [
                 'user'              => $user,
-                'states'            => $states,
-                'new_subscription'  => 'true'                
+                // 'states'            => $states,
+                'new_subscription'  => 'true'
             ]);
             exit();
         }
