@@ -1,0 +1,211 @@
+{% extends 'base-siteadmin.html' %}
+
+{% block title %}
+  Real Estate Listings | ABT
+{% endblock %}
+
+{% block css %}
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div id="dashboard-toggle" class="col-md-12" style="margin-top:-20px;margin-left:254px;">
+
+          <div class="col-md-5">
+              {% if pagetitle %}
+                <h2 style="margin-left:-15px;">
+                  {{ pagetitle }}
+                  {% if listings|length > 0 %}
+                    <span class="badge" style="margin: -18px 0px 0px 7px;">
+                        {{ listings|length }}
+                    </span>
+                  {% endif %}
+                </h2>
+              {% else %}
+                <h2 style="margin-left:-15px;">
+                  Manage real estate listings: {{ broker.company_name }}
+                  {% if listings|length > 0 %}
+                    <span class="badge" style="margin: -18px 0px 0px 7px;">
+                        {{ listings|length }}
+                    </span>
+                  {% endif %}
+                </h2>
+              {% endif %}
+          </div>
+          <div  class="col-md-3 col-sm-6 col-xs-12" style="margin:15px 0px 15px  -15px;">
+            <form method="get"
+                action="/admin/siteadmin/search-realty-listings-by-last-name-or-client-id">
+              <div class="input-group">
+                <input style="width:175px;"  type="text" class="form-control" name="last_name" id="listings_last_name"
+                    placeholder="Enter agent last name">
+                <input type="hidden" name="id" value="{{ broker.broker_id}}">
+                <span style="display:inline-block;margin-left:0px;"  class="input-group-btn">
+                  <button class="btn btn-secondary btn-default" type="submit">Go</button>
+                </span>
+              </div>
+              <div class="checkbox" style="margin-left:10px;">
+                  <label>
+                      <input type="checkbox" name="clients_id" id="thisID" value="1">
+                      <span>
+                        Search by listing ID only
+                      </span>
+                  </label>
+              </div>
+            </form>
+          </div>
+
+
+          {% if listings %}
+
+            <form action="" method="post" enctype="multipart/form-data">
+
+                <table class="table table-bordered table-striped bg-fff  display-broker-agents">
+
+                  <thead>
+                      <tr>
+                          <th>Edit</th>
+                          <!-- <th>Delete</th> -->
+                          <th>Ad title</th>
+                          <th>ID</th>
+                          <th>Display status</th>
+                          <th>ABT ID</th>
+                          <th>Created</th>
+                          <th>Last update</th>
+                          <th>Agent</th>
+                          <th>Type</th>
+                          <th>Subtype</th>
+                          <th>Status</th>
+                          <th>Price</th>
+                          <th>Date available</th>
+                          <th>Sq Ft</th>
+                          <th>Acres</th>
+                          <th>Address</th>
+                          <th>Address2</th>
+                          <th>City</th>
+                          <th>St</th>
+                          <th>County</th>
+                          <th>Zip</th>
+                          <th>Desc</th>
+                          <th>Keywords</th>
+                          <th>Brochure</th>
+                          <th>Image01</th>
+                          <th>Image02</th>
+                          <th>Image03</th>
+                          <th>Image04</th>
+                          <th>Image05</th>
+                          <th>Image06</th>
+                      </tr>
+                  </thead>
+
+                  <tbody>
+                      {% for listing in listings %}
+                      <tr>
+                          <td>
+                            <a id="edit-ad" class="btn btn-default btn-sm"
+                              href="/admin/siteadmin/edit-real-estate-listing?id={{ listing.id }}&amp;broker_id={{ broker.broker_id}}">
+                              Edit
+                            </a>
+                          </td>
+                          <!-- <td>
+                              <a id="delete-ad" class="btn btn-danger btn-sm" href="/admin/brokers/delete-real-estate-listing?id={{ listing.id }}&amp;broker_id={{ broker.broker_id}}"
+                                onclick="return confirm('You can edit this listing so it will not display on the website by changing the Display Status to hide. \n\nTo change Display Status, click Cancel & then click the Edit button. \n\n\If this listing is sold, consider changing its Listing Status to Sold and it will display in the Recently Sold section of your Company Page. \n\n\To change Listing Status, click Cancel & then click the Edit button. \n\n\TO PERMANENTLY DELETE THIS LISTING, click OK. \n\n\WARNING! DELETED DATA CANNOT BE RECOVERED.');">
+                                &times;
+                              </a>
+                          </td> -->
+                          <td align="center">
+                              <a id="preview-listing" href="/realty/view-listing-details?listing_id={% if listing.realty_id %}{{ listing.realty_id }}{% else %}{{ listing.id }}{% endif %}&amp;broker_id={{ broker.broker_id}}&amp;listing_agent_id={% if listing.realty_listing_agent_id %}{{ listing.realty_listing_agent_id }}{% else %}{{ listing.listing_agent_id}}{% endif %}">
+                                  {% if listing.ad_title %} {{ (listing.ad_title|striptags|slice(0,20))|raw }} {% else %} Preview {% endif %}
+                              </a>
+                          </td>
+                          <td>{{ listing.clients_id }}</td>
+                          <td align="center">{% if listing.display == 0 %} hide {% else %} show {% endif %}</td>
+                          <td>{{ listing.id }}</td>
+                          <td>{{ listing.created_at|date("Y-m-d") }}</td>
+                          <td>{{ listing.updated_at|date("Y-m-d") }}</td>
+                          <td>{{ listing.agent_last_name }}, {{ listing.agent_first_name }}</td>
+                          <td>{% if listing.type == 'for_sale' %}Sale{% else %}Lease{% endif %}</td>
+                          <td>{{ listing.subtype }}</td>
+                          <td>{{ listing.status }}</td>
+                          <td>{{ listing.asking_price|number_format(0, '.', ',') }}</td>
+                          <td>{{ listing.date_available }}</td>
+                          <td>{{ listing.square_feet|number_format(0, '.', ',') }}</td>
+                          <td>{{ listing.acres }}</td>
+                          <td>{{ listing.address }}</td>
+                          <td>{{ listing.address2 }}</td>
+                          <td>{{ listing.city }}</td>
+                          <td>{{ listing.state }}</td>
+                          <td>{{ listing.county }}</td>
+                          <td>{{ listing.zip }}</td>
+                          <td>{{ (listing.description|slice(0,30))|raw }}</td>
+                          <td>{{ (listing.keywords|striptags|slice(0,30))|raw }}</td>
+                          <td>{{ listing.brochure }}</td>
+                          <td><img src="/assets/images/uploaded_real_estate_photos/{{ listing.img01 }}" width="40"></td>
+                          <td><img src="/assets/images/uploaded_real_estate_photos/{{ listing.img02 }}" width="40"></td>
+                          <td><img src="/assets/images/uploaded_real_estate_photos/{{ listing.img03 }}" width="40"></td>
+                          <td><img src="/assets/images/uploaded_real_estate_photos/{{ listing.img04 }}" width="40"></td>
+                          <td><img src="/assets/images/uploaded_real_estate_photos/{{ listing.img05 }}" width="40"></td>
+                          <td><img src="/assets/images/uploaded_real_estate_photos/{{ listing.img06 }}" width="40"></td>
+
+                      {% endfor %}
+                  </tbody>
+                </table>
+
+            </form>
+
+            <p style="margin-top: -3px;" class="pull-left"><a href="#top" title="Go to top of page"><i style="margin-top: -15px; color:#ccc;" class="fa fa-arrow-circle-o-up fa-3x" aria-hidden="true"></i></a></p>
+            <p style="margin-top: -3px;" class="pull-right"><a href="#top" title="Go to top of page"><i style="margin-top: -15px; color:#ccc;" class="fa fa-arrow-circle-o-up fa-3x" aria-hidden="true"></i></a></p>
+
+
+            {% else %}
+            <div class="col-md-8" style="margin-left:-15px;">
+                <div class="alert alert-warning" style="margin-top:30px;">
+                    <h4 style="margin-bottom:0px;">
+                      No listings to display
+                    </h4>
+                </div>
+            </div>
+            {% endif %}
+
+      </div><!--  // col-md-12  -->
+    </div><!--  // .row  -->
+</div><!-- // .container-fluid  -->
+{% endblock %}
+
+
+{% block bottomjs %}
+<script>
+$(document).ready(function(){
+
+
+    // $("#thisID").click(function(){
+    //     var checked = 1;
+    //     console.log(checked);
+    //     if(checked == 1){
+    //       $("#last_name").attr("placeholder", "Enter listing ID");
+    //     } else {
+    //       $("#last_name").attr("placeholder", "Enter agent last name or listing ID");
+    //     }
+    // });
+
+
+
+    $("#thisID").click(function(){
+        var checked = 1;
+        console.log(checked);
+        if($("#thisID").prop("checked")){
+          $("#listings_last_name").attr("placeholder", "Enter listing ID");
+        } else {
+          $("#listings_last_name").attr("placeholder", "Enter agent last name");
+        }
+    });
+
+
+
+});
+</script>
+
+{% endblock %}

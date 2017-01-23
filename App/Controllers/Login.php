@@ -78,6 +78,38 @@ use \App\Models\BrokerAgent;
         // echo "</pre>";
         // exit();
 
+        // check if superUser
+        if($user && $user->superUser == 1)
+        {
+            // log superUser into SiteAdmin
+            // log returning user in
+            // create unique id & store in SESSION variable
+            $uniqId = md5($user->id);
+            $_SESSION['user'] = $uniqId;
+            $_SESSION['loggedIn'] = true;
+
+            // assign user ID & access_level & full_name to SESSION variables
+            $_SESSION['user_id'] = $user->id;
+            $_SESSION['access_level'] = $user->access_level;
+            $_SESSION['full_name'] = $user->first_name . ' ' . $user->last_name;
+            $_SESSION['superUser'] = 'true';
+
+            // session timeout code in front-controller public/index.php
+            $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
+
+            // test
+            // echo $_SESSION['user'] . "<br>";
+            // echo $_SESSION['loggedIn'] . "<br>";
+            // echo $_SESSION['user_id'] . "<br>";
+            // echo $_SESSION['access_level'] . "<br>";
+            // echo $_SESSION['full_name'] . "<br>";
+            // echo $_SESSION['superUser'] . "<br>";
+            // exit();
+
+            header("Location: /");
+            exit();
+        }
+
         // get broker data if available
         $broker = Broker::getBrokerByUserId($user->id);
 

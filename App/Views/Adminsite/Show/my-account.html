@@ -1,0 +1,472 @@
+{% extends 'base-siteadmin.html' %}
+
+{% block title %}
+  My Account | ABT
+{% endblock %}
+
+{% block css %}
+
+{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div id="dashboard-toggle" class="col-md-8" style="margin-top:-20px;margin-left:254px;">
+
+          <h2>My account: {{ broker.company_name }}</h2>
+          <hr>
+                <form class="form-horizontal">
+
+                    <h3 style="margin-bottom: 15px;">
+                      Account information
+                    </h3>
+
+                    <div class="form-group">
+                        <label for="regDate" class="control-label col-sm-3">
+                          Registration date
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="regDate"
+                            id="regDate" placeholder="Registration date"
+                            value="{{ user.regDate|date("Y-m-d")}}">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="first_name" class="control-label col-sm-3">
+                          First name
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" name="first_name" class="form-control"
+                            id="first_name" placeholder="First name"
+                            value="{{ user.first_name }}" >
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="last_name" class="control-label col-sm-3">
+                          Last name
+                      </label>
+                        <div class="col-sm-9">
+                            <input type="text" name="last_name" class="form-control"
+                              id="last_name" placeholder="Last name" value="{{ user.last_name }}" >
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="email" class="control-label col-sm-3">
+                          Login email
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="email" name="email" class="form-control"
+                              id="email" placeholder="Email" value="{{ user.email }}" >
+                         </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="company_name" class="control-label col-sm-3">
+                          Company Name
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="company_name"
+                              id="company_name" placeholder="Company name" value="{{ company_name }}" >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                           <a href="/subscribe/cancel-payment?user_id={{ user.id }}&amp;profileid={{ ppProfile.PROFILEID }}"
+                            role="button" class="btn btn-danger" id="cancel_account"
+                            onclick="return confirm('Are you sure you want to permanently delete all of your listings and related data?');">
+                            Cancel account
+                          </a>
+                        </div>
+                    </div>
+
+                   <hr>
+
+
+                    <h3 style="margin-bottom: 15px;">
+                      Payment information
+                    </h3>
+
+                    <div class="form-group">
+                        <label for="status" class="control-label col-sm-3">
+                          Status
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="status"
+                              id="status" placeholder="Account status"
+                              value="{{ ppProfile.STATUS }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amt" class="control-label col-sm-3">
+                          Amount / month
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="amt"
+                              id="amt" placeholder="Recurring amount" value="{{ ppProfile.AMT }}">
+                              <small>
+                                *Account changes take effect on your Next payment (see Next payment date)
+                              </small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="creation_date" class="control-label col-sm-3">
+                          Creation date
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="creation_date"
+                              id="creation_date" placeholder="Creation date"
+                              value="{{ creation_date }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="last_changed" class="control-label col-sm-3">
+                          Last changed
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="last_changed"
+                              id="last_changed" placeholder="Last changed"
+                              value="{{ last_changed }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="next_payment_amount" class="control-label col-sm-3">
+                          Next payment
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="next_payment_amount"
+                              id="next_payment_amount" placeholder="Next payment amount"
+                              value="{{ next_payment }}" >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="last_four" class="control-label col-sm-3">
+                          Last 4 digits of card used
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="last_four"
+                              id="last_four" placeholder="Last 4 digits of card"
+                              value="{{ last_four }}">
+                              <small>
+                                *Information for reference only. American Biz Trader does not store credit card information
+                              </small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="expiration" class="control-label col-sm-3">
+                          Expiration (mmyy)
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="expiration"
+                              id="expiration" placeholder="Expiration mm/YYYY"
+                              value="{{ ppProfile.EXPDATE }}">
+                              <small>
+                                *Information for reference only. American Biz Trader does not store credit card information
+                              </small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="next_payment_subscription_period" class="control-label col-sm-3">
+                          Profile ID
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="profileid"
+                            id="profileid" placeholder="Profile ID"
+                            value="{{ ppProfile.PROFILEID }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="agent-limit" class="control-label col-sm-3">
+                          Agent limit
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="agent-limit"
+                              id="agent-limit" placeholder="Max number of agents"
+                              value="{{ user.max_agents }}">
+                              <small>
+                                *If agent limit exceeds number of agents, you can reduce
+                                the amount of your monthly bill (changes take effect at next payment date)
+                              </small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="agents" class="control-label col-sm-3">
+                          Number of agents
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="agents"
+                              id="agents" placeholder="Number of agents"
+                              value="{{ agent_count }}">
+                              {% if agent_count < 1 %}
+                                <small>
+                                  *Please add an agent / broker. You cannot add
+                                  a listing without an agent to assign it to.
+                                  Click 'Add new agent / broker' under Agent/Broker
+                                  in the side Menu.
+                                </small>
+                              {% endif %}
+                        </div>
+                    </div>
+                </form>
+
+
+                <!-- - - - - - - Reduce my bill - - - - - - -  - - - - - - - -->
+                {% if user.max_agents > 1 %}
+                  {% if user.max_agents - agent_count >= 1 %}
+                    <hr>
+                    <h3 style="margin-bottom: 15px;">Reduce my bill</h3>
+
+                      <form class="form-horizontal" method="post"
+                        action="/subscribe/process-payment-reduction?user_id={{ user.id }}&amp;profileid={{ ppProfile.PROFILEID }}"
+                          name="reduce-bill-form" id="reduce-bill-form">
+
+                          <input type="hidden" name="current_amt" value="{{ ppProfile.AMT }}">
+
+                          <div class="form-group">
+                              <label for="reduce_my_bill" class="control-label col-sm-3">
+                                Reduce my bill
+                              </label>
+                              <div class="col-sm-9">
+                                  <small>
+                                    Because you are paying for {{ user.max_agents }}
+                                    agents but using {{ agent_count }}, you can
+                                    remove up to {{ extra_agents }} {% if extra_agents == 1 %}agent{% else %}agents{% endif %}
+                                    and reduce your monthly bill (changes take effect
+                                    at next payment date). Select the number of agents
+                                    that you are eligible to remove, and click
+                                    "Reduce my bill"
+                                  </small>
+                              </div>
+                          </div>
+
+                          <div class="form-group">
+                              <label for="remove_agent_count" class="control-label col-sm-3">
+                                Agents to remove
+                              </label>
+                              <div class="col-sm-9">
+                                  <select class="form-control" name="remove_agent_count" id="remove_agent_count">
+                                    <!-- resource: http://twig.sensiolabs.org/doc/1.x/tags/for.html -->
+                                    <option value="">Select</option>
+                                    {% for i in 1..extra_agents %}
+                                      <option value={{ i }}>{{ i }}</option>
+                                    {% endfor %}
+                                  </select>
+                              </div>
+                          </div>
+
+                          <div class="form-group">
+                              <div class="col-sm-offset-3 col-sm-9">
+                                 <button type="submit" class="btn btn-primary btn-sm"
+                                  role="submit" id="reduce-my-bill-btn">
+                                   Reduce my bill
+                                 </button>
+                              </div>
+                          </div>
+                      </form>
+                  {% endif %}
+                {% endif %}
+
+                <hr>
+
+
+
+                <!-- - - - - - Modify credit card  - - - - - - - - - - - - - -->
+
+                <h3 style="margin-bottom: 15px;" id="paymentDetails">Credit card modification</h3>
+
+                  <div class="form-group">
+                      <label for="update-credit-card" class="control-label col-sm-3 text-right">
+                        Authorize new card
+                      </label>
+                      <div class="col-sm-9">
+                         <a href="/subscribe/authorize-new-credit-card?user_id={{ user.id }}&amp;profileid={{ ppProfile.PROFILEID }}"
+                          type="submit" class="btn btn-primary btn-lg" role="button"
+                          id="update-credit-card-btn">
+                            Authorize new card
+                         </a>
+                         <small>
+                           <br>
+                           *Once authorized, your recurring bill amount will be
+                           charged against this card on your next payment
+                           date ({{ next_payment }})
+                         </small>
+                      </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <hr>
+                  </div>
+
+                <!-- - - - - - Change password - - - - - - - - - - - - - - - -->
+
+                <h3 style="margin-bottom: 15px;">Change password</h3>
+
+                <form style="border-bottom: 1px solid #eee; margin-bottom:20px;"
+                  class="form-horizontal required" method="post"
+                  action="/admin/brokers/change-password?user_id={{ user.id }}"
+                  id="change-password-form">
+
+                   <div class="form-group">
+                       <label for="current_password" class="control-label col-sm-3">
+                         Current password
+                       </label>
+                       <div class="col-sm-9">
+                           <input type="text" class="form-control required" name="current_password"
+                            id="current_password" placeholder="Current password">
+                       </div>
+                   </div>
+
+                   <div class="form-group">
+                       <label for="confirm_password" class="control-label col-sm-3">
+                         Confirm password
+                       </label>
+                       <div class="col-sm-9">
+                           <input type="text" class="form-control required"
+                            name="confirm_password" id="confirm_password"
+                            placeholder="Confirm password">
+                       </div>
+                   </div>
+
+                   <div class="form-group">
+                       <label for="new_password" class="control-label col-sm-3">
+                         New password
+                       </label>
+                       <div class="col-sm-9">
+                           <input type="text" class="form-control required" name="new_password"
+                            id="new_password" placeholder="New password - at least 6 characters">
+                       </div>
+                   </div>
+
+                   <div class="form-group">
+                       <label for="confirm_new_password" class="control-label col-sm-3">
+                         Confirm new password
+                       </label>
+                       <div class="col-sm-9">
+                           <input type="text" class="form-control required" name="confirm_new_password"
+                            id="confirm_new_password" placeholder="Confirm new password">
+                       </div>
+                   </div>
+
+                   <div class="form-group">
+                       <div class="col-sm-offset-3 col-sm-9">
+                          <button type="submit" class="btn btn-primary btn-lg" id="change-password-btn">
+                            Change password
+                          </button>
+                       </div>
+                   </div>
+                </form>
+
+
+                <!-- - - - - - - Change login email - - - - -  - - - - - - - -->
+
+                <h3 style="margin-bottom: 15px;">
+                  Change login email
+                </h3>
+
+                <form style="margin-bottom:50px;" class="form-horizontal" method="post"
+                  action="/admin/brokers/change-login-email?user_id={{ user.id }}"
+                  id="change-login-email-form">
+
+                   <div class="form-group">
+                       <label for="current_login_email" class="control-label col-sm-3">
+                         Current login email
+                       </label>
+                       <div class="col-sm-9">
+                           <input type="email" class="form-control required"
+                            name="current_login_email" id="current_login_email"
+                            placeholder="Current login email" value="{{ user.email }}">
+                       </div>
+                   </div>
+
+                   <div class="form-group">
+                       <label for="new_login_email" class="control-label col-sm-3">
+                         New login email
+                       </label>
+                       <div class="col-sm-9">
+                           <input type="email" class="form-control required"
+                            name="new_login_email" id="new_login_email"
+                            placeholder="New login email">
+                       </div>
+                   </div>
+
+                   <div class="form-group">
+                       <label for="confirm_new_login_email" class="control-label col-sm-3">
+                         Confirm new login email
+                       </label>
+                       <div class="col-sm-9">
+                           <input type="email" class="form-control required"
+                            name="confirm_new_login_email" id="confirm_new_login_email"
+                            placeholder="Confirm new login email" autocomplete="off">
+                       </div>
+                   </div>
+
+                   <div class="form-group">
+                       <label for="password" class="control-label col-sm-3">
+                         Current password
+                       </label>
+                       <div class="col-sm-9">
+                           <input type="password" class="form-control required"
+                           name="password" id="password" placeholder="Current password"
+                           autocomplete="off">
+                       </div>
+                   </div>
+
+                   <div class="form-group">
+                       <div class="col-sm-offset-3 col-sm-9">
+                          <button type="submit" class="btn btn-primary btn-lg"
+                            id="change-login-email-btn">
+                            Change login email
+                          </button>
+                       </div>
+                   </div>
+
+                </form>
+
+        </div><!--  // col  -->
+    </div><!--  // .row  -->
+</div><!-- // .container-fluid  -->
+{% endblock %}
+
+
+{% block bottomjs %}
+<script>
+$(document).ready(function(){
+
+    $("#change-password-form").validate();
+    $("#change-login-email-form").validate();
+
+    $("#reduce-bill-form").submit(function(){
+        var agent_count = $("#remove_agent_count").val();
+        console.log(agent_count);
+
+        if(agent_count < 1)
+        {
+            alert("Please select an amount in 'Agents to remove' drop-down.");
+            return false;
+        }
+
+    });
+
+    // $("#payment-history-form").submit(function(){
+    //     $("#view-payment-history-btn").hide();
+    // });
+
+});
+</script>
+{% endblock %}

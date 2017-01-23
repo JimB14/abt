@@ -11,17 +11,18 @@
     <div class="row">
 
         <div class="col-md-12">
-            <h1>Create Your Company Profile</h1>
+            <h1>Create your company profile</h1>
             <hr style="margin-bottom: 10px;">
         </div>
 
-        <div class="col-md-8" style="margin-bottom: 50px;">
+        <div class="col-md-10" style="margin-bottom: 50px;">
           <h3 class="bold">
-              Welcome {{ user.first_name }} {{ user.last_name}} to American Biz Trader
+              Welcome {{ user.first_name }} {{ user.last_name}} to American Biz
+              Trader
           </h3>
           <p>
-              After registration, you can edit this information any time from your
-              admin panel.
+              After registration, you can edit this information any time from
+              your Admin Panel.
           </p>
 
 
@@ -279,15 +280,14 @@
               <div class="form-group has-feedback">
                   <label for="website" class="control-label col-sm-3">
                       Website
-                      <br>
-                      <small>
-                        (must include &quot;http://&quot;)
-                      </small>
                   </label>
                   <div class="col-sm-9">
                       <input type="url" name="website" class="form-control required"
                       id="website" placeholder="http://www.YourDomain.com">
                       <span class="glyphicon form-control-feedback" id="website1"></span>
+                      <small>
+                        *Must include &quot;http://&quot;
+                      </small>
                   </div>
               </div>
 

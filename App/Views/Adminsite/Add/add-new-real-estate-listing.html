@@ -1,0 +1,639 @@
+{% extends 'base-siteadmin.html' %}
+
+{% block title %}
+  Add Real Estate Listing | ABT
+{% endblock %}
+
+{% block css %}
+<!-- Datepicker for warranty-registration.php @https://jqueryui.com/datepicker/#default -->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/assets/css/jquery-ui.min.css">
+{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div id="dashboard-toggle" class="col-md-8" style="margin-top:-20px;margin-left:254px;">
+
+          <h2>Add new real estate listing:  {{ broker.company_name }}</h2>
+          <hr>
+
+            <form method="post" action="/admin/siteadmin/post-new-real-estate-listing?broker_id={{ broker.broker_id }}"
+              class="form-horizontal" name="new-real-estate-listing-form"
+              id="new-real-estate-listing-form" enctype="multipart/form-data">
+
+                <h3 class="subheading">Listing agent information</h3>
+
+                <div class="form-group">
+                    <label for="broker" class="control-label col-sm-3">Company name</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="broker"
+                        id="broker" placeholder="Broker" value="{{ broker_company_name }}" disabled>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="listing_agent_id" class="control-label col-sm-3">
+                      Listing agent
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control p1 required"
+                        name="listing_agent_id" id="listing_agent_id" required>
+                            <option value="">Select agent</option>
+                            {% for agent in agents %}
+                                <option value="{{ agent.agent_id }} ">
+                                  {{ agent.agent_last_name }}  {{ agent.agent_first_name }} , {{ agent.status }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <hr/>
+
+                <h3 class="subheading">Real estate information</h3>
+
+                <div class="form-group">
+                        <label for="type" class="control-label col-sm-3">
+                          Listing type
+                        </label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name="type" id="re-type">
+                            {% if type %}
+                            <option value="{{ type }}">{{ type }}</option>
+                            {% endif %}
+                            <option value="sale">Sale</option>
+                            <option value="lease">Lease</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                        <label for="type" class="control-label col-sm-3">
+                          Category
+                        </label>
+                    <div class="col-sm-9">
+                      <select class="form-control" name="subtype" id="re-subtype">
+
+                      </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="realty_listing_status" class="control-label col-sm-3">
+                      Listing status
+                    </label>
+                    <div class="col-sm-9">
+                        <select name="realty_listing_status" id="realty_listing_status" class="form-control">
+                            <option value="active">Active</option>
+                            <!-- <option value="sold">Sold</option> -->
+                        </select>
+                        <small>
+                          IMPORTANT!  When this listing is sold, change status to "Sold" to populate
+                          "Sold Listings" tab, which displays on your Profile page and Company page. The "Sold"
+                          tab and its content will not display unless you have listings with a
+                          Listing status of "Sold." To change Listing status,
+                          click "Manage listings" under "Real Estate Listings", navigate to
+                          the listing you want to change, click the "Edit" button
+                          and find the Listing status field. Make change and click
+                          "Update Listing."
+                        </small>
+                    </div>
+                </div>
+
+
+
+
+                <!-- <div class="form-group">
+                    <label for="type" class="control-label col-sm-3">
+                      Listing type
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control required"
+                          name="type" id="type">
+                            <option value="">Select type</option>
+                            <option value="sale">For Sale</option>
+                            <option value="lease">For Lease</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="form-group" id="re-for-sale-category-div">
+                    <label for="subtype" class="control-label col-sm-3">
+                      For sale category
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control required"
+                          name="subtype" id="subtype">
+                            <option value="">Select category</option>
+                            {% for item in for_sale_categories %}
+                              <option value="{{ item }} ">{{ item }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="form-group" id="re-for-lease-category-div">
+                    <label for="subtype" class="control-label col-sm-3">
+                      For lease category
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control required"
+                          name="subtype" id="subtype">
+                            <option value="">Select category</option>
+                            {% for item in for_lease_categories %}
+                              <option value="{{ item }} ">{{ item }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div> -->
+
+
+
+                <div class="form-group">
+                    <label for="clients_id" class="control-label col-sm-3">
+                      Your company ID
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control"
+                        name="clients_id" id="clients_id"
+                        placeholder="Your company ID or reference">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="ad_title" class="control-label col-sm-3">
+                      Ad title
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control required"
+                        name="ad_title" id="ad_title"
+                        placeholder="Text displays at top of ad &amp; used for search engine indexes">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="asking_price" class="control-label col-sm-3">
+                      Asking price
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" name="asking_price"
+                        class="form-control required" id="asking_price"
+                        placeholder="Price">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="date_available" class="control-label col-sm-3">
+                      Date available
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" id="datepicker" class="form-control"
+                        name="date_available" placeholder="Date new tenant or owner can occupy">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="square_feet" class="control-label col-sm-3">
+                      Square feet
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="number" name="square_feet"
+                        class="form-control required" id="square_feet" step="100"
+                        placeholder="Total square feet">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="acres" class="control-label col-sm-3">
+                      Acres
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="number" name="acres" step="any" min="0"
+                        class="form-control required" id="acres"
+                        placeholder="Acres - leave blank if not applicable">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="address" class="control-label col-sm-3">
+                      Address
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" name="address"
+                        class="form-control required" id="address" placeholder="Address">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="address2" class="control-label col-sm-3">
+                      Address2
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" name="address2"
+                        class="form-control required" id="address2" placeholder="Address2">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="city" class="control-label col-sm-3">
+                      City
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" name="city"
+                        class="form-control required" id="city" placeholder="City">
+                    </div>
+                </div>
+
+
+                <!-- <div class="form-group"  style="margin-top: -15px; margin-left: 3px;">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="hide_city"
+                                id="hide_city" value="1">
+                                <span>
+                                  Select to prevent city from displaying in ad
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div> -->
+
+
+
+                <div class="form-group">
+                    <label for="state" class="control-label col-sm-3">
+                      State
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control required" name="state" id="add-listing-state-list">
+                            <option value="">Select state</option>
+                            {% for state in states %}
+                                <option value="{{ state.abbrev }}">{{ state.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="county" class="control-label col-sm-3">
+                      County
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control required" name="county"
+                            id="add-listing-county-list" placeholder="County">
+                            {% if county %}
+                            <option>{{ county }}</option>
+                            {% endif %}
+                            <option value="">Select county</option>
+                            <!-- jquery appends here; Ajax code below -->
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <!-- <div class="form-group" style="margin-top: -15px; margin-left: 3px;">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="hide_county"
+                                id="hide_county" value="1">
+                                <span>
+                                  Select to prevent county from displaying in ad
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div> -->
+
+
+
+                <div class="form-group">
+                    <label for="zip" class="control-label col-sm-3">
+                      Zip
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" name="zip" class="form-control required"
+                        id="zip" placeholder="Zip">
+                     </div>
+                </div>
+
+
+                <!-- <div class="form-group"  style="margin-top: -15px; margin-left: 3px;">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="hide_zip"
+                                id="hide_zip" value="1">
+                                <span>
+                                  Select to prevent zip code from displaying in ad
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div> -->
+
+
+
+                <div class="form-group">
+                    <label for="description" class="control-label col-sm-3">
+                      Description
+                    </label>
+                    <div class="col-sm-9">
+                      <textarea name="description" class="form-control required" id="re-description" placeholder="Real estate description"></textarea>
+                      <script>
+                        CKEDITOR.replace( 're-description' );
+                      </script>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="keywords" class="control-label col-sm-3">
+                      Keywords
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" name="keywords" class="form-control"
+                        id="keywords" placeholder="List 6 - 10 words to aid search engines (must be comma separated)">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                   <label class="control-label col-sm-3">
+                     Upload brochure
+                   </label>
+                   <div class="col-sm-9">
+                         <p><input type="file" name="brochure" id="brochure"></p>
+                         <p class="help-block small" style="margin-top:-7px;">
+                           **Must be pdf, gif, jpg, jpeg or png under 5MB each
+                         </p>
+                   </div>
+               </div>
+
+              <hr>
+
+               <!-- - - - - - - - - -  Images - - - - - - - - - - - - - - -  -->
+
+               <h3 class="subheading">
+                 Upload up to 6 images
+                 <br>
+                 <small>
+                   (Images can be added or
+                   <br>
+                   changed at any time
+                   <br>
+                   in "Manage listings")
+                 </small>
+               </h3>
+
+               <div class="form-group" id="upload-business-photos">
+                  <label class="control-label col-sm-3">
+
+                  </label>
+                  <div class="col-sm-9">
+                        <p><input type="file" name="img01" id="img01"></p>
+                        <p class="help-block small" style="margin-top:-7px;">
+                          **Must be gif, jpg, jpeg or png under 2MB each
+                        </p>
+                        <hr/>
+
+                        <p><input type="file" name="img02" id="img02"></p>
+                        <p class="help-block small" style="margin-top:-7px;">
+                          **Must be gif, jpg, jpeg or png under 2MB each
+                        </p>
+                        <hr/>
+
+                        <p><input type="file" name="img03" id="img03"></p>
+                        <p class="help-block small" style="margin-top:-7px;">
+                          **Must be gif, jpg, jpeg or png under 2MB each
+                        </p>
+                        <hr/>
+
+                        <p><input type="file" name="img04" id="img04"></p>
+                        <p class="help-block small" style="margin-top:-7px;">
+                          **Must be gif, jpg, jpeg or png under 2MB each
+                        </p>
+                        <hr/>
+
+                        <p><input type="file" name="img05" id="img05"></p>
+                        <p class="help-block small" style="margin-top:-7px;">
+                          **Must be gif, jpg, jpeg or png under 2MB each
+                        </p>
+                        <hr/>
+
+                        <p><input type="file" name="img06" id="img06"></p>
+                        <p class="help-block small" style="margin-top:-7px;">
+                          **Must be gif, jpg, jpeg or png under 2MB each
+                        </p>
+
+                   </div>
+               </div>
+
+                <hr/>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+                <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
+          <!--
+                <h3 class="subheading">Upload images <span class="small">(optional - can be added later)</span></h3>
+
+
+                <div class="form-group" id="upload-business-photos">
+                    <label for="business_photos" class="control-label col-sm-3">&nbsp;</label>
+                    <div class="col-sm-9">
+                        <p style="margin-bottom: 15px; color: #222;">
+                            Ctrl+ image to multi-select <em>up to 5 images</em> (1 only if you use MS Internet Explorer).
+                            <br>
+                            <em>For optimum results, upload images >= 750px wide.</em>
+                            <br><br>
+                            After posting your ad, you can view, upload and change images by clicking "Manage listings (ads)" and then the "Edit" button.
+                        </p>
+                        <p><input type="file" name="biz_photos[]" id="business_photo01" multiple="multiple" min="1" max="5"></p>
+                        <p class="help-block small" style="margin-top:-7px;">*Up to 5 images. Must be gif, jpg, jpeg or png under 2MB each</p>
+                    </div>
+                </div>
+
+                <hr/>
+          -->
+
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-8">
+                        <button  id="new-real-estate-listing-form-btn" type="submit"
+                        class="btn btn-primary btn-lg">
+                        Add real estate listing
+                      </button>
+                      <br><br>
+                      <small>
+                          *After submission, please test that you receive an email from
+                          the contact form for this listing by filling it out and submitting
+                          it. Make sure you "whitelist" noreply@americanbiztrader.com.
+                          If you do not receive an email, verify that the correct emails
+                          are listed for the agent/broker and company, and check your
+                          spam folder.
+                      </small>
+                    </div>
+                </div>
+
+            </form>
+
+
+          </div><!--  // .col-md-8  -->
+      </div><!--  // .row  -->
+</div><!--  // .container  -->
+{% endblock %}
+
+
+{% block bottomjs %}
+<!-- Datepicker for date_available field @https://jqueryui.com/datepicker/#default -->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="/assets/js/datepicker.js"></script>
+<script>
+$(document).ready(function(){
+
+    // form validation
+    $("#new-real-estate-listing-form").validate();
+
+    // modify button text on submission
+    $("#new-real-estate-listing-form").submit(function(){
+        $("#new-real-estate-listing-form-btn").html("Sending data. Please wait. . .");
+    });
+
+
+    // sale categories array
+    sale = [
+        "Entertainment",
+        "Hospitality",
+        "Income Business",
+        "Industrial",
+        "Land",
+        "Medical",
+        "Multi-family",
+        "Office",
+        "Retail",
+        "Worship",
+        "Other"
+    ];
+
+    // lease categories array
+    lease = [
+        "Industrial",
+        "Medical",
+        "Office",
+        "Office Short Term",
+        "Retail",
+        "Other"
+    ];
+
+    // call function onload to populate drop-down
+    populateSubtype();
+
+    // run function on change of drop-down
+    $("#re-type").change(function(){
+        populateSubtype();
+    });
+
+
+    function populateSubtype(){
+      // get value of default type & store in variable
+      var type = $("#re-type").val();
+
+      // check if value of type being passed
+      console.log(type);
+
+      // empty value of #subtype select
+      $("#re-subtype").empty();
+
+      // loop through selected array
+      if(type == 'sale')
+      {
+        $.each(sale, function(index, value){
+            console.log(index + ': ' + value);
+            $("#re-subtype").append( $('<option>').text(value).attr('value', value) );
+        });
+      }
+      else
+      {
+        $.each(lease, function(index, value){
+            //console.log(index + ': ' + value);
+            $("#re-subtype").append( $('<option>').text(value).attr('value', value) );
+        });
+      }
+    }
+
+
+    // show or hide categories on blur of listing type selection
+    // $("#type").blur(function(){
+    //     var type = $(this).val();
+    //
+    //     console.log(type);
+    //     if(type == 'for_sale'){
+    //       $("#re-for-sale-category-div").show(500);
+    //       $("#re-for-lease-category-div").hide();
+    //     }
+    //     if(type == 'for_lease'){
+    //       $("#re-for-lease-category-div").show(500);
+    //       $("#re-for-sale-category-div").hide();
+    //     }
+    // });
+
+
+
+    // populate county drop-down on blur of state selection
+    $("#add-listing-state-list").change(function(){
+        var state = $(this).val();
+        console.log("state = " + state);
+
+        $.ajax({
+            url: '/buy/get-county',
+            type: 'POST',
+            data: {
+              state: state
+             },
+            cache: false,
+            success: function(counties){
+
+              // empty content
+              $("#add-listing-county-list").empty();
+
+              // add 'all' choice
+              // $("#add-listing-county-list").append($('<option>').text("All counties"). attr('value', 'all'));
+
+              // loop through county_list array
+              $.each(counties, function(index, value){
+                  $('#add-listing-county-list').append( $('<option>').text(value).attr('value', value) );
+              });
+
+              console.log(counties);
+            },
+            error: function(){
+                alert("Ajax error fetching counties.");
+            }
+        });
+
+    });
+
+});
+</script>
+{% endblock %}

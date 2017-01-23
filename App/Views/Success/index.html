@@ -30,6 +30,49 @@
               {% endif %}
             {% endif %}
 
+
+            {% if success_registration == 'true' %}
+              <h3 style="margin-top: 0px">
+                {{ success_registration1 }}
+              </h3>
+              <p style="margin-top: 15px">
+                {{ success_registration2 }}
+              </p>
+              <br><br><br><br>
+            {% endif %}
+
+
+            {% if acct_activated == 'true' %}
+              <h3 style="margin-top: 0px">
+                {{ acct_activated1 }}
+              </h3>
+              <p style="margin-top: 15px">
+                During the next few minutes you will:
+                  <ul>
+                    <li>Authorize you payment</li>
+                    <li>Create your company profile</li>
+                    <li>Answer three security questions</li>
+                    <li>Create your broker profile</li>
+                  </ul>
+              </p>
+              <p>
+                  During this process, you will Log In three times to save your
+                  information. YOU CANNOT SKIP ANY STEPS.
+              </p>
+              </p>
+                Please note that all the data that you enter can be changed in
+                the Admin Panel after your complete your registration and Log In.
+              </p>
+              <h3>
+                Let's get started!
+              </h3>
+              <h4 style="margin-top: 15px">
+                <a href="/login">Click here to Log In</a>
+              </h4>
+              <br><br><br><br>
+            {% endif %}
+
+
             {% if subscribe_success == 'true' %}
               <h3 style="margin-top: 0px">
                 Congratulations {{ first_name }} {{ last_name}}!

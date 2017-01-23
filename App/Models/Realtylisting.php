@@ -418,25 +418,133 @@ class Realtylisting extends \Core\Model
             // establish db connection
             $db = static::getDB();
 
-            $sql = "SELECT realty_listings.id as realty_id, realty_listings.display as realty_display,
-                    realty_listings.broker_id as realty_broker_id, realty_listings.listing_agent_id as realty_listing_agent_id,
-                    realty_listings.type, realty_listings.subtype, realty_listings.status as realty_status,
-                    realty_listings.clients_id as realty_client_id, realty_listings.ad_title as realty_ad_title,
-                    realty_listings.asking_price as realty_asking_price, realty_listings.date_available,
-                    realty_listings.square_feet, realty_listings.acres, realty_listings.address as realty_address,
-                    realty_listings.address2 as realty_address2, realty_listings.city as realty_city,
-                    realty_listings.state as realty_state, realty_listings.county as realty_county,
-                    realty_listings.zip as realty_zip, realty_listings.description as realty_description,
-                    realty_listings.keywords as realty_keywords, realty_listings.brochure,
-                    realty_listings.img01 as realty_img01,realty_listings.img02 as realty_img02,realty_listings.img03 as realty_img03,
-                    realty_listings.img04 as realty_img04,realty_listings.img05 as realty_img05,realty_listings.img06 as realty_img06
+            $sql = "SELECT realty_listings.*,
+                    broker_agents.id as agent_id,
+                    broker_agents.first_name as agent_first_name,
+                    broker_agents.last_name as  agent_last_name,
+                    broker_agents.agent_email,
+                    broker_agents.agent_telephone, broker_agents.cell as agent_cell,
+                    broker_agents.address1, broker_agents.address2,
+                    broker_agents.city as agent_city, broker_agents.state as agent_state,
+                    broker_agents.zip as agent_zip,
+                    broker_agents.profile_photo, brokers.broker_id,
+                    brokers.company_name, brokers.broker_id
                     FROM realty_listings
                     LEFT JOIN broker_agents
                     ON broker_agents.id = realty_listings.listing_agent_id
                     LEFT JOIN brokers
                     ON brokers.broker_id = realty_listings.broker_id
-                    WHERE realty_listings.broker_id = :broker_id
-                    AND realty_listings.display = '1'
+                    WHERE realty_listings.display = '1'
+                    $last_name
+                    $clients_id
+                    ORDER BY broker_agents.last_name
+                    $limit";
+
+            $stmt = $db->prepare($sql);
+            $parameters = [
+                ':broker_id' => $broker_id
+            ];
+            $stmt->execute($parameters);
+
+            // store listing details in object
+            $listings = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+            // store in associative array
+            $results = [
+                'listings'  => $listings,
+                'pagetitle' => $pagetitle
+            ];
+
+            // return associative array to Brokers Controller
+            return $results;
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
+    }
+
+/* @NOTE: function identical to above except headers to siteadmin controller  */
+    /**
+     * gets real estate records for specified agent
+     *
+     * @param  integer          $broker_id  [description]
+     * @param  string           $last_name  [description]
+     * @param  integer          $clients_id [description]
+     * @param  integer or null  $limit      [description]
+     * @return array            The listings & pagetitle
+     */
+    public static function getRealtyListingsBySearchCriteriaForSiteAdmin($broker_id, $last_name, $clients_id, $limit)
+    {
+        // if checkbox = false (not checked) & empty form is submitted
+        if($clients_id == null && $last_name === '')
+        {
+            echo '<script>';
+            echo 'alert("Please enter an agent last name.")';
+            echo '</script>';
+
+            // redirect user to same page
+            echo '<script>';
+            echo 'window.location.href="/admin/siteadmin/show-real-estate-listings?id=' .$broker_id.'"';
+            echo '</script>';
+            exit();
+        }
+
+        // if checkbox = true (checked = on) & empty form submitted
+        if($last_name == null && $clients_id === '')
+        {
+            echo '<script>';
+            echo 'alert("Please enter a real estate listing ID.")';
+            echo '</script>';
+
+            // redirect user to same page
+            echo '<script>';
+            echo 'window.location.href="/admin/siteadmin/show-real-estate-listings?id=' .$broker_id.'"';
+            echo '</script>';
+            exit();
+        }
+
+        if($limit != null)
+        {
+          $limit = 'LIMIT  ' . $limit;
+        }
+        if($last_name != null)
+        {
+          $last_name_for_view = $last_name;
+          $last_name = "AND broker_agents.last_name LIKE '$last_name_for_view%'";
+          $pagetitle = "Real estate listings by last name: $last_name_for_view";
+        }
+        if($clients_id != null)
+        {
+          $clients_id_for_view = $clients_id;
+          $clients_id = "AND realty_listings.clients_id LIKE '$clients_id_for_view'";
+          $pagetitle = "Real estate listing by ID: $clients_id_for_view";
+        }
+
+        // execute query
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            $sql = "SELECT realty_listings.*,
+                    broker_agents.id as agent_id,
+                    broker_agents.first_name as agent_first_name,
+                    broker_agents.last_name as  agent_last_name,
+                    broker_agents.agent_email,
+                    broker_agents.agent_telephone, broker_agents.cell as agent_cell,
+                    broker_agents.address1, broker_agents.address2,
+                    broker_agents.city as agent_city, broker_agents.state as agent_state,
+                    broker_agents.zip as agent_zip,
+                    broker_agents.profile_photo, brokers.broker_id,
+                    brokers.company_name, brokers.broker_id
+                    FROM realty_listings
+                    LEFT JOIN broker_agents
+                    ON broker_agents.id = realty_listings.listing_agent_id
+                    LEFT JOIN brokers
+                    ON brokers.broker_id = realty_listings.broker_id
+                    WHERE realty_listings.display = '1'
                     $last_name
                     $clients_id
                     ORDER BY broker_agents.last_name

@@ -1,0 +1,262 @@
+{% extends 'base-siteadmin.html' %}
+
+{% block title %}
+  Listings | ABT
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div id="dashboard-toggle" class="col-md-12" style="margin-top:-20px;margin-left:254px;">
+
+          <div class="col-md-5">
+              {% if pagetitle %}
+                <h2 style="margin-left:-15px;">
+                  {{ pagetitle }}
+                  {% if listings|length > 0 %}
+                    <span class="badge" style="margin: -18px 0px 0px 7px;">
+                        {{ listings|length }}
+                    </span>
+                  {% endif %}
+                </h2>
+              {% else %}
+                <h2 style="margin-left:-15px;">
+                  Manage business listings: {{ broker.company_name }}
+                  {% if listings|length > 0 %}
+                    <span class="badge" style="margin: -18px 0px 0px 7px;">
+                        {{ listings|length }}
+                    </span>
+                  {% endif %}
+                </h2>
+              {% endif %}
+          </div>
+          <div  class="col-md-3 col-sm-6 col-xs-12" style="margin:15px 0px 15px  -15px;">
+            <form method="get"
+                action="/admin/siteadmin/search-listings-by-last-name-or-client-id">
+              <div class="input-group">
+                <input style="width:175px;"  type="text" class="form-control" name="last_name"
+                    id="listings_last_name" placeholder="Enter agent last name">
+                <input type="hidden" name="id" value="{{ broker.broker_id}}">
+                <span style="display:inline-block;margin-left:0px;"  class="input-group-btn">
+                  <button class="btn btn-secondary btn-default" type="submit">
+                    Go
+                  </button>
+                </span>
+              </div>
+              <div class="checkbox" style="margin-left:10px;">
+                  <label>
+                      <input type="checkbox" name="clients_id" id="thisID" value="1">
+                      <span>
+                        Search by listing ID only
+                      </span>
+                  </label>
+              </div>
+            </form>
+          </div>
+
+
+          {% if listings %}
+
+            <form action="" method="post" enctype="multipart/form-data">
+
+                <table class="table table-bordered table-striped bg-fff  display-broker-agents">
+
+                  <thead>
+                      <tr>
+                          <th>Edit</th>
+                          <!-- <th>Delete</th> -->
+                          <th><a title="How listing &#10displays &#10on website">Preview ad</a></th>
+                          <th><a href="/admin/brokers/show-listings-by-id?id={{ broker.broker_id }}" title="Click to sort">Sort<br> by ID</a></th>
+                          <th>Display status</th>
+                          <th>ABT ID</th>
+                          <th>Created</th>
+                          <th>Last update</th>
+                          <th>Agent<br><a href="/admin/brokers/show-listings-by-agent-last-name?id={{ broker.broker_id }}" title="Click to sort">Sort by<br> last name</a></th>
+                          <th>CatID</th>
+                          <th>SubCatID</th>
+                          <th><a title="Actual name &#10NEVER displays&#10on website">Business name</a></th>
+                          <th>Ad title</th>
+                          <th>Status</th>
+                          <th>Yr Est</th>
+                          <th># Emp</th>
+                          <th>Country</th>
+                          <th>County</th>
+                          <th>Hide County</th>
+                          <th>City</th>
+                          <th>Hide City</th>
+                          <th>St</th>
+                          <th>Hide Zip</th>
+                          <th>Zip</th>
+                          <th>Desc</th>
+                          <th>SF</th>
+                          <th>Why sell</th>
+                          <th>Growth Opt</th>
+                          <th>Support</th>
+                          <th>Competition</th>
+                          <th>Keywords</th>
+                          <th>Website</th>
+                          <th>Ask price</th>
+                          <th>Gross income</th>
+                          <th>Cash flow</th>
+                          <th>EBITDA</th>
+                          <th>Inv incl ?</th>
+                          <th>Inv value</th>
+                          <th>FFE incl ?</th>
+                          <th>FFE value</th>
+                          <th>RE incl ?</th>
+                          <th>RE for sale?</th>
+                          <th>RE value</th>
+                          <th>Description</th>
+                          <th>Seller financing</th>
+                          <th>Description</th>
+                          <th>Franchise</th>
+                          <th>Home based</th>
+                          <th>Relocatable</th>
+                          <th>Lender prequalified</th>
+                          <th>Image01</th>
+                          <th>Image02</th>
+                          <th>Image03</th>
+                          <th>Image04</th>
+                          <th>Image05</th>
+                          <th>Image06</th>
+                      </tr>
+                  </thead>
+
+                  <tbody>
+                      {% for listing in listings %}
+                      <tr>
+                          <td>
+                            <a id="edit-ad" class="btn btn-default btn-sm"
+                              href="/admin/siteadmin/edit-listing?id={{ listing.listing_id }}&amp;broker_id={{ broker.broker_id }}">
+                              Edit
+                            </a>
+                          </td>
+                          <!-- <td>
+                              <a id="delete-ad" class="btn btn-danger btn-sm" href="/admin/siteadmin/delete-listing?id={{ listing.listing_id }}&amp;broker_id={{ broker.broker_id}}"
+                                onclick="return confirm('You can edit this listing so it will not display on the website by changing the Display Status to hide. \n\nTo change Display Status, click Cancel & then click the Edit button. \n\n\If this listing is sold, consider changing its Listing Status to Sold and it will display in the Recently Sold section of your Company Page. \n\n\To change Listing Status, click Cancel & then click the Edit button. \n\n\TO PERMANENTLY DELETE THIS LISTING, click OK. \n\n\WARNING! DELETED DATA CANNOT BE RECOVERED.');">
+                                &times;
+                              </a>
+                          </td> -->
+                          <td align="center">
+                              <a id="preview-listing" href="/buy/view-listing-details?listing_id={{ listing.listing_id }}&amp;broker_id={{ broker.broker_id}}&amp;listing_agent_id={{ listing.listing_agent_id}}">
+                                  {% if listing.ad_title %} {{ (listing.ad_title|striptags|slice(0,20))|raw }} {% else %} Preview {% endif %}
+                              </a>
+                          </td>
+                          <td>{{ listing.clients_id }}</td>
+                          <td align="center">{% if listing.display == 0 %} hide {% else %} show {% endif %}</td>
+                          <td>{{ listing.listing_id }}</td>
+                          <td>{{ listing.create_date|date("Y-m-d") }}</td>
+                          <td>{{ listing.last_update|date("Y-m-d") }}</td>
+                          <td>{{ listing.agent_last_name }}, {{ listing.agent_first_name }}</td>
+                          <td>{{ listing.category_id }}</td>
+                          <td>{{ listing.subcategory_id }}</td>
+                          <td>{{ listing.business_name }}</td>
+                          <td>{{ (listing.ad_title|striptags|slice(0,30))|raw  }}</td>
+                          <td>{{ listing.listing_status }}</td>
+                          <td>{{ listing.year_established }}</td>
+                          <td>{{ listing.number_of_employees }}</td>
+                          <td>{{ listing.country }}</td>
+                          <td>{{ listing.county }}</td>
+                          <td>{% if listing.hide_county == 0 %} no {% else %} yes {% endif %}</td>
+                          <td>{{ listing.city }}</td>
+                          <td>{% if listing.hide_city == 0 %} no {% else %} yes {% endif %}</td>
+                          <td>{{ listing.state }}</td>
+                          <td>{% if listing.hide_zip == 0 %} no {% else %} yes {% endif %}</td>
+                          <td>{{ listing.zip }}</td>
+                          <td>{{ (listing.biz_description|slice(0,30))|raw }}</td>
+                          <td>{{ listing.square_feet|number_format(0, '.', ',') }}</td>
+                          <td>{{ (listing.reason_selling|slice(0,30))|raw }}</td>
+                          <td>{{ (listing.growth_opportunities|slice(0,30))|raw }}</td>
+                          <td>{{ (listing.support|striptags|slice(0,30))|raw }}</td>
+                          <td>{{ (listing.competition|striptags|slice(0,30))|raw }}</td>
+                          <td>{{ (listing.keywords|striptags|slice(0,30))|raw }}</td>
+                          <td>{{ listing.biz_website }}</td>
+                          <td>{{ listing.asking_price|number_format(0, '.', ',') }}</td>
+                          <td>{{ listing.gross_income|number_format(0, '.', ',') }}</td>
+                          <td>{{ listing.cash_flow|number_format(0, '.', ',') }}</td>
+                          <td>{{ listing.ebitda|number_format(0, '.', ',') }}</td>
+                          <td>{% if listing.inventory_included == 0 %} no {% else %} yes {% endif %}</td>
+                          <td>{{ listing.inventory_value|number_format(0, '.', ',') }}</td>
+                          <td>{% if listing.ffe_included == 0 %} no {% else %} yes {% endif %}</td>
+                          <td>{{ listing.ffe_value|number_format(0, '.', ',') }}</td>
+                          <td>{% if listing.real_estate_included == 0 %} no {% else %} yes {% endif %}</td>
+                          <td>{% if listing.real_estate_for_sale == 0 %} no {% else %} yes {% endif %}</td>
+                          <td>{{ listing.real_estate_value|number_format(0, '.', ',') }}</td>
+                          <td>{{ listing.real_estate_description|slice(0,30) }}</td>
+                          <td>{% if listing.seller_financing_available == 0 %} no {% else %} yes {% endif %}</td>
+                          <td>{{ (listing.seller_financing_description|slice(0,30)|raw) }}</td>
+                          <td>{% if listing.franchise == 0 %} no {% else %} yes {% endif %}</td>
+                          <td>{% if listing.home_based == 0 %} no {% else %} yes {% endif %}</td>
+                          <td>{% if listing.relocatable == 0 %} no {% else %} yes {% endif %}</td>
+                          <td>{% if listing.lender_prequalified == 0 %} no {% else %} yes {% endif %}</td>
+                          <td><img src="/assets/images/uploaded_business_photos/{{ listing.img01 }}" width="40"></td>
+                          <td><img src="/assets/images/uploaded_business_photos/{{ listing.img02 }}" width="40"></td>
+                          <td><img src="/assets/images/uploaded_business_photos/{{ listing.img03 }}" width="40"></td>
+                          <td><img src="/assets/images/uploaded_business_photos/{{ listing.img04 }}" width="40"></td>
+                          <td><img src="/assets/images/uploaded_business_photos/{{ listing.img05 }}" width="40"></td>
+                          <td><img src="/assets/images/uploaded_business_photos/{{ listing.img06 }}" width="40"></td>
+
+                      {% endfor %}
+                  </tbody>
+                </table>
+
+            </form>
+
+            <p style="margin-top: -3px;" class="pull-left"><a href="#top" title="Go to top of page"><i style="margin-top: -15px; color:#ccc;" class="fa fa-arrow-circle-o-up fa-3x" aria-hidden="true"></i></a></p>
+            <p style="margin-top: -3px;" class="pull-right"><a href="#top" title="Go to top of page"><i style="margin-top: -15px; color:#ccc;" class="fa fa-arrow-circle-o-up fa-3x" aria-hidden="true"></i></a></p>
+
+
+            {% else %}
+            <div class="col-md-8" style="margin-left:-15px;">
+                <div class="alert alert-warning" style="margin-top:30px;">
+                    <h4 style="margin-bottom:0px;">
+                      No listings to display
+                    </h4>
+                </div>
+            </div>
+            {% endif %}
+
+      </div><!--  // col-md-12  -->
+    </div><!--  // .row  -->
+</div><!-- // .container-fluid  -->
+{% endblock %}
+
+
+{% block bottomjs %}
+<script>
+$(document).ready(function(){
+
+
+    // $("#thisID").click(function(){
+    //     var checked = 1;
+    //     console.log(checked);
+    //     if(checked == 1){
+    //       $("#last_name").attr("placeholder", "Enter listing ID");
+    //     } else {
+    //       $("#last_name").attr("placeholder", "Enter agent last name or listing ID");
+    //     }
+    // });
+
+
+
+    $("#thisID").click(function(){
+        var checked = 1;
+        console.log(checked);
+        if($("#thisID").prop("checked")){
+          $("#listings_last_name").attr("placeholder", "Enter listing ID");
+        } else {
+          $("#listings_last_name").attr("placeholder", "Enter agent last name");
+        }
+    });
+
+
+
+});
+</script>
+
+{% endblock %}

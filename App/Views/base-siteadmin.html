@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>
+        {% block title %}
+
+        {% endblock %}
+    </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--  The above 3 meta tags *must* come first in the head; any other head
+          content must come *after* these tags -->
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" type="image/x-icon">
+
+    {% if session.user == true and session.access_level > 0 %}
+      <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/ckeditor/4.5.10/ckeditor.js"></script> -->
+      <script src="//cdn.ckeditor.com/4.5.11/standard/ckeditor.js"></script>
+    {% endif %}
+
+    {% block css %}
+    {% endblock %}
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="/assets/css/home-page-image-styles.css">
+    <link rel="stylesheet" href="/assets/css/jquery-ui.min.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/simple-sidebar.css">
+
+    <link href='//fonts.googleapis.com/css?family=Raleway:400,700' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow' rel='stylesheet' type='text/css'>
+    <link href="//fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body style="background: #fff;">
+
+
+  <div id="wrapper">
+      <!-- - - - - - - - - - - -  Sidebar  - - - - - - - - - - -->
+      <div id="sidebar-wrapper">
+
+          <p style="font-size:20px; margin:10px 0px 15px 12px;">
+            <a style="color:#fff;" href="/">
+              American Biz Trader
+            </a>
+          </p>
+
+          <div style="margin: 10px 20px 10px 20px;">
+            <p style="font-size: 110%; color: #fff; margin-bottom:5px;">
+              Client
+            </p>
+            <form method="get" action="/admin/siteadmin/get-broker-data">
+              <div class="input-group">
+                <select name="broker_id" id="broker_id" class="form-control">
+                    <option>{% if broker.company_name %}{{ broker.company_name }}{% else %}Select company{% endif %}</option>
+                    {% for broker in brokers %}
+                      <option value="{{ broker.broker_id }}">{{ broker.company_name }}</option>
+                    {% endfor %}
+                </select>
+                <span style="display:inline-block;margin-left:0px;margin-top: 20px;" class="input-group-btn">
+                  <button class="btn btn-sm btn-default" type="submit">Go</button>
+                </span>
+              </div>
+            </form>
+          </div>
+
+          {% if broker %}
+            <ul class="sidebar-nav" style="margin-bottom: 20px; margin-top: 5px">
+                <li style="font-size: 130%; color: #fff;">{{ broker.company_name }}</li>
+
+                <li>
+                    <a href="/admin/siteadmin/my-account?id={{ broker.broker_id }}">
+                      My account
+                    </a>
+                </li>
+
+                <li>
+                    <a  href="/admin/siteadmin/company-profile?id={{ broker.broker_id }}">
+                        Company profile
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/admin/brokers/preview-company-page?id={{ broker.broker_id }}"
+                        title="Shows how Company listings will appear on live website">
+                        Preview company page
+                    </a>
+                </li>
+
+                <li style="font-size: 130%; color: #fff;">Agent / Broker</li>
+
+                <li>
+                    <a href="/admin/siteadmin/show-agents?id={{ broker.broker_id }}">
+                        Manage agents / brokers
+                    </a>
+                </li>
+
+
+              <li style="font-size: 130%; color: #fff;">Business Listings</li>
+
+              <li>
+                  <a href="/admin/siteadmin/add-new-listing?id={{ broker.broker_id }}">
+                      Add new listing
+                  </a>
+              </li>
+
+
+                <li>
+                    <a  href="/admin/siteadmin/show-listings?id={{ broker.broker_id }}">
+                        Manage listings
+                    </a>
+                </li>
+
+
+                <li style="font-size: 130%; color: #fff;">Real Estate Listings</li>
+
+                <li>
+                    <a href="/admin/siteadmin/add-new-real-estate-listing?id={{ broker.broker_id }}">
+                        Add new listing
+                    </a>
+                </li>
+
+                <li>
+                    <a  href="/admin/siteadmin/show-real-estate-listings?id={{ broker.broker_id }}">
+                        Manage listings
+                    </a>
+                </li>
+
+
+                <!-- <li style="font-size: 130%; color: #fff;">My Leads</li>
+
+                <li>
+                    <a href="/admin/brokers/show-leads?id={{ broker.broker_id }}">
+                        Manage leads
+                    </a>
+                </li> -->
+
+                <li style="font-size: 130%; color: #fff;">Home</li>
+
+                <li><a href="/admin/siteadmin/index?user_id={{ session.user_id }}">Home</a></li>
+
+                <!-- <li><a href="/logout">Logout</a></li> -->
+
+                <div style="margin-left:15px;margin-top:20px;">
+                  <a id="logout-btn" class="btn btn-default" href="/logout">Logout</a>
+                </div>
+
+            </ul>
+          {% endif %}
+      </div><!-- // #sidebar-wrapper  -->
+  </div><!-- /#wrapper -->
+
+<div id="navbar-subheader-bar">
+    <div class="row">
+        <div class="col-md-12">
+            <p style="margin-left:254px;">
+                <span id="menu-hide-show" style="margin-right: 15px;">
+                  <a href="#menu-toggle" style="background-color: #fff; padding:0px; color: #337AB7" id="menu-toggle">
+                    <span id="glyph" class="glyphicon glyphicon-chevron-left"></span>
+                  </a>
+                </span>
+                <span class="glyphicon glyphicon-user text-size120"></span>
+                 &nbsp;
+                 <span>
+                   Site Administrator: {% if session.user %} {{ session.full_name }} {% endif %}
+                 </span>
+                <span style="padding-left: 15px;"><script>var utc = new Date().toJSON().slice(0,10);document.write(utc);</script></span>
+            </p>
+        </div>
+    </div><!--  // .row  -->
+</div><!-- // #navbar-subheader-bar  -->
+{% block content %}
+
+
+
+
+{% endblock %}
+<!--  footer -->
+<!-- <div class="footer text-center" style="background-color: #fff; margin-top: 60px; padding:10px;color:#fff;">
+
+</div> -->
+
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.js"></script>
+  <script src="//use.fontawesome.com/6acf38a2cb.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.js"></script>
+
+  {% if session.user == true and session.access_level == 2 %}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+    <script src="//code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+  {% endif %}
+
+  <script>
+  $(document).ready(function(){
+
+      $("#menu-toggle").click(function(e) {
+          e.preventDefault();
+          $("#wrapper").toggleClass("toggled");
+      });
+
+
+      $("#menu-hide-show").click(function(){
+          var value = $("#glyph").attr("class");
+          var margin = $("#dashboard-toggle").css("margin-left");
+          console.log(margin);
+
+          if(value == "glyphicon glyphicon-chevron-left"){
+              $( "#glyph" ).removeClass("glyphicon glyphicon-chevron-left");
+              $( "#glyph" ).addClass("glyphicon glyphicon-chevron-right");
+          }
+          if(value == "glyphicon glyphicon-chevron-right"){
+              $( "#glyph" ).removeClass("glyphicon glyphicon-chevron-right");
+              $( "#glyph" ).addClass("glyphicon glyphicon-chevron-left");
+          }
+
+          if(margin == '254px')
+          {
+              $("#dashboard-toggle").css( {"margin-left": "0px"} );
+          }
+          else if(margin == '0px')
+          {
+              $("#dashboard-toggle").css( {"margin-left": "254px"} );
+          }
+      });
+
+
+
+
+      $(".menu-item a").click(function(){
+          //alert("It works!");
+            $(this).addClass('active').siblings().removeClass('active');
+      });
+
+
+
+
+  });
+  </script>
+
+
+{% block bottomjs %}
+
+{% endblock %}
+
+</body>
+</html>

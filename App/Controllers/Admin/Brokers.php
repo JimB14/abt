@@ -55,7 +55,7 @@ class Brokers extends \Core\Controller
         }
         else
         {
-            // get broker data from User model
+            // get broker data from Broker model
             $broker = Broker::getBrokerByUserId($user_id);
 
             // get broker type & store in variable
@@ -210,7 +210,11 @@ class Brokers extends \Core\Controller
 
 
 
-
+    /**
+     * retrieves company data
+     *
+     * @return [type] [description]
+     */
     public static function companyProfileAction()
     {
         // retrieve GET variable
@@ -239,14 +243,10 @@ class Brokers extends \Core\Controller
         // echo '</pre>';
         // exit();
 
-        // get agents id, last name, first name & broker ID only for drop-down
-        $agents = BrokerAgent::getNamesOfAllBrokerAgents($_SESSION['broker_id'], $orderby = 'broker_agents.last_name');
-
         // render view & pass $broker object
         View::renderTemplate('Admin/Show/company-profile.html', [
             'broker'      => $broker,
             'states'      => $states,
-            'agents'      => $agents,
             'user'        => $user,
             'broker_type' => $broker_type
         ]);
@@ -357,7 +357,7 @@ class Brokers extends \Core\Controller
             // store user ID in variable
             $user_id = $user->id;
 
-            // get user's PayPal data 
+            // get user's PayPal data
             $profile = Paypallog::getPaypalData($user->id);
 
             // store user's PayPal profile ID in variable
@@ -383,8 +383,11 @@ class Brokers extends \Core\Controller
     }
 
 
-
-
+    /**
+     * inserts new agent into broker_agents table
+     *
+     * @return boolean
+     */
     public function postNewAgent()
     {
         // retrieve query string variables
@@ -489,35 +492,41 @@ class Brokers extends \Core\Controller
 
 
 
-
+    /**
+     * displays agents for specific broker
+     *
+     * @return Object  The broker's agents
+     */
     public function showAgents()
     {
-      // retrieve GET variable
-      $broker_id = (isset($_REQUEST['id'])) ? filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING) : '';
+        // retrieve GET variable
+        $broker_id = (isset($_REQUEST['id'])) ? filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING) : '';
 
-      // get agent data
-      $agents = BrokerAgent::getAllBrokerAgents($limit=null,$broker_id, $orderby = 'broker_agents.last_name');
+        // get agent data
+        $agents = BrokerAgent::getAllBrokerAgents($limit=null,$broker_id, $orderby = 'broker_agents.last_name');
 
-      // test
-      // echo "<pre>";
-      // print_r($agents);
-      // echo "</pre>";
-      // exit();
+        // test
+        // echo "<pre>";
+        // print_r($agents);
+        // echo "</pre>";
+        // exit();
 
-      // get company type (broker type = business(1), realty(2), both(3))
-      $broker_type = Broker::getBrokerCompanyType($broker_id);
+        // get company type (broker type = business(1), realty(2), both(3))
+        $broker_type = Broker::getBrokerCompanyType($broker_id);
 
-      // render view & pass $agents object
-      View::renderTemplate('Admin/Show/agents.html', [
-          'agents'      => $agents,
-          'broker_id'   => $broker_id,
-          'broker_type' => $broker_type
-      ]);
+        // render view & pass $agents object
+        View::renderTemplate('Admin/Show/agents.html', [
+            'agents'      => $agents,
+            'broker_id'   => $broker_id,
+            'broker_type' => $broker_type
+        ]);
     }
 
 
 
-
+    /**
+     * retrieves broker data & renders view of form
+     */
     public function addNewListing()
     {
         // retrieve GET variable
@@ -575,7 +584,11 @@ class Brokers extends \Core\Controller
 
 
 
-
+    /**
+     * inserts new listing into database
+     *
+     * @return view
+     */
     public function postNewListing()
     {
         // retrieve GET variable
@@ -603,7 +616,11 @@ class Brokers extends \Core\Controller
 
 
 
-
+    /**
+     * retrieve data for specified broker & render view
+     *
+     * @return view
+     */
     public function showListings()
     {
         // retrieve GET variable
@@ -635,7 +652,11 @@ class Brokers extends \Core\Controller
 
 
 
-
+    /**
+     * retrieves listing record by broker ID
+     *
+     * @return view
+     */
     public function showListingsById()
     {
         // retrieve GET variable
@@ -690,7 +711,11 @@ class Brokers extends \Core\Controller
 
 
 
-
+    /**
+     * retrieves listings by agent last name or client ID
+     *
+     * @return view
+     */
     public function searchListingsByLastNameOrClientId()
     {
         // retrieve form data
@@ -760,7 +785,11 @@ class Brokers extends \Core\Controller
 
 
 
-
+    /**
+     * retrieves real estate listings by listing agent last name or client ID
+     *
+     * @return Object   The listings
+     */
     public function searchRealtyListingsByLastNameOrClientId()
     {
         // retrieve form data
@@ -1332,7 +1361,11 @@ class Brokers extends \Core\Controller
 
 
 
-
+    /**
+     * retrieves listing record by listing ID & Broker ID
+     *
+     * @return view
+     */
     public function editListing()
     {
         // retrieve GET variable
@@ -1387,7 +1420,11 @@ class Brokers extends \Core\Controller
 
 
 
-
+    /**
+     * update listing record in database
+     *
+     * @return boolean
+     */
     public function updateListing()
     {
         // retrieve variable
@@ -1431,7 +1468,11 @@ class Brokers extends \Core\Controller
 
 
 
-
+    /**
+     * updates images for specified listing
+     *
+     * @return boolean
+     */
     public function editListingImages()
     {
         // retrieve variables - listing ID & broker ID
@@ -1476,7 +1517,11 @@ class Brokers extends \Core\Controller
 
 
 
-
+    /**
+     * deletes listing by ID
+     *
+     * @return boolean
+     */
     public function deleteListing()
     {
         // retrieve variable
@@ -1654,7 +1699,9 @@ class Brokers extends \Core\Controller
     }
 
 
-
+    /**
+     * inserts new real estate listing into database
+     */
     public function addNewRealEstateListing()
     {
         // retrieve GET variable
@@ -1731,7 +1778,11 @@ class Brokers extends \Core\Controller
     }
 
 
-
+    /**
+     * retrieves listing record by ID & renders view
+     *
+     * @return view
+     */
     public function showRealEstateListings()
     {
         // retrieve GET variable
@@ -1763,7 +1814,11 @@ class Brokers extends \Core\Controller
     }
 
 
-
+    /**
+     * inserts new real estate listing into database
+     *
+     * @return boolean
+     */
     public function postNewRealEstateListing()
     {
         // retrieve GET variable

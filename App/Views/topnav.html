@@ -39,17 +39,21 @@
 
                     <ul class="nav navbar-nav navbar-right">
 
-                        {% if session.user == true and session.access_level == 2 %}
+                        {% if (session.loggedIn == 'true' and session.user == true and session.access_level == 2) or (session.superUser == 'true') %}
                             <li class=dropdown>
                                 <a href=# class=dropdown-toggle id=drop1 data-toggle=dropdown role=button aria-haspopup=true aria-expanded=false>
                                   Admin
                                   <span class=caret></span>
                                 </a>
                                 <ul class=dropdown-menu aria-labelledby=drop1>
-                                  <li><a href=/admin/brokers/index?user_id={{ session.user_id }}>Admin Panel</a></li>
+                                  {% if session.access_level == 2 %}
+                                    <li><a href=/admin/brokers/index?user_id={{ session.user_id }}>Admin Panel</a></li>
+                                    <li role=separator class=divider></li>
+                                  {% endif %}
+                                  {% if (session.loggedIn == 'true') and (session.superUser == 'true') %}
+                                    <li><a href=/admin/siteadmin/index?user_id={{ session.user_id }}>Site Administration</a></li>
+                                  {% endif %}
                                   <!-- <li role=separator class=divider></li>
-                                  <li><a href=#>Expert Admin</a></li>
-                                  <li role=separator class=divider></li>
                                   <li><a href=#>Franchisor Admin</a></li>
                                   <li role=separator class=divider></li>
                                   <li><a href=#>FSBO Admin</a></li> -->

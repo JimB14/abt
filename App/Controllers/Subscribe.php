@@ -90,14 +90,15 @@ class Subscribe extends \Core\Controller
                     $subscribe_msg1 = "You have successfully paid for your first
                     month's subscription!";
 
-                    $subscribe_msg2 = "Your credit card will be charged for the same
-                    amount ($$sub_amt) one month from tomorrow and each month thereafter unless
-                    you cancel your subscription.";
+                    $subscribe_msg2 = "Your credit card will be charged for the
+                    same amount ($$sub_amt) one month from tomorrow and each
+                    month afterward unless you cancel your subscription.";
 
-                    $subscribe_msg3 = "You can now Log In to complete the registration
-                    process and begin posting your listings.";
+                    $subscribe_msg3 = "You can now Log In to complete the
+                    registration process and begin posting your listings.";
 
-                    $subscribe_msg4 = "Congratulations and welcome to American Biz Trader!";
+                    $subscribe_msg4 = "Congratulations and welcome to American
+                      Biz Trader!";
 
                     $subscribe_msg5 = "You can Log In here.";
 

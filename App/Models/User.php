@@ -225,6 +225,40 @@ class User extends \Core\Model
     }
 
 
+    /**
+     * gets User data by broker ID
+     *
+     * @param  integer  $broker_id   The broker's ID
+     * @return Object               The user data
+     */
+    public static function getUserByBrokerUserId($broker_user_id)
+    {
+        // establish db connection
+        $db = static::getDB();
+
+        try
+        {
+            $sql = "SELECT * FROM users WHERE id = :id";
+            $stmt = $db->prepare($sql);
+            $parameters = [
+                ':id' => $id
+            ];
+            $stmt->execute($parameters);
+
+            // store user data in object
+            $user = $stmt->fetch(PDO::FETCH_OBJ);
+
+            // return object to Siteadmin controller
+            return $user;
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
+    }
+
+
 
     /**
      * updates value in users.current after successful payment

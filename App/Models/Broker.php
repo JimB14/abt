@@ -8,7 +8,39 @@ use \App\Config;
 
 class Broker extends \Core\Model
 {
+  /**
+   * get all broker records
+   *
+   * @return Object               The broker record
+   */
+  public static function getBrokers()
+  {
+      try
+      {
+          // establish db connection
+          $db = static::getDB();
 
+          $sql = "SELECT * FROM brokers
+                  ORDER BY company_name";
+          $stmt = $db->prepare($sql);
+          $stmt->execute();
+          $brokers = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+          return $brokers;
+      }
+      catch (PDOException $e)
+      {
+          echo $e->getMessage();
+          exit();
+      }
+  }
+
+    /**
+     * get broker record using broker ID
+     *
+     * @param  Integer  $broker_id  The broker's ID
+     * @return Object               The broker record
+     */
     public static function getBrokerDetails($broker_id)
     {
         try

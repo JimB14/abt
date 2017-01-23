@@ -1,0 +1,828 @@
+{% extends 'base-siteadmin.html' %}
+
+{% block title %}
+  Add Listing | ABT
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div id="dashboard-toggle" class="col-md-8" style="margin-top:-20px;margin-left:254px;">
+
+          <h2>Add new business listing: {{ broker.company_name }}</h2>
+          <hr>
+
+            <form method="post" action="/admin/siteadmin/post-new-listing?broker_id={{ broker.broker_id }}"
+              class="form-horizontal" name="new-ad-form" id="new-ad-form" enctype="multipart/form-data">
+
+                <h3 class="subheading">Listing agent information</h3>
+
+                <div class="form-group">
+                    <label for="broker" class="control-label col-sm-3">Company name</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="broker"
+                        id="broker" placeholder="Broker" value="{{ broker_company_name }}" disabled>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="listing_agent_id" class="control-label col-sm-3">
+                      Listing agent
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control p1 required"
+                        name="listing_agent_id" id="listing_agent_id">
+                            <option value="">Select agent</option>
+                            {% for agent in agents %}
+                                <option value="{{ agent.agent_id }} ">
+                                  {{ agent.agent_last_name }}  {{ agent.agent_first_name }} , {{ agent.status }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <hr/>
+
+                <h3 class="subheading">Business information</h3>
+
+
+                <div class="form-group">
+                    <label for="category" class="control-label col-sm-3">Category</label>
+                    <div class="col-sm-9">
+                        <select class="form-control p1 required" name="category" id="add-new-listing-business-category">
+                            <option value="">Select category</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- - - - - - - - - - - - - - - - - - - - - -- -  - - - - - -->
+                <div id="default-image-div" class="form-group hide-div">
+                   <label for="category" class="control-label col-sm-3">
+                     Category image
+                   </label>
+                   <div class="col-sm-3">
+                       <img class="img-responsive" id="default-image" src="">
+                       <br>
+                       <button class="btn" id="scale-event">Hover to enlarge</button>
+                   </div>
+                   <div class="col-sm-3"></div>
+                   <div class="col-sm-3"></div>
+                </div>
+
+                <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+                <div class="form-group">
+                    <label for="subcategory-list" class="control-label col-sm-3">
+                      Subcategory
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control required" name="subcategory" id="add-new-listing-subcategory-list" >
+                            <option value="all">All sub categories</option>
+                            <!-- jquery appends here; Ajax code below -->
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="clients_id" class="control-label col-sm-3">
+                      Your company ID
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control"
+                        name="clients_id" id="clients_id"
+                        placeholder="Your company listing ID or reference">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="business_name" class="control-label col-sm-3">
+                      Business name
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control"
+                        name="business_name" id="business_name"
+                        placeholder="Actual business name - will never display on Website">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="ad_title" class="control-label col-sm-3">
+                      Ad title
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control required"
+                        name="ad_title" id="ad_title"
+                        placeholder="Title that will appear at top of ad">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="franchise" class="control-label col-sm-3">
+                      Franchise
+                    </label>
+                    <div class="col-sm-9">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="franchise"
+                                id="franchise" value="1">
+                                <span>
+                                  Yes, business is a franchise
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="home_based" class="control-label col-sm-3">
+                      Home-based
+                    </label>
+                    <div class="col-sm-9">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="home_based"
+                                id="home_based" value="1">
+                                <span>
+                                  Yes, business operated in home
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="relocatable" class="control-label col-sm-3">
+                      Relocatable
+                    </label>
+                    <div class="col-sm-9">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="relocatable"
+                                id="relocatable" value="1">
+                                <span>
+                                  Yes, business can be relocated
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="listing_status" class="control-label col-sm-3">
+                      Listing status
+                    </label>
+                    <div class="col-sm-9">
+                        <select name="listing_status" id="listing_status" class="form-control">
+                            <option value="active">Active</option>
+                            <!-- <option value="active">Sold</option> -->
+                        </select>
+                        <small>
+                            IMPORTANT!  When this listing is sold, change status to "Sold" to populate
+                            "Sold Listings" tab, which displays on your Profile page and Company page. The "Sold"
+                            tab and its content will not display unless you have listings with a
+                            Listing status of "Sold." To change Listing status,
+                            click "Manage listings" under "Business Listings", navigate to
+                            the listing you want to change, click the "Edit" button
+                            and find the Listing status field. Make change and click
+                            "Update Listing."
+                        </small>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="year_established" class="control-label col-sm-3">
+                      Year established
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" name="year_established"
+                        class="form-control required" id="year_established"
+                        placeholder="Year established">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="number_of_employees" class="control-label col-sm-3">
+                      Number of employees
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" name="number_of_employees"
+                        class="form-control required" id="number_of_employees"
+                        placeholder="Number of employees">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="country" class="control-label col-sm-3">
+                      Country
+                    </label>
+                    <div class="col-sm-9">
+                        <select name="country" id="country" class="form-control required">
+                            <option value="US">US</option>
+                            <option value="Canada">Canada</option>
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="state" class="control-label col-sm-3">
+                      State
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control required" name="state" id="add-listing-state-list">
+                            <option value="">Select state</option>
+                            {% for state in states %}
+                                <option value="{{ state.abbrev }}">{{ state.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="county" class="control-label col-sm-3">
+                      County
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control required" name="county"
+                            id="add-listing-county-list" placeholder="County">
+                            {% if county %}
+                            <option>{{ county }}</option>
+                            {% endif %}
+                            <option value="">Select county</option>
+                            <!-- jquery appends here; Ajax code below -->
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group" style="margin-top: -15px; margin-left: 3px;">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="hide_county"
+                                id="hide_county" value="1">
+                                <span>
+                                  Select to prevent county from displaying in ad
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="city" class="control-label col-sm-3">
+                      City
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" name="city"
+                        class="form-control required" id="city" placeholder="City">
+                    </div>
+                </div>
+
+
+                <div class="form-group"  style="margin-top: -15px; margin-left: 3px;">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="hide_city"
+                                id="hide_city" value="1">
+                                <span>
+                                  Select to prevent city from displaying in ad
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="zip" class="control-label col-sm-3">
+                      Zip
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" name="zip" class="form-control required"
+                        id="zip" placeholder="Zip">
+                     </div>
+                </div>
+
+
+                <div class="form-group"  style="margin-top: -15px; margin-left: 3px;">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="hide_zip"
+                                id="hide_zip" value="1">
+                                <span>
+                                  Select to prevent zip code from displaying in ad
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="biz_description" class="control-label col-sm-3">
+                      Description
+                    </label>
+                    <div class="col-sm-9">
+                      <textarea name="biz_description" class="form-control required" id="biz_description" placeholder="Business description" rows="12"></textarea>
+                      <script>
+                        CKEDITOR.replace( 'biz_description' );
+                      </script>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="square_feet" class="control-label col-sm-3">
+                      Square feet
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="number" name="square_feet"
+                        class="form-control" id="square_feet"
+                        placeholder="Square feet">
+                     </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="reason_selling" class="control-label col-sm-3">
+                      Reason for selling
+                    </label>
+                    <div class="col-sm-9"><textarea name="reason_selling" class="form-control required" id="reason_selling" placeholder="Reason for selling"></textarea>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="growth_opportunities" class="control-label col-sm-3">
+                      Growth opportunities
+                    </label>
+                    <div class="col-sm-9">
+                        <textarea name="growth_opportunities" class="form-control" id="growth_opportunities" placeholder="Describe growth opportunities"></textarea>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="support" class="control-label col-sm-3">
+                      Support
+                    </label>
+                    <div class="col-sm-9">
+                        <textarea name="support" class="form-control required" id="support" placeholder="Describe support"></textarea>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="competition" class="control-label col-sm-3">
+                      Competition
+                    </label>
+                    <div class="col-sm-9">
+                        <textarea name="competition" class="form-control" id="competition" placeholder="Describe competitive environment"></textarea>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="keywords" class="control-label col-sm-3">
+                      Keywords
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" name="keywords" class="form-control"
+                        id="keywords" placeholder="List 1 - 6 words to aid search engines (must be comma separated)">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="biz_website" class="control-label col-sm-3">
+                      Website
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" name="biz_website" class="form-control"
+                        id="biz_website" placeholder="domainName.com or www.domainName.com">
+                    </div>
+                </div>
+
+
+                <hr/>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
+
+
+                <h3 class="subheading">Financial information</h3>
+
+                <div class="form-group">
+                    <label for="asking_price" class="control-label col-sm-3">
+                      Asking price
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="number" name="asking_price"
+                        class="form-control required"
+                        id="asking_price" placeholder="Asking price">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="gross_income" class="control-label col-sm-3">
+                      Gross income
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="number" name="gross_income" class="form-control"
+                        id="gross_income" placeholder="Gross income">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="cash_flow" class="control-label col-sm-3">
+                      Cash flow
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="number" name="cash_flow" class="form-control"
+                        id="cash_flow" placeholder="Cash flow">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="ebitda" class="control-label col-sm-3">
+                      EBITDA
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="number" name="ebitda" class="form-control"
+                        id="ebitda" placeholder="Earnings before interest, taxes, depreciation and amortization">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group" id="inventory-value">
+                    <label for="inventory_value" class="control-label col-sm-3">
+                      Inventory value
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="number" name="inventory_value"
+                        class="form-control" id="inventory_value" placeholder="Inventory value">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="inventory_included" class="control-label col-sm-3">
+                      Inventory included
+                    </label>
+                    <div class="col-sm-9">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="inventory_included"
+                                id="inventory_included" value="1">
+                                <span>
+                                  Yes, inventory is included in asking price
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group" id="ffe-value">
+                    <label for="ffe_value" class="control-label col-sm-3">
+                      FFE value
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="number" name="ffe_value" class="form-control"
+                        id="ffe_value" placeholder="Furniture, fixtures and equipment value">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="ffe_included" class="control-label col-sm-3">
+                      FFE included
+                    </label>
+                    <div class="col-sm-9">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="ffe_included"
+                                id="ffe_included" value="1">
+                                <span>
+                                  Yes, furniture, fixtures and equipment are included in asking price
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group" id="real-estate-value">
+                    <label for="real_estate_value" class="control-label col-sm-3">
+                       Real estate value
+                     </label>
+                    <div class="col-sm-9">
+                        <input type="number" name="real_estate_value"
+                        class="form-control" id="real_estate_value"
+                        placeholder="Real estate value">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="real_estate_included" class="control-label col-sm-3">
+                      Real estate included
+                    </label>
+                    <div class="col-sm-9">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="real_estate_included"
+                                id="real_estate_included" value="1">
+                                <span>
+                                  Yes, real estate is included in asking price
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="real_estate_for_sale" class="control-label col-sm-3">
+                      Real estate for sale
+                    </label>
+                    <div class="col-sm-9">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="real_estate_for_sale"
+                                id="real_estate_for_sale" value="1">
+                                <span>
+                                  Yes, real estate not included in asking price but
+                                  real estate is for sale
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group" id="real-estate-description">
+                    <label for="real_estate_description" class="control-label col-sm-3">
+                      Facilities description
+                    </label>
+                    <div class="col-sm-9">
+                        <textarea name="real_estate_description" class="form-control" id="real_estate_description" placeholder="Describe facilities"></textarea>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="seller_financing_available" class="control-label col-sm-3">
+                      Seller financing
+                    </label>
+                    <div class="col-sm-9">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="seller_financing_available"
+                                id="seller_financing_available" value="1">
+                                <span>
+                                  Yes, seller financing is available
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group" id="seller-financing-description">
+                    <label for="seller_financing_description" class="control-label col-sm-3">
+                      Financing description
+                    </label>
+                    <div class="col-sm-9">
+                        <textarea name="seller_financing_description" class="form-control" id="seller_financing_description" placeholder="Describe seller financing" ></textarea>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="lender_prequalified" class="control-label col-sm-3">
+                      Lender pre-qualified
+                    </label>
+                    <div class="col-sm-9">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="lender_prequalified"
+                                id="lender_prequalified" value="1">
+                                <span>
+                                  Yes, business pre-qualified by a lender
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <hr>
+
+
+                <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
+          <!--
+                <h3 class="subheading">Upload images <span class="small">(optional - can be added later)</span></h3>
+
+
+                <div class="form-group" id="upload-business-photos">
+                    <label for="business_photos" class="control-label col-sm-3">&nbsp;</label>
+                    <div class="col-sm-9">
+                        <p style="margin-bottom: 15px; color: #222;">
+                            Ctrl+ image to multi-select <em>up to 5 images</em> (1 only if you use MS Internet Explorer).
+                            <br>
+                            <em>For optimum results, upload images >= 750px wide.</em>
+                            <br><br>
+                            After posting your ad, you can view, upload and change images by clicking "Manage listings (ads)" and then the "Edit" button.
+                        </p>
+                        <p><input type="file" name="biz_photos[]" id="business_photo01" multiple="multiple" min="1" max="5"></p>
+                        <p class="help-block small" style="margin-top:-7px;">*Up to 5 images. Must be gif, jpg, jpeg or png under 2MB each</p>
+                    </div>
+                </div>
+
+                <hr/>
+          -->
+
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-8">
+                        <button  id="submit-listing-btn" type="submit"
+                        class="btn btn-primary btn-lg">
+                        Add listing
+                      </button>
+                      <br><br>
+                      <small>
+                          After submission, please test that you receive an email from
+                          the contact form for this listing by filling it out and submitting
+                          it. Make sure you "whitelist" noreply@americanbiztrader.com.
+                          If you do not receive an email, verify that the correct emails
+                          are listed for the agent/broker and company, and check your
+                          spam folder.
+                      </small>
+                    </div>
+                </div>
+
+            </form>
+
+
+          </div><!--  // .col-md-8  -->
+      </div><!--  // .row  -->
+</div><!--  // .container  -->
+{% endblock %}
+
+
+{% block bottomjs %}
+<script>
+$(document).ready(function(){
+
+    $("#new-ad-form").validate();
+
+
+    $("#submit-listing-btn").click(function(){
+        $(this).html("Sending data. Please wait. . .");
+    });
+
+    // To populate sub category drop-down
+    $("#add-new-listing-business-category").change(function(){
+        var category_id = $(this).val();
+        console.log(category_id);
+
+        $.ajax({
+            url: '/buy/get-sub-categories',
+            type: 'POST',
+            data: { category_id: category_id },
+            cache: false,
+            success: function(sub_categories){
+                // resource: Samir Talwar, http://stackoverflow.com/questions/5918144/how-can-i-use-json-data-to-populate-the-options-of-a-select-box
+
+                // empty any values from previous append (from Main controller)
+                $('#add-new-listing-subcategory-list').empty();
+
+                // loop through sub_categories array
+                $.each(sub_categories, function(index, value){
+                  $('#add-new-listing-subcategory-list').append( $('<option>').text(value.sub_cat_name).attr('value', value.id));
+                });
+
+                console.log(sub_categories);
+            },
+            error: function(){
+                alert("Ajax error fetching sub-categories.");
+            }
+        });
+
+          // html on this page line #70
+         $.ajax({
+              url: '/buy/get-image',
+              type: 'POST',
+              data: { id: category_id },
+              cache: false,
+              success: function(default_image){
+                  $("img#default-image").attr("src", "/assets/images/biz_categories/"  + default_image);
+                  $("#default-image-div").removeClass("hide-div");
+                  $("#default-image-div").addClass("show-div");
+              }
+          });
+
+          $("#scale-event").hover(function(){
+                $("#default-image").addClass('transition');
+
+           }, function(){
+                $("#default-image").removeClass('transition');
+          });
+
+    });
+
+
+    // To populate county drop-down
+    $("#add-listing-state-list").change(function(){
+        var state = $(this).val();
+        console.log("state = " + state);
+
+        $.ajax({
+            url: '/buy/get-county',
+            type: 'POST',
+            data: {
+              state: state
+             },
+            cache: false,
+            success: function(counties){
+
+              // empty content
+              $("#add-listing-county-list").empty();
+
+              // add 'all' choice
+              // $("#add-listing-county-list").append($('<option>').text("All counties"). attr('value', 'all'));
+
+              // loop through county_list array
+              $.each(counties, function(index, value){
+                  $('#add-listing-county-list').append( $('<option>').text(value).attr('value', value) );
+              });
+
+              console.log(counties);
+            },
+            error: function(){
+                alert("Ajax error fetching counties.");
+            }
+        });
+
+    });
+
+});
+</script>
+{% endblock %}

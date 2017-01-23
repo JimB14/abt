@@ -1,0 +1,1183 @@
+{% extends 'base-siteadmin.html' %}
+
+{% block title %}
+  Edit Agent | ABT
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div id="dashboard-toggle" class="col-md-8" style="margin-top:-20px;margin-left:254px;">
+
+          <h2>Edit:  {{ agent.first_name}} {{ agent.last_name }}, {{ agent.status }}</h2>
+          <hr>
+
+          <form method="post" class="form-horizontal"
+            action="/admin/siteadmin/update-agent?id={{ agent.id }}&amp;broker_id={{ broker.broker_id }}"
+            name="update-agent-form" id="update-agent-form" enctype="multipart/form-data">
+
+            <h3 style="margin-bottom: 15px;">Search engine optimized to generate leads</h3>
+            <h4 class="subheading">
+              Important data stored by search engines
+              <a href="https://moz.com/learn/seo/meta-description" target="_blank">
+                (learn more)
+              </a>
+            </h4>
+
+            <div class="form-group">
+                <label for="type" class="control-label col-sm-3">
+                  Meta description
+                  <br>
+                  <small>
+                    <a href="/buy/agent-profile/{{ agent.id }}&amp;broker_id={{ broker.broker_id }}">
+                      (On your profile page)
+                    </a>
+                  </small>
+                </label>
+                <div class="col-sm-9">
+                      <p style="margin-top:6px;" id="meta-description-content">
+                        <a style="text-decoration:underline;cursor:pointer" title="First name">{{ agent.first_name }}</a> <a style="text-decoration:underline;cursor:pointer" title="Last name">{{ agent.last_name }}</a> is a professional {% if agent.type == 1 %}<a style="text-decoration:underline;cursor:pointer" title="Type">Business Broker</a>{% elseif agent.type == 2 %}<a style="text-decoration:underline;cursor:pointer" title="Type">Commercial Real Estate Broker</a>{% elseif agent.type == 3 %}<a style="text-decoration:underline;cursor:pointer" title="Type">Business & Commercial Real Estate Broker</a>{% endif %} for <a style="text-decoration:underline;cursor:pointer" title="Company name">{{ company_name }}</a>, serving <a style="text-decoration:underline;cursor:pointer" title="County or counties of first state">{{ agent.counties_serv01 }}</a> in <a style="text-decoration:underline;cursor:pointer" title="First state">{{ agent.state_serv01 }}</a> Call: <a style="text-decoration:underline;cursor:pointer" title="Office telephone">{{ agent.agent_telephone }}</a>
+                      </p>
+                      <a style="text-decoration:underline;cursor:pointer" title="Category"></a>
+                    <p id="display-meta-description-length"></p>
+                </div>
+            </div>
+            <hr>
+
+
+              <h3 style="margin-bottom: 15px;">
+                Agent information
+              </h3>
+
+              <div class="form-group has-feedback">
+                  <label for="first_name" class="control-label col-sm-3">
+                    First name
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="text" name="first_name" class="form-control" id="first_name" placeholder="First name" value="{{ agent.first_name }}" autofocus>
+                      <small>
+                        *Displays in meta description.
+                      </small>
+                  </div>
+                      <span class="glyphicon form-control-feedback" id="first_name1"></span>
+              </div>
+
+
+              <div class="form-group has-feedback">
+                  <label for="last_name" class="control-label col-sm-3">
+                    Last name
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="text" name="last_name" class="form-control" id="last_name" placeholder="Last name" value="{{ agent.last_name }}">
+                      <small>
+                        *Displays in meta description.
+                      </small>
+                  </div>
+                      <span class="glyphicon form-control-feedback" id="last_name1"></span>
+              </div>
+
+
+              <div class="form-group">
+                  <label for="status" class="control-label col-sm-3">
+                    Status
+                  </label>
+                  <div class="col-sm-9">
+                      <select name="status" id="status" class="form-control">
+                        <option value="{{ agent.status }}">{{ agent.status }}</option>
+                        <option value="agent">Agent</option>
+                        <option value="broker">Broker/Owner</option>
+                      </select>
+                  </div>
+              </div>
+
+
+              <div class="form-group">
+                  <label for="type" class="control-label col-sm-3">
+                    Type
+                  </label>
+                  <div class="col-sm-9">
+                      <select name="type" id="type" class="form-control required">
+                        <option value="{{ agent.type }}">{{ agent.type }}</option>
+                        <option value="1">Sells businesses only</option>
+                        <option value="2">Sells commercial real estate only</option>
+                        <option value="3">Sells both</option>
+                      </select>
+                      <small>
+                        1 = business broker; 2 = commercial real estate broker; 3 = both &nbsp;&nbsp;
+                        *Displays in meta description.
+                      </small>
+                  </div>
+              </div>
+
+
+              <div class="form-group has-feedback">
+                  <label for="about_me" class="control-label col-sm-3">
+                    About me
+                  </label>
+                  <div class="col-sm-9">
+                      <textarea name="about_me" class="form-control" id="about_me" placeholder="Describe professional qualifications">{{ agent.about_me|raw }}</textarea>
+                      <script>
+                          CKEDITOR.replace('about_me');
+                      </script>
+                  </div>
+                      <span class="glyphicon form-control-feedback" id="about_me1"></span>
+              </div>
+
+
+              <div class="form-group has-feedback">
+                  <label for="profile_photo" class="control-label col-sm-3">
+                    Upload agent photo
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="file" name="profile_photo" id="profile_photo">
+                      <p class="help-block small">
+                        *Must be gif, jpg, jpeg or png under 2MB
+                      </p>
+                      <img src="/assets/images/uploaded_profile_photos/{{ agent.profile_photo }}" width="100">
+                  </div>
+                      <span class="glyphicon form-control-feedback" id="profile_photo1"></span>
+              </div>
+
+
+              <div class="form-group has-feedback">
+                  <label for="cell" class="control-label col-sm-3">
+                    Cell
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="text" name="cell" class="form-control" id="cell" placeholder="Cell" value="{{ agent.cell }}">
+                  </div>
+                      <span class="glyphicon form-control-feedback" id="cell1"></span>
+              </div>
+
+
+              <div class="form-group has-feedback">
+                  <label for="agent_email" class="control-label col-sm-3">
+                    Email<br><small>(Leads sent here &amp; CC to broker)</small>
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="email" name="agent_email" class="form-control" id="agent_email" placeholder="Email" value="{{ agent.agent_email }}">
+                  </div>
+                      <span class="glyphicon form-control-feedback" id="agent_email1"></span>
+              </div>
+
+
+              <div class="form-group has-feedback">
+                  <label for="agent_telephone" class="control-label col-sm-3">
+                    Telephone (Office)
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="text" name="agent_telephone" class="form-control" id="agent_telephone" placeholder="Telephone" value="{{ agent.agent_telephone }}">
+                      <small>
+                        *Displays in meta description.
+                      </small>
+                  </div>
+                      <span class="glyphicon form-control-feedback" id="agent_telephone1"></span>
+              </div>
+
+
+              <div class="form-group has-feedback">
+                  <label for="agent_address1" class="control-label col-sm-3">
+                    Address1
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="text" name="agent_address1" class="form-control" id="agent_address1" placeholder="Address1" value="{{ agent.address1 }}">
+                  </div>
+                      <span class="glyphicon form-control-feedback" id="agent_address11"></span>
+              </div>
+
+
+              <div class="form-group has-feedback">
+                  <label for="agent_address2" class="control-label col-sm-3">
+                    Address2
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="text" name="agent_address2" class="form-control" id="agent_address2" placeholder="Address2" value="{{ agent.address2 }}">
+                  </div>
+                      <span class="glyphicon form-control-feedback" id="agent_address21"></span>
+              </div>
+
+
+              <div class="form-group has-feedback">
+                  <label for="agent_city" class="control-label col-sm-3">
+                    City
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="text" name="agent_city" class="form-control" id="agent_city" placeholder="City" value="{{ agent.city }}">
+                  </div>
+                      <span class="glyphicon form-control-feedback" id="agent_city1"></span>
+              </div>
+
+
+              <div class="form-group has-feedback">
+                  <label for="agent_state" class="control-label col-sm-3">
+                    State
+                  </label>
+                  <div class="col-sm-9">
+                      <select class="form-control" name="agent_state" id="agent_state">
+                          <option value="{{ agent.state }}">{{ agent.state }}</option>
+                          {% for state in states %}
+                              <option value="{{ state.abbrev }}">{{ state.name }}</option>
+                          {% endfor %}
+                      </select>
+                  </div>
+                      <span class="glyphicon form-control-feedback" id="agent_state1"></span>
+              </div>
+
+
+              <div class="form-group has-feedback">
+                  <label for="agent_zip" class="control-label col-sm-3">
+                    Zip
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="text" name="agent_zip" class="form-control" id="agent_zip" placeholder="Zip" value="{{ agent.zip }}">
+                  </div>
+                      <span class="glyphicon form-control-feedback" id="agent_zip1"></span>
+              </div>
+
+
+              <div class="form-group has-feedback">
+                  <label for="affiliations" class="control-label col-sm-3">
+                    Awards, Affiliations, Licensing, Certifications
+                  </label>
+                  <div class="col-sm-9">
+                      <textarea name="affiliations" class="form-control" id="affiliations" placeholder="List affiliations, memberships to professional organizations">{{ agent.affiliations|raw }}</textarea>
+                      <script>
+                          CKEDITOR.replace('affiliations');
+                      </script>
+                  </div>
+                      <span class="glyphicon form-control-feedback" id="affiliations1"></span>
+              </div>
+
+
+
+              <h4 style="margin: 20px 0px 15px 0px;" class="bold">
+                States and Counties served
+              </h4>
+
+              <!-- - - - - - - - -  state_serv01  - - - - - - - - - - - - - -->
+
+              <div class="form-group">
+                  <label for="state01" class="control-label col-sm-3">
+                    Select state <br><small>(to populate counties)</small>
+                  </label>
+                  <div class="col-sm-9">
+                      <select class="form-control" name="state01" id="edit-state01">
+                          <option value="{{ agent.state_serv01 }}">{{ agent.state_serv01 }}</option>
+                          {% for state in states %}
+                              <option value="{{ state.abbrev }}">{{ state.name }}</option>
+                          {% endfor %}
+                      </select>
+                      <small>
+                        *Displays in meta description.
+                      </small>
+                  </div>
+              </div>
+
+              <!-- <div class="form-group">
+                  <label class="control-label col-sm-3">
+                    Current counties <small> (read only) </small>
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="text" class="form-control" value="{{ agent.counties_serv01 }}" readonly>
+                  </div>
+              </div> -->
+
+
+              <div class="form-group">
+                  <label for="counties_serv01" class="control-label col-sm-3">
+                    Select counties
+                    <br><small> (Ctrl + click for multiple select)</small>
+                  </label>
+                  <div class="col-sm-9">
+                      <select class="form-control" name="counties_serv01[]" id="edit-counties-serv01" multiple>
+                          <option value="{{ agent.counties_serv01 }}" selected="selected">{{ agent.counties_serv01 }}</option>
+                      </select>
+                      <small>
+                        *Displays in meta description.
+                      </small>
+                  </div>
+              </div>
+
+
+              <!-- if 1st state exists; offer option to add 2nd state & counties -->
+              {% if agent.state_serv01 and agent.state_serv02 == '' %}
+              <div class="form-group has-feedback" style="margin-top: 0px; margin-left: 3px;">
+                  <div class="checkbox col-sm-offset-3 col-sm-9">
+                      <label>
+                          <input type="checkbox" name="edit-agent-show02" id="edit-agent-show02" value="edit-agent-show02">
+                          Add 2nd state
+                      </label>
+                  </div>
+              </div>
+
+              <div id="edit-state-county02">
+                  <div class="form-group">
+                      <label for="state02" class="control-label col-sm-3">
+                        Select state 2
+                      </label>
+                      <div class="col-sm-9">
+                          <select class="form-control" name="state02" id="edit-state02">
+                            <option value="">{% if state.name %}{{ state.name }}{% else %} Select{% endif %}</option>
+                              {% for state in states %}
+                                  <option value="{{ state.abbrev}}">{{ state.name }}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                      <label for="counties_serv02" class="control-label col-sm-3">
+                        Select counties 2 - 1st time
+                        <br><small> (Ctrl + click for multiple select)</small>
+                      </label>
+                      <div class="col-sm-9">
+                          <select class="form-control" name="counties_serv02[]" id="edit-counties-serv02" multiple >
+                              <option value="">Select county</option>
+                          </select>
+                      </div>
+                  </div>
+              </div>
+              {% endif %}
+
+
+
+              <!--  if state_serv02 exists, display data  -->
+              {% if agent.state_serv02 %}
+                <div class="form-group">
+                    <label for="state02" class="control-label col-sm-3">
+                      Select state 2<br><small>(to populate counties)</small>
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name="state02" id="edit-state02">
+                            <option value="{{ agent.state_serv02 }}">{{ agent.state_serv02 }}</option>
+                            {% for state in states %}
+                                <option value="{{ state.abbrev }}">{{ state.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- <div class="form-group">
+                    <label class="control-label col-sm-3">
+                      Current counties <small> (read only) </small>
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" value="{{ agent.counties_serv02 }}" readonly>
+                    </div>
+                </div> -->
+
+                <div class="form-group">
+                    <label for="counties_serv02" class="control-label col-sm-3">
+                      Select counties 2 - edit
+                      <br><small> (Ctrl + click for multiple select)</small>
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name="counties_serv02[]" id="edit-counties-serv02" multiple >
+                            <option value="{{ agent.counties_serv02 }}" selected="selected">{{ agent.counties_serv02 }}</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="form-group has-feedback" style="margin-top: -15px; margin-left: 3px;">
+                    <div class="checkbox col-sm-offset-3 col-sm-9">
+                        <label>
+                            <input type="checkbox" name="delete_state02" id="delete-state02" value="1">
+                            <span>
+                              Select checkbox to delete the state of
+                              {% if agent.state_serv02 %}
+                                {{ agent.state_serv02 }}
+                              {% else %}
+                                State,
+                              {% endif %}
+                              and the following
+                              {% if state.state_serv02 == 'LA '%}
+                                parishes:
+                              {% else %}
+                                counties: {{ agent.counties_serv02 }}
+                              {% endif %}
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+
+                <div id="delete-btn-div-state02" class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <a id="delete-state02-ajax" href="/admin/brokers/delete-state02?state=02&amp;agent_id={{ agent.id }}&amp;broker_id={{ broker.broker_id }}"
+                          class="btn btn-danger btn-sm" role="button"
+                          onclick="return confirm('Delete {{ agent.state_serv02 }} &amp; {% if agent.state_serv02 == 'LA' %} parishes {% else %} counties now?'{% endif %})">
+                          Delete {{ agent.state_serv02 }} &amp; {% if agent.state_serv02 == 'LA' %} Parishes {% else %} Counties {% endif %}
+                        </a>
+                    </div>
+                </div>
+              {% endif %}
+
+
+
+
+              <!-- if 2nd state exists and 3rd state is null; offer option to add 3rd state -->
+              {% if agent.state_serv02 and agent.state_serv03 == '' %}
+              <div class="form-group has-feedback" style="margin-top: 0px; margin-left: 3px;">
+                  <div class="checkbox col-sm-offset-3 col-sm-9">
+                      <label>
+                          <input type="checkbox" name="edit-agent-show03" id="edit-agent-show03" value="edit-agent-show03">
+                          Add 3rd state
+                      </label>
+                  </div>
+              </div>
+
+              <div id="edit-state-county03">
+                  <div class="form-group">
+                      <label for="state03" class="control-label col-sm-3">
+                        Select state 3
+                      </label>
+                      <div class="col-sm-9">
+                          <select class="form-control" name="state03" id="edit-state03">
+                            <option value="">{% if state.name %}{{ state.name }}{% else %} Select{% endif %}</option>
+                              {% for state in states %}
+                                  <option value="{{ state.abbrev}}">{{ state.name }}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                      <label for="counties_serv03" class="control-label col-sm-3">
+                        Select counties 3 - 1st time
+                        <br><small> (Ctrl + click for multiple select)</small>
+                      </label>
+                      <div class="col-sm-9">
+                          <select class="form-control" name="counties_serv03[]" id="edit-counties-serv03" multiple >
+                              <option value="">Select county</option>
+                          </select>
+                      </div>
+                  </div>
+              </div>
+              {% endif %}
+
+
+
+
+              <!--  if state_serv03 exists, display data  -->
+              {% if agent.state_serv03 %}
+                <div class="form-group">
+                    <label for="state03" class="control-label col-sm-3">
+                      Select state 3<br><small>(to populate counties)</small>
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name="state03" id="edit-state03">
+                            <option value="{{ agent.state_serv03 }}">{{ agent.state_serv03 }}</option>
+                            {% for state in states %}
+                                <option value="{{ state.abbrev }}">{{ state.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- <div class="form-group">
+                    <label class="control-label col-sm-3">
+                      Current counties <small> (read only) </small>
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" value="{{ agent.counties_serv03 }}" readonly>
+                    </div>
+                </div> -->
+
+
+                <div class="form-group">
+                    <label for="counties_serv03" class="control-label col-sm-3">
+                      Select counties 3 - edit
+                      <br><small> (Ctrl + click for multiple select)</small>
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name="counties_serv03[]" id="edit-counties-serv03" multiple >
+                            <option value="{{ agent.counties_serv03 }}" selected="selected">{{ agent.counties_serv03 }}</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="form-group has-feedback" style="margin-top: -15px; margin-left: 3px;">
+                    <div class="checkbox col-sm-offset-3 col-sm-9">
+                        <label>
+                            <input type="checkbox" name="delete_state03" id="delete-state03" value="1">
+                            <span>
+                              Select checkbox to delete the state of
+                              {% if agent.state_serv03 %}
+                                {{ agent.state_serv03 }}
+                              {% else %}
+                                State,
+                              {% endif %}
+                                and the following
+                              {% if state.state_serv03 == 'LA '%}
+                                parishes:
+                              {% else %}
+                                counties: {{ agent.counties_serv03 }}
+                              {% endif %}
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+
+                <div id="delete-btn-div-state03" class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <a id="delete-state03-ajax" href="/admin/brokers/delete-state03?state=03&amp;agent_id={{ agent.id }}&amp;broker_id={{ broker.broker_id }}"
+                          class="btn btn-danger btn-sm" role="button"
+                          onclick="return confirm('Delete {{ agent.state_serv03 }} &amp; {% if agent.state_serv03 == 'LA' %} parishes {% else %} counties now?'{% endif %})">
+                          Delete {{ agent.state_serv03 }} &amp;{% if agent.state_serv03 == 'LA' %} Parishes {% else %} Counties {% endif %}
+                        </a>
+                    </div>
+                </div>
+              {% endif %}
+
+
+
+              <!-- if 3rd state exists and 4th state is null; offer option to add 4th state -->
+              {% if agent.state_serv03 and agent.state_serv04 == '' %}
+              <div class="form-group has-feedback" style="margin-top: 0px; margin-left: 3px;">
+                  <div class="checkbox col-sm-offset-3 col-sm-9">
+                      <label>
+                          <input type="checkbox" name="edit-agent-show04" id="edit-agent-show04" value="edit-agent-show04">
+                          Add 4th state
+                      </label>
+                  </div>
+              </div>
+
+              <div id="edit-state-county04">
+                  <div class="form-group">
+                      <label for="state03" class="control-label col-sm-3">
+                        Select state 4
+                      </label>
+                      <div class="col-sm-9">
+                          <select class="form-control" name="state04" id="edit-state04">
+                            <option value="">{% if state.name %}{{ state.name }}{% else %} Select{% endif %}</option>
+                              {% for state in states %}
+                                  <option value="{{ state.abbrev}}">{{ state.name }}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                      <label for="counties_serv04" class="control-label col-sm-3">
+                        Select counties 4 - 1st time
+                        <br><small> (Ctrl + click for multiple select)</small>
+                      </label>
+                      <div class="col-sm-9">
+                          <select class="form-control" name="counties_serv04[]" id="edit-counties-serv04" multiple >
+                              <option value="">Select county</option>
+                          </select>
+                      </div>
+                  </div>
+              </div>
+              {% endif %}
+
+
+
+              <!--  if state_serv04 exists, display data  -->
+              {% if agent.state_serv04 %}
+                <div class="form-group">
+                    <label for="state04" class="control-label col-sm-3">
+                      Select state 4 <br><small>(to populate counties)</small>
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name="state04" id="edit-state04">
+                            <option value="{{ agent.state_serv04 }}">{{ agent.state_serv04 }}</option>
+                            {% for state in states %}
+                                <option value="{{ state.abbrev }}">{{ state.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- <div class="form-group">
+                    <label class="control-label col-sm-3">
+                      Current counties <small> (read only) </small>
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" value="{{ agent.counties_serv04 }}" readonly>
+                    </div>
+                </div> -->
+
+
+                <div class="form-group">
+                    <label for="counties_serv04" class="control-label col-sm-3">
+                      Select counties - edit
+                      <br><small> (Ctrl + click for multiple select)</small>
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name="counties_serv04[]" id="edit-counties-serv04" multiple >
+                            <option value="{{ agent.counties_serv04 }}" selected="selected">{{ agent.counties_serv04 }}</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                {% if agent.state_serv04 and agent.state_serv04 != '' %}
+                <div class="form-group has-feedback" style="margin-top: -15px; margin-left: 3px;">
+                    <div class="checkbox col-sm-offset-3 col-sm-9">
+                        <label>
+                            <input type="checkbox" name="delete_state04" id="delete-state04" value="1">
+                            <span>
+                              Select checkbox to delete the state of
+                              {% if agent.state_serv04 %}
+                                {{ agent.state_serv04 }}
+                              {% else %}
+                                State,
+                              {% endif %}
+                                and the following
+                              {% if state.state_serv04 == 'LA '%}
+                                parishes:
+                              {% else %}
+                                counties: {{ agent.counties_serv04 }}
+                              {% endif %}
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                {% endif %}
+
+
+                <div id="delete-btn-div-state04" class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <a id="delete-state04-ajax" href="/admin/brokers/delete-state04?state=04&amp;agent_id={{ agent.id }}&amp;broker_id={{ broker.broker_id }}"
+                          class="btn btn-danger btn-sm" role="button"
+                          onclick="return confirm('Delete {{ agent.state_serv04 }} &amp; {% if agent.state_serv04 == 'LA' %} parishes {% else %} counties now?'{% endif %})">
+                          Delete {{ agent.state_serv04 }} &amp;{% if agent.state_serv04 == 'LA' %} Parishes {% else %} Counties {% endif %}
+                        </a>
+                    </div>
+                </div>
+              {% endif %}
+
+
+
+              <!-- if 4th state exits and 5th state is null; offer option to add 5th state -->
+              {% if agent.state_serv04 and agent.state_serv05 == '' %}
+              <div class="form-group has-feedback" style="margin-top: 0px; margin-left: 3px;">
+                  <div class="checkbox col-sm-offset-3 col-sm-9">
+                      <label>
+                          <input type="checkbox" name="edit-agent-show04" id="edit-agent-show05" value="edit-agent-show05">
+                          Add 5th state
+                      </label>
+                  </div>
+              </div>
+
+              <div id="edit-state-county05">
+                  <div class="form-group">
+                      <label for="state05" class="control-label col-sm-3">
+                        Select state 5
+                      </label>
+                      <div class="col-sm-9">
+                          <select class="form-control" name="state05" id="edit-state05">
+                            <option value="">{% if state.name %}{{ state.name }}{% else %} Select{% endif %}</option>
+                              {% for state in states %}
+                                  <option value="{{ state.abbrev}}">{{ state.name }}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                      <label for="counties_serv05" class="control-label col-sm-3">
+                        Select counties - 1st time
+                        <br><small> (Ctrl + click for multiple select)</small>
+                      </label>
+                      <div class="col-sm-9">
+                          <select class="form-control" name="counties_serv05[]" id="edit-counties-serv05" multiple >
+                              <option value="">Select county</option>
+                          </select>
+                      </div>
+                  </div>
+              </div>
+              {% endif %}
+
+
+              <!--  if state_serv04 exists, display data  -->
+              {% if agent.state_serv05 %}
+                <div class="form-group">
+                    <label for="state05" class="control-label col-sm-3">
+                      Select state 5 <br><small>(to populate counties)</small>
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name="state05" id="edit-state05">
+                            <option value="{{ agent.state_serv05 }}">{{ agent.state_serv05 }}</option>
+                            {% for state in states %}
+                                <option value="{{ state.abbrev }}">{{ state.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- <div class="form-group">
+                    <label class="control-label col-sm-3">
+                      Current counties <small> (read only) </small>
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" value="{{ agent.counties_serv05 }}" readonly>
+                    </div>
+                </div> -->
+
+
+                <div class="form-group">
+                    <label for="counties_serv05" class="control-label col-sm-3">
+                      Select counties - edit
+                      <br><small> (Ctrl + click for multiple select)</small>
+                    </label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name="counties_serv05[]" id="edit-counties-serv05" multiple >
+                            <option value="{{ agent.counties_serv05 }}" selected="selected">{{ agent.counties_serv05 }}</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="form-group has-feedback" style="margin-top: -15px; margin-left: 3px;">
+                    <div class="checkbox col-sm-offset-3 col-sm-9">
+                        <label>
+                            <input type="checkbox" name="delete_state05" id="delete-state05" value="1">
+                            <span>
+                              Select checkbox to delete the state of
+                              {% if agent.state_serv05 %}
+                                {{ agent.state_serv05 }}
+                              {% else %}
+                                State,
+                              {% endif %}
+                                and the following
+                              {% if state.state_serv05 == 'LA '%}
+                                parishes:
+                              {% else %}
+                                counties: {{ agent.counties_serv05 }}
+                              {% endif %}
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+
+                <div id="delete-btn-div-state05" class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <a id="delete-state05-ajax" href="/admin/brokers/delete-state05?state=05&amp;agent_id={{ agent.id }}&amp;broker_id={{ broker.broker_id }}"
+                          class="btn btn-danger btn-sm" role="button"
+                          onclick="return confirm('Delete {{ agent.state_serv05 }}&amp;{% if agent.state_serv05 == 'LA' %} parishes {% else %} counties now?'{% endif %})">
+                          Delete {{ agent.state_serv05 }} &amp;{% if agent.state_serv05 == 'LA' %} Parishes {% else %} Counties {% endif %}
+                        </a>
+                    </div>
+                </div>
+              {% endif %}
+              <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+
+              <div class="col-sm-offset-3 col-sm-9">
+                <hr>
+              </div>
+
+              <div class="form-group">
+                  <div class="col-sm-offset-3 col-sm-9" style="paddding-top: 30px;">
+                      <button type="submit" class="btn btn-primary btn-lg" id="update-agent-btn">Update agent</button>
+                  </div>
+              </div>
+          </form>
+
+        </div><!--  // col-md-12  -->
+    </div><!--  // .row  -->
+</div><!-- // .container-fluid  -->
+{% endblock %}
+
+
+{% block bottomjs %}
+<script>
+$(document).ready(function(){
+
+    $("#update-agent-form").submit(function(){
+        $("#update-agent-btn").html("Sending information, please wait . . . ")
+    });
+
+
+    // To populate county drop-down for @admin/brokers/admin/add-an-agent-form.html.php
+    $("#edit-state01").change(function(){
+        var state01_edit = $(this).val();
+        console.log(state01_edit);
+
+        $.ajax({
+            url: '/buy/get-counties',
+            type: 'POST',
+            data: { state: state01_edit},
+            cache: false,
+            success: function(county_list){
+
+              // empty content
+              $("#edit-counties-serv01").empty();
+
+              // loop through county_list array
+              $.each(county_list, function(index, value){
+                  $('#edit-counties-serv01').append( $('<option>').text(value).attr('value', value) );
+              });
+
+              console.log(county_list);
+            },
+            error: function(){
+                alert("Error occurred during Ajax request.");
+            }
+        });
+    });
+
+
+    // To populate county drop-down for @admin/brokers/admin/add-an-agent-form.html.php
+    $("#edit-state02").change(function(){
+        var state02_edit = $(this).val();
+        console.log(state02_edit);
+
+        $.ajax({
+            url: '/buy/get-counties',
+            type: 'POST',
+            data: { state: state02_edit},
+            cache: false,
+            success: function(county_list){
+
+              // empty content
+              $("#edit-counties-serv02").empty();
+
+              // loop through county_list array
+              $.each(county_list, function(index, value){
+                  $('#edit-counties-serv02').append( $('<option>').text(value).attr('value', value) );
+              });
+
+              console.log(county_list);
+            },
+            error: function(){
+                alert("Error occurred during Ajax request.");
+            }
+        });
+    });
+
+    // To populate county drop-down for @admin/brokers/admin/add-an-agent-form.html.php
+    $("#edit-state03").change(function(){
+        var state03_edit = $(this).val();
+        console.log(state03_edit);
+
+        $.ajax({
+            url: '/buy/get-counties',
+            type: 'POST',
+            data: { state: state03_edit},
+            cache: false,
+            success: function(county_list){
+
+              // empty content
+              $("#edit-counties-serv03").empty();
+
+              // loop through county_list array
+              $.each(county_list, function(index, value){
+                  $('#edit-counties-serv03').append( $('<option>').text(value).attr('value', value) );
+              });
+
+              console.log(county_list);
+            },
+            error: function(){
+                alert("Error occurred during Ajax request.");
+            }
+        });
+    });
+
+    // To populate county drop-down for @admin/brokers/admin/add-an-agent-form.html.php
+    $("#edit-state04").change(function(){
+        var state04_edit = $(this).val();
+        console.log(state04_edit);
+
+        $.ajax({
+            url: '/buy/get-counties',
+            type: 'POST',
+            data: { state: state04_edit},
+            cache: false,
+            success: function(county_list){
+
+              // empty content
+              $("#edit-counties-serv04").empty();
+
+              // loop through county_list array
+              $.each(county_list, function(index, value){
+                  $('#edit-counties-serv04').append( $('<option>').text(value).attr('value', value) );
+              });
+
+              console.log(county_list);
+            },
+            error: function(){
+                alert("Error occurred during Ajax request.");
+            }
+        });
+    });
+
+
+    // To populate county drop-down for @admin/brokers/admin/add-an-agent-form.html.php
+    $("#edit-state05").change(function(){
+        var state05_edit = $(this).val();
+        console.log(state05_edit);
+
+        $.ajax({
+            url: '/buy/get-counties',
+            type: 'POST',
+            data: { state: state05_edit},
+            cache: false,
+            success: function(county_list){
+
+              // empty content
+              $("#edit-counties-serv05").empty();
+
+              // loop through county_list array
+              $.each(county_list, function(index, value){
+                  $('#edit-counties-serv05').append( $('<option>').text(value).attr('value', value) );
+              });
+
+              console.log(county_list);
+            },
+            error: function(){
+                alert("Error occurred during Ajax request.");
+            }
+        });
+    });
+
+
+
+    $("#delete-state02").click(function(){
+        $("#delete-btn-div-state02").toggle(500);
+    });
+
+
+    // Click delete button to delete State & counties
+    $("#delete-state02-ajax").click(function(event){
+        event.preventDefault();
+        var href = $(this).attr("href");
+        //alert(href);
+        var queryString = href.slice(href.indexOf('?')+1);
+        var arr = queryString.split('&');
+        //alert(arr);
+        var id = arr[2].split('=');
+        //alert(id);
+        id = id[1];
+
+        $.ajax({
+            url: '/admin/brokers/delete-state-from-agent-profile',
+            type: 'GET',
+            data: queryString,
+            cache: false,
+            success: function(result){
+              alert("The state and counties were successfully deleted!");
+              window.location.href="/admin/brokers/show-agents?id="+id;
+            },
+            error: function(){
+                alert("Error occurred during Ajax request.");
+            }
+        });
+    });
+
+
+
+    $("#delete-state03").click(function(){
+        $("#delete-btn-div-state03").toggle(500);
+    });
+
+    // Click delete button to delete State & counties
+    $("#delete-state03-ajax").click(function(event){
+        event.preventDefault();
+        var href = $(this).attr("href");
+        //alert(href);
+        var queryString = href.slice(href.indexOf('?')+1);
+        var arr = queryString.split('&');
+        //alert(arr);
+        var id = arr[2].split('=');
+        //alert(id);
+        id = id[1];
+
+        $.ajax({
+            url: '/admin/brokers/delete-state-from-agent-profile',
+            type: 'GET',
+            data: queryString,
+            cache: false,
+            success: function(result){
+              alert("The state and counties were successfully deleted!");
+              window.location.href="/admin/brokers/show-agents?id="+id;
+            },
+            error: function(){
+                alert("Error occurred during Ajax request.");
+            }
+        });
+    });
+
+
+    $("#delete-state04").click(function(){
+        $("#delete-btn-div-state04").toggle(500);
+    });
+
+    // Click delete button to delete State & counties
+    $("#delete-state04-ajax").click(function(event){
+        event.preventDefault();
+        var href = $(this).attr("href");
+        //alert(href);
+        var queryString = href.slice(href.indexOf('?')+1);
+        var arr = queryString.split('&');
+        //alert(arr);
+        var id = arr[2].split('=');
+        //alert(id);
+        id = id[1];
+
+        $.ajax({
+            url: '/admin/brokers/delete-state-from-agent-profile',
+            type: 'GET',
+            data: queryString,
+            cache: false,
+            success: function(result){
+              alert("The state and counties were successfully deleted!");
+              window.location.href="/admin/brokers/show-agents?id="+id;
+            },
+            error: function(){
+                alert("Error occurred during Ajax request.");
+            }
+        });
+    });
+
+
+
+    $("#delete-state05").click(function(){
+        $("#delete-btn-div-state05").toggle(500);
+    });
+
+    // Click delete button to delete State & counties
+    $("#delete-state05-ajax").click(function(event){
+        event.preventDefault();
+        var href = $(this).attr("href");
+        //alert(href);
+        var queryString = href.slice(href.indexOf('?')+1);
+        var arr = queryString.split('&');
+        //alert(arr);
+        var id = arr[2].split('=');
+        //alert(id);
+        id = id[1];
+
+        $.ajax({
+            url: '/admin/brokers/delete-state-from-agent-profile',
+            type: 'GET',
+            data: queryString,
+            cache: false,
+            success: function(result){
+              alert("The state and counties were successfully deleted!");
+              window.location.href="/admin/brokers/show-agents?id="+id;
+            },
+            error: function(){
+                alert("Error occurred during Ajax request.");
+            }
+        });
+    });
+
+
+    // Show / hide div
+    $("#edit-agent-show02").click(function(){
+
+        $("#edit-state-county02").toggle(500);
+    });
+
+    // Show / hide div
+    $("#edit-agent-show03").click(function(){
+
+        $("#edit-state-county03").toggle(500);
+    });
+
+    // Show / hide div
+    $("#edit-agent-show04").click(function(){
+
+        $("#edit-state-county04").toggle(500);
+    });
+
+    // Show / hide div
+    $("#edit-agent-show05").click(function(){
+
+        $("#edit-state-county05").toggle(500);
+    });
+
+    // Change html on button on form submission
+    $("#add-an-agent-form").submit(function(){
+        $("#submit-new-agent-button").html("Sending information, please wait . . .");
+    });
+
+
+    // To populate county drop-down for edit-agent.html.php
+    $("#edit-state02").change(function(){
+        var state02 = $(this).val();
+        console.log(state02);
+
+        $.ajax({
+            url: '/buy/get-counties',
+            type: 'POST',
+            data: { state: state02},
+            cache: false,
+            success: function(county_list){
+
+              // empty content
+              $("#edit_counties_serv02").empty();
+
+              // loop through county_list array
+              $.each(county_list, function(index, value){
+                  $('#edit-counties-serv02').append( $('<option>').text(value).attr('value', value) );
+              });
+
+              console.log(county_list);
+            },
+            error: function(){
+                alert("Error occurred during Ajax request.");
+            }
+        });
+    });
+
+
+    // To populate county drop-down for edit-agent.html.php
+    $("#edit-state03").change(function(){
+        var state03 = $(this).val();
+        console.log(state03);
+
+        $.ajax({
+            url: '/buy/get-counties',
+            type: 'POST',
+            data: { state: state03},
+            cache: false,
+            success: function(county_list){
+
+              // empty content
+              $("#edit-counties-serv03").empty();
+
+              // loop through county_list array
+              $.each(county_list, function(index, value){
+                  $('#edit-counties-serv03').append( $('<option>').text(value).attr('value', value) );
+              });
+
+              console.log(county_list);
+            },
+            error: function(){
+                alert("Error occurred during Ajax request.");
+            }
+        });
+    });
+
+
+    // get meta-description length
+    getLength("meta-description-content");
+
+    function getLength(id){
+      var string = document.getElementById(id).innerHTML;
+      //alert(string);
+      var string_length = string.length;
+      string_length = string_length - 602;
+
+      console.log(string_length);
+
+      document.getElementById("display-meta-description-length").innerHTML="Current character length is " + string_length + ". Recommended length is 150 - 160 characters (includes spaces).";
+    };
+
+
+});
+</script>
+{% endblock %}

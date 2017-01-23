@@ -102,11 +102,17 @@ class Register extends \Core\Controller
             if($result)
             {
               // define message
-              $message = "You have successfully registered! Please check your
-                          email for our verification email.";
+              $success_registration1 = 'You have successfully registered!';
+
+              $success_registration2 = "Please check your email to verify that
+                you are not a robot. If you do not receive an email from
+                noreply@americanbiztrader.com in the next few minutes, please
+                check your spam folder and white-list americanbiztrader.com.";
 
               View::renderTemplate('Success/index.html', [
-                  'message' => $message
+                  'success_registration'  => 'true',
+                  'success_registration1' => $success_registration1,
+                  'success_registration2' => $success_registration2
               ]);
             }
             else
@@ -156,11 +162,12 @@ class Register extends \Core\Controller
         if($result)
         {
             // define message
-            $message = "Congratulations! Your account has been activated. You can now login.";
+            $acct_activated1 = "Congratulations! Your account has been activated.";
 
             // show success message
             View::renderTemplate('Success/index.html', [
-                'message' => $message
+                'acct_activated1'   => $acct_activated1,
+                'acct_activated' => 'true'
             ]);
         }
         else
