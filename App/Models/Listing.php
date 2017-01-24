@@ -512,6 +512,43 @@ class Listing extends \Core\Model
 
 
 
+    public static function getListingDetailsForAdmin($listing_id)
+    {
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            $sql = "SELECT * FROM listing
+                    INNER JOIN listing_financial
+                    ON listing.listing_id = listing_financial.listing_id
+                    LEFT JOIN listing_images
+                    ON listing.listing_id = listing_images.listing_id
+                    WHERE listing.listing_id = :listing_id";
+
+            $stmt = $db->prepare($sql);
+            $parameters = [
+                ':listing_id' => $listing_id
+            ];
+            $stmt->execute($parameters);
+
+            // store listing details in object
+            $listing = $stmt->fetch(PDO::FETCH_OBJ);
+
+            // return object to controller
+            return $listing;
+        }
+        catch (PDOException $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
+    }
+
+
+
+
+
 
     public static function getAllAgentListings($listing_agent_id, $limit)
     {

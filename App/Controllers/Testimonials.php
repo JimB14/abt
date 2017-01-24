@@ -44,7 +44,8 @@ class Testimonials extends \Core\Controller
         $content = Testimonial::getAllTestimonials();
 
         View::renderTemplate('Testimonials/index.html', [
-            'testimonials' => $content
+            'testimonials'      => $content,
+            'testimonialsindex' => 'active'
         ]);
     }
 

@@ -19,7 +19,8 @@ class Sell extends \Core\Controller
         // exit();
 
         View::renderTemplate('Sell/index.html', [
-            'listing' => $listing
+            'listing'   => $listing,
+            'sellindex' => 'active'
         ]);
     }
 }

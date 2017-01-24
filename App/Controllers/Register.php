@@ -35,7 +35,9 @@ class Register extends \Core\Controller
 
     public function indexAction()
     {
-        View::renderTemplate('Register/index.html', []);
+        View::renderTemplate('Register/index.html', [
+            'registerindex' => 'active'
+        ]);
     }
 
 

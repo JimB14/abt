@@ -55,9 +55,10 @@ class Experts extends \Core\Controller
         $pagetitle = "Featured Experts";
 
         View::renderTemplate('Experts/index.html', [
-            'states'      => $states,
-            'agents'      => $agents,
-            'pagetitle'   => $pagetitle
+            'states'        => $states,
+            'agents'        => $agents,
+            'pagetitle'     => $pagetitle,
+            'expertsindex'  => 'active'
         ]);
     }
 

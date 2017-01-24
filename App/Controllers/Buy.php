@@ -359,7 +359,10 @@ class Buy extends \Core\Controller
     }
 
 
-
+    /**
+     * [viewListingDetailsAction description]
+     * @return [type] [description]
+     */
     public function viewListingDetailsAction()
     {
         // assign id to variable
@@ -380,11 +383,10 @@ class Buy extends \Core\Controller
         // exit();
 
         // get listing details from Listing model
-        $listing = Listing::getListingDetails($listing_id);
+        $listing = Listing::getListingDetailsForAdmin($listing_id);
 
         // assign img01 to variable
         $image = $listing->img01;
-
 
         // Assign image path to variable
         $image_path = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/uploaded_business_photos/';
@@ -463,15 +465,15 @@ class Buy extends \Core\Controller
 
         // display results in view
         View::renderTemplate('Buy/listing-details.html', [
-            'listing'                   => $listing,
-            'broker_listings'           => $broker_listings,
-            'broker'                    => $broker,
-            'agent'                     => $agent,
-            'agent_listings'            => $agent_listings,
-            'agent_id'                  => $agent_id,
-            'img_width'                 => $img01_width,
-            'agent_realty_listings'     => $agent_realty_listings,
-            'broker_realty_listings'   => $broker_realty_listings
+            'listing'                 => $listing,
+            'broker_listings'         => $broker_listings,
+            'broker'                  => $broker,
+            'agent'                   => $agent,
+            'agent_listings'          => $agent_listings,
+            'agent_id'                => $agent_id,
+            'img_width'               => $img01_width,
+            'agent_realty_listings'   => $agent_realty_listings,
+            'broker_realty_listings'  => $broker_realty_listings
         ]);
     }
 

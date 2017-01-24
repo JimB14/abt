@@ -103,7 +103,7 @@ class Realty extends \Core\Controller
         // exit();
 
         // get listing & agent details from Realtylisting model
-        $listing = Realtylisting::getRealEstateListing($id);
+        $listing = Realtylisting::getRealEstateListingForAdmin($id);
 
         // assign img01 to variable
         $image = $listing->img01;

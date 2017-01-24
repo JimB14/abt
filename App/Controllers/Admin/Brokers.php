@@ -1373,7 +1373,7 @@ class Brokers extends \Core\Controller
         $broker_id = (isset($_REQUEST['broker_id'])) ? filter_var($_REQUEST['broker_id'], FILTER_SANITIZE_STRING) : '';
 
         // get listing data
-        $listing = Listing::getListingDetails($listing_id);
+        $listing = Listing::getListingDetailsForAdmin($listing_id);
 
         // test
         // echo "<pre>";

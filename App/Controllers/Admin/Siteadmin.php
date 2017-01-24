@@ -747,7 +747,7 @@ class Siteadmin extends \Core\Controller
         $brokers = Broker::getBrokers();
 
         // get listing data
-        $listing = Listing::getListingDetails($listing_id);
+        $listing = Listing::getListingDetailsForAdmin($listing_id);
 
         // test
         // echo "<pre>";

@@ -22,18 +22,18 @@
                 <div class="collapse navbar-collapse" id="myNavbar">
 
                     <ul class="nav navbar-nav">
-                        <li class=""><a href="/buy-a-business">Buy</a></li>
-                        <li class=""><a href="/sell-a-business">Sell</a></li>
-                        <li class=""><a href="/buy-lease-commercial-real-estate">Real Estate</a></li>
-                        <li class=""><a href="/find-a-business-expert">Experts</a></li>
-                        <li><a href="/testimonials">Testimonials</a></li>
+                        <li class="{% if buyindex == 'active' %}active-menu-selection{% endif %}"><a href="/buy-a-business">Buy</a></li>
+                        <li class="{% if sellindex == 'active' %}active-menu-selection{% endif %}"><a href="/sell-a-business">Sell</a></li>
+                        <li class="{% if realestateindex == 'active' %}active-menu-selection{% endif %}"><a href="/buy-lease-commercial-real-estate">Real Estate</a></li>
+                        <li class="{% if expertsindex == 'active' %}active-menu-selection{% endif %}"><a href="/find-a-business-expert">Experts</a></li>
+                        <li class="{% if testimonialsindex == 'active' %}active-menu-selection{% endif %}"><a href="/testimonials">Testimonials</a></li>
                         <!--<li class=""><a href="/contact">Contact</a></li>-->
                         {% if session.user %}
                         <li><a href="/testimonials/add-testimonial">Add testimonial</a></li>
                         <li><a><span style="color:#ff0000;">Welcome {{ session.full_name }}!</span></a></li>
                         {% endif %}
                         {% if session.user == false %}
-                        <li class=""><a href="/register">Register</a></li>
+                        <li class="{% if registerindex == 'active' %}active-menu-selection{% endif %}"><a href="/register">Register</a></li>
                         {% endif %}
                     </ul>
 

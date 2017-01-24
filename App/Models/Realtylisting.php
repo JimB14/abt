@@ -1718,6 +1718,44 @@ class Realtylisting extends \Core\Model
             $db = static::getDB();
 
             $sql = "SELECT * FROM realty_listings
+                    WHERE id = :id
+                    AND display = 1";
+
+            $stmt = $db->prepare($sql);
+            $parameters = [
+                ':id' => $id
+            ];
+            $stmt->execute($parameters);
+
+            // store listing details in object
+            $listing = $stmt->fetch(PDO::FETCH_OBJ);
+
+            // return object to controller
+            return $listing;
+        }
+        catch (PDOException $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
+    }
+
+
+    /**
+     * get listing details by ID
+     *
+     * @param  Int $id The listing ID
+     *
+     * @return Object     The listing data
+     */
+    public static function getRealEstateListingForAdmin($id)
+    {
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            $sql = "SELECT * FROM realty_listings
                     WHERE id = :id";
 
             $stmt = $db->prepare($sql);
