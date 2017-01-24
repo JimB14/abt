@@ -106,6 +106,16 @@ use \App\Models\BrokerAgent;
             // echo $_SESSION['superUser'] . "<br>";
             // exit();
 
+            // get broker data
+            $broker = Broker::getBrokerByUserId($user->id);
+
+            if($broker)
+            {
+                // send login notification email to `brokers`.`broker_email`
+                $result = Mail::loginNotification($broker, $user);
+
+            }
+
             header("Location: /");
             exit();
         }
@@ -156,6 +166,16 @@ use \App\Models\BrokerAgent;
             // echo $_SESSION['full_name'] . "<br>";
             // exit();
 
+            // get broker data
+            $broker = Broker::getBrokerByUserId($user->id);
+
+            if($broker)
+            {
+                // send login notification email to `brokers`.`broker_email`
+                $result = Mail::loginNotification($broker, $user);
+
+            }
+
             header("Location: /");
             exit();
         }
@@ -175,13 +195,10 @@ use \App\Models\BrokerAgent;
         }
         elseif ( ($user) && ($user->first_login == 1 && $user->current == 0) )
         {
-            // get states for drop-down
-            //$states = State::getStates();
 
             // send for payment; pass action for new subscription
             View::renderTemplate('Paypal/index.html', [
                 'user'              => $user,
-                // 'states'            => $states,
                 'new_subscription'  => 'true',
                 'pagetitle'         => 'Subscribe',
                 'action'            => '/subscribe/process-payment?id='.$user->id

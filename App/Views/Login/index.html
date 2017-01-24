@@ -17,7 +17,9 @@
         <div class="col-md-8">
 
               {% if session.loginerror %}
+              <div class="col-sm-offset-3 col-sm-9">
                 {% include 'Error/errormessage.html' %}
+              </div>
               {% endif %}
 
               <form name="loginform" id="loginform" action="login/login-user"

@@ -3,6 +3,9 @@
 namespace App\Controllers;
 
 use \Core\View;
+use \App\Models\Broker;
+use \App\Mail;
+use \App\Models\User;
 
 
 /**
@@ -22,6 +25,20 @@ class Logout extends \Core\Controller
         }
         else
         {
+
+            // get broker data
+            $broker = Broker::getBrokerByUserId($_SESSION['user_id']);
+
+            // get user data
+            $user = User::getUser($_SESSION['user_id']);
+
+            if($broker)
+            {
+                // send login notification email to `brokers`.`broker_email`
+                $result = Mail::LogoutNotification($broker, $user);
+
+            }
+
             unset($_SESSION['user']);
             unset($_SESSION['loggedIn']);
             unset($_SESSION['user_id']);

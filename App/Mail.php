@@ -668,7 +668,7 @@ class Mail
         $mail->Subject = 'Visitor message from ABT';
         $mail->Body = '<h2 style="color:#0000FF;">Message from American Biz Trader</h2>'
                     . '<h3>To: ' . $listing_inquiry['company_name'].':</h3>'
-                    . '</p>A website visitor sent you a message!</p>'
+                    . '<p>A website visitor sent you a message!</p>'
                     . '<h3>Prospect info</h3>'
                     . '<p>Name: ' . $listing_inquiry['first_name'] . ' ' . $listing_inquiry['last_name'] . '</p>'
                     . '<p>Telephone: ' . $listing_inquiry['telephone'] . '</p>'
@@ -754,7 +754,7 @@ class Mail
         $mail->Body = '<h2 style="color:#0000FF;">Message from American Biz Trader</h2>'
                     . '<h3>To: ' . $listing_inquiry['company_name'] . '</h3>'
                     . '<h3>For: ' . $listing_inquiry['agent_first_name'] . ' ' . $listing_inquiry['agent_last_name'] . '</h3>'
-                    . '</p>A website visitor sent you a message!</p>'
+                    . '<p>A website visitor sent you a message!</p>'
                     . '<h3>Prospect info</h3>'
                     . '<p>Name: ' . $listing_inquiry['first_name'] . ' ' . $listing_inquiry['last_name'] . '</p>'
                     . '<p>Telephone: ' . $listing_inquiry['telephone'] . '</p>'
@@ -777,4 +777,169 @@ class Mail
            echo $mail->ErrorInfo;
         }
     }
+
+
+    /**
+     * Sends login notification email to `brokers`.`broker_email`
+     *
+     * @param  Object   $broker   The broker
+     * @param  Object   $user     The user
+     *
+     * @return boolean
+     */
+    public static function loginNotification($broker, $user)
+    {
+        // test
+        // echo "Connected to loginNotification() method in Mail Controller!<br><br>";
+        // echo '<pre>';
+        // echo $broker;
+        // echo '</pre>';
+        // exit();
+
+        /**
+         * create instance of PHPMailer object
+         */
+        $mail = new \PHPMailer(); // backslash required if class in root namespace
+
+        // settings
+        $mail->isSMTP();
+        $mail->Host = Config::SMTP_HOST;
+        $mail->Port = Config::SMTP_PORT; // not requied for server to server mail
+        $mail->SMTPAuth = true;
+        $mail->Username = Config::SMTP_USER;
+        $mail->Password = Config::SMTP_PASSWORD;
+        $mail->SMTPSecure = 'tls'; // not required for server to server mail
+        $mail->CharSet = 'UTF-8';
+
+        /**
+         * solution
+         * @https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting
+         */
+        $mail->SMTPOptions = array(
+            'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            )
+        );
+
+        /**
+         * Send email
+         */
+        $mail->setFrom('noreplyh@americanbiztrader.com', 'AmericanBizTrader');
+        $mail->addAddress($broker->broker_email);
+        //$mail->addAddress('jim.burns14@gmail.com');
+        //$mail->addCC('dave.didion@americangymtrader.com');
+        $mail->addBCC('sales@americanbiztrader.com');
+        $mail->addBCC('jim.burns14@gmail.com');
+        $mail->addBCC('dave.didion@americangymtrader.com');
+
+        $mail->isHTML(true);
+
+        // Subject & body
+        $mail->Subject = 'Log In';
+        $mail->Body = '<h2 style="color:#0000FF;">Message from American Biz Trader</h2>'
+                    . '<h3>To: ' . $broker->first_name . ' ' . $broker->last_name . ', ' . $broker->company_name . '</h3>'
+                    . '<h3>Log In Notification</h3>'
+                    . '<p>Authorized user <strong><q>' . $user->first_name . ' ' . $user->last_name . '</q></strong> just logged in.</p>'
+                    . '<h3 style="color:#0000ff;font-style:italic;">Thank you for using AmericanBizTrader.com!</h3>'
+                    . '<p>end of message</p>';
+
+        // send mail & return $result to controller
+        if($mail->send())
+        {
+            $result = true;
+
+            return $result;
+        }
+
+        // if mail fails display error message
+        if(!$mail->send())
+        {
+           echo $mail->ErrorInfo;
+        }
+    }
+
+
+    /**
+     * Sends logout notification email to `brokers`.`broker_email`
+     *
+     * @param  Object   $broker   The broker
+     * @param  Object   $user     The user
+     *
+     * @return boolean
+     */
+    public static function logoutNotification($broker, $user)
+    {
+        // test
+        // echo "Connected to logoutNotification() method in Mail Controller!<br><br>";
+        // echo '<pre>';
+        // echo $broker;
+        // echo '</pre>';
+        // exit();
+
+        /**
+         * create instance of PHPMailer object
+         */
+        $mail = new \PHPMailer(); // backslash required if class in root namespace
+
+        // settings
+        $mail->isSMTP();
+        $mail->Host = Config::SMTP_HOST;
+        $mail->Port = Config::SMTP_PORT; // not requied for server to server mail
+        $mail->SMTPAuth = true;
+        $mail->Username = Config::SMTP_USER;
+        $mail->Password = Config::SMTP_PASSWORD;
+        $mail->SMTPSecure = 'tls'; // not required for server to server mail
+        $mail->CharSet = 'UTF-8';
+
+        /**
+         * solution
+         * @https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting
+         */
+        $mail->SMTPOptions = array(
+            'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            )
+        );
+
+        /**
+         * Send email
+         */
+        $mail->setFrom('noreplyh@americanbiztrader.com', 'AmericanBizTrader');
+        $mail->addAddress($broker->broker_email);
+        //$mail->addAddress('jim.burns14@gmail.com');
+        //$mail->addCC('dave.didion@americangymtrader.com');
+        $mail->addBCC('sales@americanbiztrader.com');
+        $mail->addBCC('jim.burns14@gmail.com');
+        $mail->addBCC('dave.didion@americangymtrader.com');
+
+        $mail->isHTML(true);
+
+        // Subject & body
+        $mail->Subject = 'Log Out';
+        $mail->Body = '<h2 style="color:#0000FF;">Message from American Biz Trader</h2>'
+                    . '<h3>To: ' . $broker->first_name . ' ' . $broker->last_name . ', ' . $broker->company_name . '</h3>'
+                    . '<h3>Log Out Notification</h3>'
+                    . '<p>Authorized user <strong><q>'. $user->first_name . ' ' . $user->last_name . '</strong></q> just logged out.</p>'
+                    . '<h3 style="color:#0000ff;font-style:italic;">Thank you for using AmericanBizTrader.com!</h3>'
+                    . '<p>end of message</p>';
+
+        // send mail & return $result to controller
+        if($mail->send())
+        {
+            $result = true;
+
+            return $result;
+        }
+
+        // if mail fails display error message
+        if(!$mail->send())
+        {
+           echo $mail->ErrorInfo;
+        }
+    }
+
 }

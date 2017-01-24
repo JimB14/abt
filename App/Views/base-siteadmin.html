@@ -76,7 +76,7 @@
 
           {% if broker %}
             <ul class="sidebar-nav" style="margin-bottom: 20px; margin-top: 5px">
-                <li style="font-size: 130%; color: #fff;">{{ broker.company_name }}</li>
+                <li style="font-size: 130%; color: #ff0000;">{% if broker.company_name|length > 18 %}{{ broker.company_name|slice(0, 19) }}...{% else %}{{ broker.company_name }}{% endif %}</li>
 
                 <li>
                     <a href="/admin/siteadmin/my-account?id={{ broker.broker_id }}">
@@ -175,6 +175,9 @@
                    Site Administrator: {% if session.user %} {{ session.full_name }} {% endif %}
                  </span>
                 <span style="padding-left: 15px;"><script>var utc = new Date().toJSON().slice(0,10);document.write(utc);</script></span>
+                {% if broker.company_name %}
+                  <span style="padding-left: 35px;color:#ff0000;font-size: 135%;">Client:  {{ broker.company_name }}</span>
+                {% endif %}
             </p>
         </div>
     </div><!--  // .row  -->
