@@ -784,6 +784,80 @@ class Listing extends \Core\Model
 
 
 
+    public static function getBusinessListingsForAdmin($broker_id, $limit)
+    {
+        if($limit != null)
+        {
+          $limit = 'LIMIT  ' . $limit;
+        }
+
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            $sql = "SELECT listing.listing_id, listing.display, listing.broker_id,
+                    listing.listing_agent_id, listing.category_id, listing.subcategory_id,
+                    listing.clients_id, listing.ad_title, listing.listing_status, listing.business_name,
+                    listing.year_established, listing.number_of_employees, listing.country,
+                    listing.county, listing.hide_county, listing.city, listing.hide_city,
+                    listing.state, listing.hide_zip, listing.zip, listing.biz_description, listing.square_feet,
+                    listing.reason_selling, listing.growth_opportunities, listing.support,
+                    listing.competition, listing.keywords, listing.biz_website,
+                    listing.create_date, listing.last_update,
+                    listing_financial.id, listing_financial.listing_id as listing_financial_id,
+                    listing_financial.asking_price, listing_financial.gross_income,
+                    listing_financial.cash_flow, listing_financial.ebitda,
+                    listing_financial.inventory_included, listing_financial.inventory_value,
+                    listing_financial.ffe_included, listing_financial.ffe_value,
+                    listing_financial.real_estate_included, listing_financial.real_estate_for_sale, listing_financial.real_estate_value,
+                    listing_financial.real_estate_description, listing_financial.seller_financing_available,
+                    listing_financial.seller_financing_description,listing_financial.franchise,
+                    listing_financial.home_based,listing_financial.relocatable,
+                    listing_financial.lender_prequalified,
+                    listing_images.id as listing_images_id, listing_images.listing_id as listing_images_listing_id,
+                    listing_images.broker_id as listing_images_broker_id, listing_images.img01,
+                    listing_images.img02, listing_images.img03,
+                    listing_images.img04, listing_images.img05, listing_images.img06,
+                    broker_agents.id as agent_id, broker_agents.first_name as agent_first_name,
+                    broker_agents.last_name as  agent_last_name, broker_agents.agent_email,
+                    broker_agents.profile_photo,
+                    brokers.broker_id, brokers.company_name
+                    FROM listing
+                    LEFT JOIN listing_financial
+                    ON listing.listing_id = listing_financial.listing_id
+                    LEFT JOIN listing_images
+                    ON listing.listing_id = listing_images.listing_id
+                    LEFT JOIN broker_agents
+                    ON broker_agents.id = listing.listing_agent_id
+                    LEFT JOIN brokers
+                    ON brokers.broker_id = listing.broker_id
+                    WHERE listing.broker_id = :broker_id
+                    ORDER BY create_date DESC
+                    $limit";
+
+            $stmt = $db->prepare($sql);
+            $parameters = [
+                ':broker_id' => $broker_id
+            ];
+            $stmt->execute($parameters);
+
+            // store listing details in object
+            $listings = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+            // return object to controller
+            return $listings;
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
+    }
+
+
+
+
     public static function getListingsById($broker_id)
     {
         try

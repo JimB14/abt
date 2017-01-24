@@ -665,7 +665,7 @@ class Siteadmin extends \Core\Controller
         $brokers = Broker::getBrokers();
 
         // get listings
-        $listings = Listing::getListings($broker_id, $limit = null);
+        $listings = Listing::getBusinessListingsForAdmin($broker_id, $limit = null);
 
         // test
         // echo $_SESSION['broker_id'];

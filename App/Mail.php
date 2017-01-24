@@ -827,7 +827,7 @@ class Mail
          * Send email
          */
         $mail->setFrom('noreplyh@americanbiztrader.com', 'AmericanBizTrader');
-        $mail->addAddress($broker->broker_email);
+        //$mail->addAddress($broker->broker_email);
         //$mail->addAddress('jim.burns14@gmail.com');
         //$mail->addCC('dave.didion@americangymtrader.com');
         $mail->addBCC('sales@americanbiztrader.com');
@@ -909,7 +909,7 @@ class Mail
          * Send email
          */
         $mail->setFrom('noreplyh@americanbiztrader.com', 'AmericanBizTrader');
-        $mail->addAddress($broker->broker_email);
+        //$mail->addAddress($broker->broker_email);
         //$mail->addAddress('jim.burns14@gmail.com');
         //$mail->addCC('dave.didion@americangymtrader.com');
         $mail->addBCC('sales@americanbiztrader.com');

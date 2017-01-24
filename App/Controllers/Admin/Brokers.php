@@ -627,7 +627,7 @@ class Brokers extends \Core\Controller
         $broker_id = (isset($_REQUEST['id'])) ? filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING) : '';
 
         // get listings
-        $listings = Listing::getListings($broker_id, $limit = null);
+        $listings = Listing::getBusinessListingsForAdmin($broker_id, $limit = null);
 
         // test
         // echo $_SESSION['broker_id'];
