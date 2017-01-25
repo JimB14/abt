@@ -62,7 +62,7 @@ class Mail
          * Send an email
          */
         // "From" and "To"
-        $mail->setFrom('noreply@americanbiztrader.site', 'ABT'); // gmail
+        $mail->setFrom('noreply@americanbiztrader.com', 'ABT'); // gmail
         // overrides this setting with SMTP_USER
         $mail->addAddress($email, $first_name);
 
@@ -99,7 +99,7 @@ class Mail
                     . '<h3>American Biz Trader</h3>'
                     . '<p>Please click the link below to verify your account.</p>'
                     . '<p>If you did not register or are receiving this in error, please delete. </p>'
-                    . '<p><a href="http://americanbiztrader.site/register/verify-account?token='
+                    . '<p><a href="http://americanbiztrader.com/register/verify-account?token='
                     . $token . '&amp;user_id=' . $user_id . '">Click here to activate your account.</a></p>';
 
         // embed image in email
@@ -167,7 +167,7 @@ class Mail
         /**
          * Send email
          */
-        $mail->setFrom('contact@americanbiztrader.com', $first_name . ' ' . $last_name);
+        $mail->setFrom('sales@americanbiztrader.com', $first_name . ' ' . $last_name);
         $mail->addAddress('dave.didion@americangymtrader.com', 'ABT');
         $mail->addCC('sales@americanbiztrader.com');
         // $mail->addCC('jim.burns@webmediapartners.com');
@@ -258,7 +258,7 @@ class Mail
          */
         // "From" and "To"
         $mail->setFrom('sales@americanbiztrader.com', 'AmericanBizTrader');
-        $mail->addAddress('sales@americanbiztrader.com', 'Dave');
+        //$mail->addAddress('sales@americanbiztrader.com', 'Dave');
         //$mail->addAddress('dave.didion@americangymtrader.com', 'Dave');
         //$mail->addCC('wesleyajohnston@gmail.com');
         $mail->addBCC('jim.burns14@gmail.com');
@@ -290,7 +290,7 @@ class Mail
                     . '<li>A thank you email will be sent to the testimonial author&#39;s email address</li>'
                     . '<li>A copy of this &quot;thank you&quot; email will be sent to you (website owner or designee)</li>'
                     . '</ol>'
-                    . '<p><a href="http://americanbiztrader.site/testimonials/publishTestimonial?token='
+                    . '<p><a href="http://americanbiztrader.com/testimonials/publishTestimonial?token='
                     . $token . '&amp;id=' . $id . '&amp;user_id=' . $user_id . '">To publish this testimony, click here.</a></p>'
                     . '<p>If you clicked in error, please contact your web developer.</p>';
 
@@ -380,7 +380,7 @@ class Mail
                     . 'American Biz Trader'
                     . '</p>'
                     . '<p>'
-                    . '<a href="http://americanbiztrader.site/testimonials">Click here '
+                    . '<a href="http://americanbiztrader.com/testimonials">Click here '
                     . 'to see your testimonial on our website.</a>'
                     . '</p>';
 
@@ -486,7 +486,7 @@ class Mail
                     . '<h3>American Biz Trader</h3>'
                     . '<p>Temporary password: ' .$tmp_pass. '</p>'
                     . '<p>Please log in with this temporary password and set a permanent password in &quot;My Account&quot;</p>'
-                    . '<p><a href="http://americanbiztrader.site/login/temp-pass-login">Click here to login with temporary password</a></p>'
+                    . '<p><a href="http://americanbiztrader.com/login/temp-pass-login">Click here to login with temporary password</a></p>'
                     . '<p>If you did not request this change, please delete this email. </p>';
 
         // embed image in email

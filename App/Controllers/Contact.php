@@ -43,6 +43,14 @@ class Contact extends \Core\Controller
       {
           $message = 'Please contact me about advertising on American Biz Trader';
       }
+      else if($id === 'help-posting')
+      {
+          $message = 'Please contact me regarding data entry';
+      }
+      else if($id === 'feedback')
+      {
+          $message = "Here's my feedback:";
+      }
       else
       {
           $message = '';

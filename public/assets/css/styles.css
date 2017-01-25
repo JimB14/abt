@@ -1372,6 +1372,24 @@ table.display-broker-agents{
     opacity: .25;
     z-index: -1;
 }
+
+.dashboard-tips-wrapper {
+  margin-left: -10px;
+  margin-top: 5px;
+  padding: 25px;
+  width: 70%;
+  background-color: transparent;
+  height: 100%;
+  color: #000;
+  opacity: .75;
+}
+
+.dashboard-tips-wrapper li {
+  margin-bottom: .5em;
+}
+
+
+
 /* view/base-admin.html */
 .input-group #clients_id input {
   width: 100px;
