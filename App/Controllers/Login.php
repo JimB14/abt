@@ -106,7 +106,7 @@ use \App\Models\BrokerAgent;
             // echo $_SESSION['superUser'] . "<br>";
             // exit();
 
-            // get broker data
+            // get broker data (empty array returned for site admin users)
             $broker = Broker::getBrokerByUserId($user->id);
 
             if($broker)
@@ -131,7 +131,6 @@ use \App\Models\BrokerAgent;
           // get count of agent records for broker by broker ID
           $agent_count = BrokerAgent::getCountOfAgents($broker_id);
         }
-
 
         // // test
         // echo '<pre>';
@@ -169,15 +168,30 @@ use \App\Models\BrokerAgent;
             // get broker data
             $broker = Broker::getBrokerByUserId($user->id);
 
+            // test
+            // echo '<pre>';
+            // print_r($broker);
+            // echo "</pre>";
+            // exit();
+
             if($broker)
             {
                 // send login notification email to `brokers`.`broker_email`
                 $result = Mail::loginNotification($broker, $user);
 
+                if($result)
+                {
+                    echo '<script>';
+                    echo 'window.location.href="/"';
+                    echo '</script>';
+                    exit();
+                }
             }
-
-            header("Location: /");
-            exit();
+            else
+            {
+                echo "Error retrieving broker data.";
+                exit();
+            }
         }
 
         // check if user has ever logged in and is current
@@ -241,13 +255,9 @@ use \App\Models\BrokerAgent;
         }
         elseif ( ($user) && ($user->first_login == 0 && $user->current == 0) )
         {
-            // get states for drop-down
-            //$states = State::getStates();
-
             // send for payment
             View::renderTemplate('Paypal/index.html', [
                 'user'              => $user,
-                // 'states'            => $states,
                 'new_subscription'  => 'true'
             ]);
             exit();

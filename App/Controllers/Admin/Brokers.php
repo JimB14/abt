@@ -122,7 +122,6 @@ class Brokers extends \Core\Controller
             $extra_agents = '';
         }
 
-
         // get paypal_log data (LIMIT 1)
         $data = Paypallog::getTransactionData($user->id);
 
@@ -141,6 +140,24 @@ class Brokers extends \Core\Controller
         else
         {
             echo "Error occurred while fetching profileID.";
+            exit();
+        }
+
+        if($profileid == 'courtesy')
+        {
+            echo "<h3>";
+            echo 'This is a Courtesy account, compliments of American Biz
+                  Trader.';
+            echo '<br>';
+            echo 'No account information available.';
+            echo '<br><br>';
+            echo '<button onclick="goBack()">';
+            echo '<< Go back';
+            echo '</button>';
+            echo '<script>';
+            echo 'function goBack()';
+            echo '{window.history.go(-1);}';
+            echo '</script>';
             exit();
         }
 

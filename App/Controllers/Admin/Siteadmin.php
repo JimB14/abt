@@ -132,6 +132,7 @@ class Siteadmin extends \Core\Controller
         if($broker_id == '')
         {
             header("Location: /admin/siteadmin/index?user_id={{ session.user_id }}");
+            exit();
         }
 
         // get brokers for drop-down
@@ -140,11 +141,11 @@ class Siteadmin extends \Core\Controller
         // get broker data
         $broker = Broker::getBrokerDetails($broker_id);
 
-        // get company type (broker type = business(1), realty(2), both(3))
-        $broker_type = Broker::getBrokerCompanyType($broker_id);
+        // store user_id in variable
+        $user_id = $broker->user_id;
 
         // get user data
-        $user = User::getUser($_SESSION['user_id']);
+        $user = User::getUser($user_id);
 
         // get number of agents
         $agent_count = BrokerAgent::getCountOfAgents($broker_id);
@@ -181,9 +182,29 @@ class Siteadmin extends \Core\Controller
             exit();
         }
 
+        if($profileid == 'courtesy')
+        {
+            echo "<h3>";
+            echo 'This is a Courtesy account, compliments of American Biz
+                  Trader.';
+            echo '<br>';
+            echo 'No account information available.';
+            echo '<br><br>';
+            echo '<button onclick="goBack()">';
+            echo '<< Go back';
+            echo '</button>';
+            echo '<script>';
+            echo 'function goBack()';
+            echo '{window.history.go(-1);}';
+            echo '</script>';
+            exit();
+        }
+
+
         // get paypal profile data from payflow gateway
         $ppProfile = Paypal::profileStatusInquiry($profileid);
 
+        // test
         // echo '<pre>';
         // print_r($ppProfile);
         // echo '</pre>';
@@ -229,7 +250,6 @@ class Siteadmin extends \Core\Controller
                 'broker'        => $broker,
                 'user'          => $user,
                 'agent_count'   => $agent_count,
-                'broker_type'   => $broker_type,
                 'ppProfile'     => $ppProfile,
                 'last_four'     => $last_four,
                 'creation_date' => $creation_date,

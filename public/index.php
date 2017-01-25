@@ -74,5 +74,7 @@ $router->add('{controller}/{action}');
 $router->add('{controller}/{id:\d+}/{action}'); // 'id' can be anything
 $router->add('{controller}/{action}/{id:\d+}'); // controller, action and id can be in any order
 
+$router->add('{controller}/{action}/{state}/{id:\d+}');
+
 // call dispatch method of Router class
 $router->dispatch($_SERVER['QUERY_STRING']);

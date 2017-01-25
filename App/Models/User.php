@@ -226,7 +226,7 @@ class User extends \Core\Model
 
 
     /**
-     * gets User data by broker ID
+     * gets User data by brokers ID
      *
      * @param  integer  $broker_id   The broker's ID
      * @return Object               The user data

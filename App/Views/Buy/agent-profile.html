@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Professional profile
+    {{ agent.first_name }} {{ agent.last_name }}, {% if agent.type == 1 %}Business Broker{% elseif agent.type == 2 %}Commercial Real Estate Broker{% elseif agent.type == 3 %} Business & Commercial Real Estate Broker{% endif %}
 {% endblock %}
 
 {% block metadescription %}
@@ -16,7 +16,8 @@
 <div class="page-wrapper">
         <div class="row">
             <div class="col-md-12 p1 ptop30">
-                <h2 class="bold text-capitalize"><img src="/assets/images/uploaded_company_logos/{{ broker.company_logo }}" height="60" alt="company logo"> {{ broker.company_name }}</h2>
+                <p><img src="/assets/images/uploaded_company_logos/{{ broker.company_logo }}" height="60" alt="company logo"></p>
+                <h2 class="bold text-capitalize" style="margin-top: 0px;">{{ broker.company_name }}</h2>
             </div><!--  // .col-md-12  -->
         </div><!--  // .row  -->
 

@@ -413,12 +413,11 @@ class Buy extends \Core\Controller
         // store image width in variable
         $img01_width = $size[0];
 
-
         // test
         // echo "<pre>";
         // print_r($listing);
         // echo "</pre>";
-        //exit();
+        // exit();
 
         // get all broker listings from Listing model
         $broker_listings = Listing::getListings($broker_id, $limit = 10);
@@ -427,7 +426,7 @@ class Buy extends \Core\Controller
         // echo "<pre>";
         // print_r($broker_listings);
         // echo "</pre>";
-        //exit();
+        // exit();
 
         // get listing broker data from Broker model
         $broker = Broker::getBrokerDetails($broker_id);
@@ -436,7 +435,7 @@ class Buy extends \Core\Controller
         // echo "<pre>";
         // print_r($broker);
         // echo "</pre>";
-        //exit();
+        // exit();
 
         // get listing agent data from BrokerAgent model
         $agent = BrokerAgent::getAgent($agent_id);
@@ -445,7 +444,7 @@ class Buy extends \Core\Controller
         // echo "<pre>";
         // print_r($agent);
         // echo "</pre>";
-        //exit();
+        // exit();
 
         // get agent's listings from Listing model
         $agent_listings = Listing::getAllAgentListings($agent_id, $limit=10);

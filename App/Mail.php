@@ -811,6 +811,13 @@ class Mail
         $mail->SMTPSecure = 'tls'; // not required for server to server mail
         $mail->CharSet = 'UTF-8';
 
+
+        /**
+         * Enable SMTP debug messages
+         */
+        // $mail->SMTPDebug = 2;
+        // $mail->Debugoutput = 'html';
+
         /**
          * solution
          * @https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting
@@ -826,7 +833,7 @@ class Mail
         /**
          * Send email
          */
-        $mail->setFrom('noreplyh@americanbiztrader.com', 'AmericanBizTrader');
+        $mail->setFrom('noreply@americanbiztrader.com', 'AmericanBizTrader');
         //$mail->addAddress($broker->broker_email);
         //$mail->addAddress('jim.burns14@gmail.com');
         //$mail->addCC('dave.didion@americangymtrader.com');
@@ -908,7 +915,7 @@ class Mail
         /**
          * Send email
          */
-        $mail->setFrom('noreplyh@americanbiztrader.com', 'AmericanBizTrader');
+        $mail->setFrom('noreply@americanbiztrader.com', 'AmericanBizTrader');
         //$mail->addAddress($broker->broker_email);
         //$mail->addAddress('jim.burns14@gmail.com');
         //$mail->addCC('dave.didion@americangymtrader.com');
