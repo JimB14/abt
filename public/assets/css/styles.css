@@ -1330,12 +1330,20 @@ table.display-broker-agents{
 .testimonials-title-bg-box h3 {
   margin: 0px;
 }
+
  /* register-form */
  .help-block {
     display: block;
+    padding-left:5px;
     margin-top: 5px;
     margin-bottom: 10px;
-    color: #a1a1a1; /*#737373;*/
+    color: #ff1500; /*#a1a1a1; /*#737373;*/
+}
+.glyphicon-remove:before {
+  color: #ff1500;
+}
+.glyphicon-ok:before {
+    color: #006700;
 }
 
 /* Buy/index.html */
@@ -1369,7 +1377,7 @@ table.display-broker-agents{
     left: 0;
     min-width: 100%;
     min-height: 100%;
-    opacity: .25;
+    opacity: .1;
     z-index: -1;
 }
 
@@ -1381,7 +1389,7 @@ table.display-broker-agents{
   background-color: transparent;
   height: 100%;
   color: #000;
-  opacity: .75;
+  opacity: .8;
 }
 
 .dashboard-tips-wrapper li {

@@ -71,7 +71,8 @@ class Siteadmin extends \Core\Controller
             // render view & pass $broker object
             View::renderTemplate('Adminsite/index.html', [
                 'user'    => $user,
-                'brokers' => $brokers
+                'brokers' => $brokers,
+                'home'    => 'active'
             ]);
         }
     }
@@ -184,21 +185,19 @@ class Siteadmin extends \Core\Controller
 
         if($profileid == 'courtesy')
         {
-            echo "<h3>";
-            echo 'This is a Courtesy account, compliments of American Biz
-                  Trader.';
-            echo '<br>';
-            echo 'No account information available.';
-            echo '<br><br>';
-            echo '<button onclick="goBack()">';
-            echo '<< Go back';
-            echo '</button>';
-            echo '<script>';
-            echo 'function goBack()';
-            echo '{window.history.go(-1);}';
-            echo '</script>';
+          // render view
+          View::renderTemplate('Adminsite/Show/my-account.html', [
+              'brokers'       => $brokers,
+              'broker'        => $broker,
+              'user'          => $user,
+              'agent_count'   => $agent_count,
+              'extra_agents'  => $extra_agents,
+              'myaccount'     => 'active',
+              'courtesy'      => 'true'
+          ]);
             exit();
         }
+
 
 
         // get paypal profile data from payflow gateway
@@ -255,7 +254,8 @@ class Siteadmin extends \Core\Controller
                 'creation_date' => $creation_date,
                 'last_changed'  => $last_changed,
                 'next_payment'  => $next_payment,
-                'extra_agents'  => $extra_agents
+                'extra_agents'  => $extra_agents,
+                'myaccount'     => 'active',
             ]);
         }
         else
@@ -299,11 +299,12 @@ class Siteadmin extends \Core\Controller
 
         // render view & pass $broker object
         View::renderTemplate('Adminsite/Show/company-profile.html', [
-            'brokers'     => $brokers,
-            'broker'      => $broker,
-            'user'        => $user,
-            'states'      => $states,
-            'broker_type' => $broker_type
+            'brokers'         => $brokers,
+            'broker'          => $broker,
+            'user'            => $user,
+            'states'          => $states,
+            'broker_type'     => $broker_type,
+            'companyprofile'  => 'active'
         ]);
     }
 
@@ -338,11 +339,12 @@ class Siteadmin extends \Core\Controller
 
         // render view & pass $agents object
         View::renderTemplate('Adminsite/Show/agents.html', [
-            'brokers'     => $brokers,
-            'broker'      => $broker,
-            'agents'      => $agents,
-            'broker_id'   => $broker_id,
-            'broker_type' => $broker_type
+            'brokers'       => $brokers,
+            'broker'        => $broker,
+            'agents'        => $agents,
+            'broker_id'     => $broker_id,
+            'broker_type'   => $broker_type,
+            'manageagents'  => 'active'
         ]);
     }
 
@@ -631,7 +633,8 @@ class Siteadmin extends \Core\Controller
                 'states'              => $states,
                 'broker_company_name' => $broker_company_name,
                 'broker_id'           => $broker_id,
-                'broker_type'         => $broker_type
+                'broker_type'         => $broker_type,
+                'addnewlisting'       => 'active'
             ]);
         }
     }
@@ -702,11 +705,12 @@ class Siteadmin extends \Core\Controller
 
         // render view, pass $listings object
         View::renderTemplate('Adminsite/Show/listings.html', [
-            'brokers'     => $brokers,
-            'broker'      => $broker,
-            'listings'    => $listings,
-            'agents'      => $agents,
-            'broker_type' => $broker_type
+            'brokers'       => $brokers,
+            'broker'        => $broker,
+            'listings'      => $listings,
+            'agents'        => $agents,
+            'broker_type'   => $broker_type,
+            'showlistings'  => 'active'
         ]);
     }
 
@@ -1116,7 +1120,8 @@ class Siteadmin extends \Core\Controller
               'states'              => $states,
               'broker_company_name' => $broker_company_name,
               'broker_id'           => $broker_id,
-              'broker_type'         => $broker_type
+              'broker_type'         => $broker_type,
+              'addnewrealtylisting' => 'active'
               // 'for_sale_categories'   => $for_sale_categories,
               // 'for_lease_categories'  => $for_lease_categories
           ]);
@@ -1189,11 +1194,12 @@ class Siteadmin extends \Core\Controller
 
         // render view, pass $listings object
         View::renderTemplate('Adminsite/Show/realty-listings.html', [
-            'brokers'     => $brokers,
-            'broker'      => $broker,
-            'listings'    => $listings,
-            'agents'      => $agents,
-            'broker_type' => $broker_type
+            'brokers'               => $brokers,
+            'broker'                => $broker,
+            'listings'              => $listings,
+            'agents'                => $agents,
+            'broker_type'           => $broker_type,
+            'managerealtylistings'  => 'active'
         ]);
     }
 

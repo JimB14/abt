@@ -22,22 +22,25 @@
               your account. You must complete this form and submit it
               successfully to be able to post listings.
           </h5>
+
           {% if session.registererror %}
-            {% include 'Error/errormessage.html' %}
+            <div class="col-sm-offset-3 col-sm-9">
+              {% include 'Error/errormessage.html' %}
+            </div>
           {% endif %}
 
           <!--  Display results from ajax_processing/  -->
           <div id="message"></div>
 
           {% if success %}
-          <div class="alert alert-success alert-padding">{{ success }}</div>
+            <div class="alert alert-success alert-padding">{{ success }}</div>
           {% endif %}
 
           <form name="registrationform" id="registrationform" class="form-horizontal"
-                    action="register/register-new-user" method="post">
+              action="register/register-new-user" method="post">
 
               <div class="form-group has-feedback">
-                  <label for="email" class="col-sm-3 control-label">
+                  <label for="register_email" class="col-sm-3 control-label">
                     Email
                   </label>
                   <div class="col-sm-9">
@@ -81,12 +84,22 @@
               </div>
 
               <div class="form-group has-feedback">
+                  <label for="company" class="col-sm-3 control-label">
+                    Company
+                  </label>
+                  <div class="col-sm-9">
+                      <input type="text" class="form-control" name="company"
+                        id="company" placeholder="Company">
+                      <span class="glyphicon form-control-feedback" id="company1"></span>
+                  </div>
+              </div>
+
+              <div class="form-group has-feedback">
                   <label for="password" class="col-sm-3 control-label">
                     Password
                   </label>
                   <div class="col-sm-9">
-                      <input type="password" class="form-control" name="password"
-                        id="password" placeholder="Password">
+                      <input type="password" class="form-control" name="password" id="password" placeholder="Password">
                       <span class="glyphicon form-control-feedback" id="password1"></span>
                   </div>
               </div>
@@ -151,6 +164,7 @@ $(document).ready(function(){
         rules: {
             register_email: {
                 required: true,
+                minlength: 5,
                 email: true
             },
             verify_email: {
@@ -166,9 +180,12 @@ $(document).ready(function(){
                 maxlength: 30,
                 required: true
             },
-            passsword: {
+            company: {
+              required: true
+            },
+            password: {
                 minlength: 6,
-                maxlength: 10,
+                maxlength: 12,
                 required: true
             },
             verify_password: {
@@ -178,31 +195,35 @@ $(document).ready(function(){
         },
         messages: {
             register_email: {
-                required: "Please enter your email address",
-                email: "Please enter a valid email address"
+                required: "*Please enter your email address",
+                email: "*Please enter a valid email address",
+                minlength: "*Please enter an email address"
             },
             verify_email: {
-                equalTo: "Please enter the same email address"
+                equalTo: "*Please enter the same email address"
             },
             first_name: {
-                minlength: "Please enter at least 2 characters",
-                maxlength: "Please enter less than 20 characters",
-                required: "Please enter your first name"
+                minlength: "*Please enter at least 2 characters",
+                maxlength: "*Please enter less than 20 characters",
+                required: "*Please enter your first name"
             },
             last_name: {
-              minlength: "Please enter at least 2 characters",
-              maxlength: "Please enter less than 30 characters",
-              required: "Please enter your last name"
+              minlength: "*Please enter at least 2 characters",
+              maxlength: "*Please enter less than 30 characters",
+              required: "*Please enter your last name"
+            },
+            company: {
+                required: "*Please enter your company name"
             },
             password: {
-                minlength: "Please enter at least 6 characters",
-                maxlength: "Please enter up to 10 characters",
-                required: "Please enter a password",
+                minlength: "*Please enter at least 6 characters",
+                maxlength: "*Please enter up to 12 characters",
+                required: "*Please enter a password",
             },
             verify_password: {
-                equalTo: "Please enter the same password"
+                equalTo: "*Please enter the same password"
             },
-            agree: "Please accept our terms and conditions"
+            agree: "*Please accept our terms and conditions"
         },
         highlight: function(element) {
             var id_attr = "#" + $( element ).attr("id") + "1";
@@ -262,9 +283,9 @@ $(document).ready(function(){
     });
 
     // change button text on submit
-    $("#registrationform").submit(function(){
-        $("#registerBtn").text("Sending data. Please wait...");
-    });
+    // $("#registrationform").submit(function(){
+    //     $("#registerBtn").text("Sending data. Please wait...");
+    // });
 
 });
 </script>

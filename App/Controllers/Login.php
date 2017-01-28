@@ -47,6 +47,7 @@ use \App\Models\BrokerAgent;
        */
       public function indexAction()
       {
+          // display log in page
           View::renderTemplate('Login/index.html', []);
       }
 
@@ -68,6 +69,11 @@ use \App\Models\BrokerAgent;
         // echo $email . "<br>";
         // echo $password  . "<br>";
         // exit();
+
+        // get visitor IP Address
+        $user_ip_address = $this->getUserIp();
+
+        // echo $user_ip_address;
 
         // validate user & find if in database; store user data in $user object
         $user = User::validateLoginCredentials($email, $password);
@@ -153,6 +159,7 @@ use \App\Models\BrokerAgent;
             $_SESSION['user_id'] = $user->id;
             $_SESSION['access_level'] = $user->access_level;
             $_SESSION['full_name'] = $user->first_name . ' ' . $user->last_name;
+            $_SESSION['company'] = $user->company;
 
             // session timeout code in front-controller public/index.php
             $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
@@ -163,6 +170,7 @@ use \App\Models\BrokerAgent;
             // echo $_SESSION['user_id'] . "<br>";
             // echo $_SESSION['access_level'] . "<br>";
             // echo $_SESSION['full_name'] . "<br>";
+            // echo $_SESSION['company'] . "<br>";
             // exit();
 
             // get broker data
@@ -194,11 +202,17 @@ use \App\Models\BrokerAgent;
             }
         }
 
-        // check if user has ever logged in and is current
+        // user who has paid but never logged in = needs to register company
         if( ($user) && ($user->first_login == 1 && $user->current == 1) )
         {
             // get states for drop-down
             $states = State::getStates();
+
+            // test
+            // echo '<pre>';
+            // print_r($user);
+            // echo '</pre>';
+            // exit();
 
             // first time logging in (users.first_login === 1)
             View::renderTemplate('Register/new-user-registration.html', [
@@ -207,6 +221,7 @@ use \App\Models\BrokerAgent;
             ]);
             exit();
         }
+        // new susbscriber who has never logged in or paid
         elseif ( ($user) && ($user->first_login == 1 && $user->current == 0) )
         {
 
@@ -215,6 +230,7 @@ use \App\Models\BrokerAgent;
                 'user'              => $user,
                 'new_subscription'  => 'true',
                 'pagetitle'         => 'Subscribe',
+                'subscriptiononly'  => Config::SUBSCRIPTION,
                 'action'            => '/subscribe/process-payment?id='.$user->id
             ]);
             exit();
@@ -249,6 +265,7 @@ use \App\Models\BrokerAgent;
                 'agent_count'       => $agent_count,
                 'reactivation_rate' => $reactivation_rate,
                 'new_agent_cost'    => Config::SUBSCRIPTION,
+                'subscriptiononly'  => Config::SUBSCRIPTION,
                 'action'            => '/subscribe/process-reactivation?user_id='.$user->id
             ]);
             exit();
@@ -410,6 +427,33 @@ use \App\Models\BrokerAgent;
                 exit();
             }
         }
+    }
+
+
+    /**
+     * gets visitor's IP address
+     * @return [type] [description]
+     */
+    public function getUserIP()
+    {
+        $client  = @$_SERVER['HTTP_CLIENT_IP'];
+        $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+        $remote  = $_SERVER['REMOTE_ADDR'];
+
+        if(filter_var($client, FILTER_VALIDATE_IP))
+        {
+            $ip = $client;
+        }
+        elseif(filter_var($forward, FILTER_VALIDATE_IP))
+        {
+            $ip = $forward;
+        }
+        else
+        {
+            $ip = $remote;
+        }
+
+        return $ip;
     }
 
 

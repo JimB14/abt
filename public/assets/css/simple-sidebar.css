@@ -80,16 +80,34 @@ html,body{
 
 .sidebar-nav li {
     text-indent: 20px;
-    line-height: 40px;
+    line-height: 28px;  /*40px;*/
 }
 
 .sidebar-nav li a {
     display: block;
     text-decoration: none;
     color: #999999;
+    padding-left:6px;
 }
 
 .sidebar-nav li a:hover {
+    text-decoration: none;
+    /*color: #fff;
+    background: rgba(255,255,255,0.2);*/
+    color: #000;
+    background: #fff;
+    font-weight: bold;
+}
+
+.sidebar-active {
+    text-decoration: none;
+    /*color: #fff;
+    background: rgba(255,255,255,0.2);*/
+    color: #000 !important;
+    background: #fff;
+    font-weight: bold;
+}
+.sidebar-active a {
     text-decoration: none;
     /*color: #fff;
     background: rgba(255,255,255,0.2);*/

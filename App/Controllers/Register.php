@@ -168,8 +168,8 @@ class Register extends \Core\Controller
 
             // show success message
             View::renderTemplate('Success/index.html', [
-                'acct_activated1'   => $acct_activated1,
-                'acct_activated' => 'true'
+                'acct_activated1' => $acct_activated1,
+                'acct_activated'  => 'true'
             ]);
         }
         else

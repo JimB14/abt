@@ -67,9 +67,10 @@ class User extends \Core\Model
         $email = isset($_REQUEST['email']) ? filter_var($_REQUEST['email'], FILTER_SANITIZE_EMAIL) : '';
         $first_name = isset($_REQUEST['first_name']) ? filter_var($_REQUEST['first_name'], FILTER_SANITIZE_STRING) : '';
         $last_name = isset($_REQUEST['last_name']) ? filter_var($_REQUEST['last_name'], FILTER_SANITIZE_STRING) : '';
+        $company = isset($_REQUEST['company']) ? filter_var($_REQUEST['company'], FILTER_SANITIZE_STRING) : '';
         $user_ip = $_SERVER['REMOTE_ADDR'];
 
-        if($first_name === '' || $last_name === '' || $email === '')
+        if($first_name === '' || $last_name === '' || $email === '' || $company === '')
         {
             $_SESSION['registererror'] = '*All fields are required.';
             $okay = false;
@@ -137,12 +138,13 @@ class User extends \Core\Model
             // insert user data into users table
             try
             {
-                $sql = "INSERT INTO users (first_name, last_name, email, pass, user_ip)
-                        VALUES (:first_name, :last_name, :email, :pass, :user_ip)";
+                $sql = "INSERT INTO users (first_name, last_name, company, email, pass, user_ip)
+                        VALUES (:first_name, :last_name, :company, :email, :pass, :user_ip)";
                 $stmt = $db->prepare($sql);
                 $parameters = [
                     ':first_name' => $first_name,
                     ':last_name'  => $last_name,
+                    ':company'    => $company,
                     ':email'      => $email,
                     ':pass'       => $pass,
                     ':user_ip'    => $user_ip

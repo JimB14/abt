@@ -16,32 +16,52 @@
         </div>
 
         <div class="col-md-8">
+              <p class="col-sm-offset-3" style="margin-bottom: 28px;">
+                Thanks, {{ user.first_name }} {{ user.last_name }}, for taking
+                the time to share what American Biz Trader means to you and how
+                it has impacted your business.
+              </p>
 
               {% if session.addtestimonialerror %}
                 {% include 'errormessage.php' %}
               {% endif %}
 
-              <form method="post" name="testimonialform" class="form-horizontal" id="testimonialform" action="/testimonials/submit-testimonial">
+              <form method="post" name="testimonialform" class="form-horizontal"
+                id="testimonialform" action="/testimonials/submit-testimonial">
 
                   <div class="form-group">
-                      <label for="title"  class="col-sm-3 control-label">Title</label>
+                      <label for="title"  class="col-sm-3 control-label">
+                        Title
+                      </label>
                       <div class="col-sm-9">
-                          <input type="text" class="form-control required" id="title" name="title" placeholder="title" autofocus>
+                          <input type="text" class="form-control required"
+                          id="title" name="title" autofocus
+                          placeholder="title, e.g. &quot;Great value!&quot;">
                       </div>
                   </div>
 
                   <div class="form-group">
-                      <label for="testimonial"  class="col-sm-3 control-label">Testimonial</label>
+                      <label for="testimonial"  class="col-sm-3 control-label">
+                        Testimonial
+                      </label>
                       <div class="col-sm-9">
-                          <textarea class="form-control required" id="testimonial" name="testimonial" placeholder="testimonial"></textarea>
+                          <textarea rows="8" class="form-control required" id="testimonial" name="testimonial" placeholder="testimonial"></textarea>
                       </div>
                   </div>
 
                   <hr>
 
                   <div class="form-group">
-                      <div class="col-sm-offset-3 col-sm-9">
-                          <button type="submit" class="btn btn-primary">Submit Testimonial</button>
+                      <div class="col-sm-offset-3 col-sm-9" style="margin-bottom: 30px;">
+                          <button type="submit" class="btn btn-primary">
+                            Submit Testimonial
+                          </button>
+                          <small>
+                            <br>
+                            *If approved, your tesitmonial will be posted on our
+                            website. For search engines, be sure to include your
+                            company name in your testimonial.
+                          </small>
                       </div>
                   </div>
 

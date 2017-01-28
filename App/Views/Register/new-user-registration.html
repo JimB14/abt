@@ -99,7 +99,8 @@
                   </label>
                   <div class="col-sm-9">
                       <input type="text" class="form-control required" name="company_name"
-                      id="company_name" placeholder="Company name">
+                        id="company_name" placeholder="Company name"
+                        value="{% if user.company %}{{ user.company }}{% endif %}">
                       <span class="glyphicon form-control-feedback" id="company_name1"></span>
                   </div>
               </div>

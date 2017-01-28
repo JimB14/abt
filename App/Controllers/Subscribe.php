@@ -668,7 +668,7 @@ class Subscribe extends \Core\Controller
                             if($result)
                             {
                                 // log user out
-                                header("Location: /logout");
+                                header("Location: /logout?id=cancel");
                                 exit();
                             }
                             else
@@ -727,6 +727,12 @@ class Subscribe extends \Core\Controller
 
         // get broker agent count & store in $max_agents
         $agent_count = BrokerAgent::getCountOfAgents($broker_id);
+
+        // if agent_count = 0, increase to 1 so max_agents = 1
+        if($agent_count < 1)
+        {
+          $agent_count = 1;
+        }
 
         // get PROFILEID for user
         $profileid = User::getProfileId($user_id);

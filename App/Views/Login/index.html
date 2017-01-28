@@ -10,7 +10,7 @@
     <div class="row">
 
         <div class="col-md-12">
-            <h1>Login</h1>
+            <h1>Log In</h1>
             <hr>
         </div>
 
@@ -26,17 +26,26 @@
                 method="post" class="form-horizontal">
 
                   <!--<input type="hidden" name="_token" value="{!! htmlspecialchars($signer->getSignature()) !!}">-->
-                  <div class="form-group">
-                      <label for="email" class="col-sm-3 control-label">Email</label>
+                  <div class="form-group has-feedback">
+                      <label for="email" class="col-sm-3 control-label">
+                        Email
+                      </label>
                       <div class="col-sm-9">
-                          <input type="email" class="form-control email required" name="email" id="email" placeholder="user@example.com" autofocus>
+                          <input type="email" class="form-control email required"
+                          name="email" id="email" placeholder="user@example.com"
+                          autofocus>
+                          <span class="glyphicon form-control-feedback" id="email1"></span>
                       </div>
                   </div>
 
-                  <div class="form-group">
-                      <label for="password" class="col-sm-3 control-label">Password</label>
+                  <div class="form-group has-feedback">
+                      <label for="password" class="col-sm-3 control-label">
+                        Password
+                      </label>
                       <div class="col-sm-9">
-                          <input type="password" class="form-control required" name="password" id="password" placeholder="Password">
+                          <input type="password" class="form-control required"
+                          name="password" id="password" placeholder="Password">
+                          <span class="glyphicon form-control-feedback" id="password1"></span>
                       </div>
                   </div>
 
@@ -49,7 +58,9 @@
 
                   <div class="form-group">
                       <div class="col-sm-offset-3 col-sm-9">
-                          <button type="submit" class="btn btn-primary">Sign in</button>
+                          <button type="submit" class="btn btn-primary" id="login-btn">
+                            Sign in
+                          </button>
                       </div>
                   </div>
 
@@ -68,7 +79,60 @@
 {% block bottomjs %}
 <script>
 $(document).ready(function(){
-    //$("#loginform").validate();
+    // $("#loginform").validate();
+
+    $("#loginform").validate({
+        rules: {
+            email: {
+                required: true,
+                email: true
+            },
+            password: {
+                required: true,
+                minlength: 6,
+                maxlength: 12
+            },
+        },
+        messages: {
+            email: {
+                required: "*Please enter your email address",
+                email: "*Please enter a valid email address"
+            },
+            password: {
+                minlength: "*Please enter at least 6 characters",
+                maxlength: "*Please enter up to 12 characters",
+                required: "*Please enter a password",
+            },
+        },
+        highlight: function(element) {
+            var id_attr = "#" + $( element ).attr("id") + "1";
+            $(element).closest('.form-group has-feedback').removeClass('has-success').addClass('has-error');
+            $(id_attr).removeClass('glyphicon-ok').addClass('glyphicon-remove');
+        },
+        unhighlight: function(element) {
+            var id_attr = "#" + $( element ).attr("id") + "1";
+            $(element).closest('.form-group has-feedback').removeClass('has-error').addClass('has-success');
+            $(id_attr).removeClass('glyphicon-remove').addClass('glyphicon-ok');
+        },
+        errorElement: 'span',
+            errorClass: 'help-block',
+            errorPlacement: function(error, element) {
+                if(element.length) {
+                    error.insertAfter(element);
+                } else {
+                error.insertAfter(element);
+                }
+            }
+
+
+     });
+
+    //  $("#loginform").submit(function(){
+    //    $("#login-btn").text("Processing request. Please wait...");
+    //  });  
+
+
+
 });
 </script>
 {% endblock %}

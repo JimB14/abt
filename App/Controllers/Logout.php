@@ -15,13 +15,46 @@ use \App\Models\User;
  */
 class Logout extends \Core\Controller
 {
+    /**
+     * logs user out
+     * @return boolean
+     */
     public function indexAction()
     {
-        //if SESSION is not set & user attempts to logout
+        // retrieve query string data
+        $value = (isset($_REQUEST['id'])) ? filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING) : '';
+
+        // if SESSION is not set & user attempts to logout
         if(!isset($_SESSION['user']))
         {
             header("Location: /login");
             exit();
+        }
+        else if($value == 'cancel')
+        {
+            $cancel_message1 = "Your account has been canceled. Your credit card
+              will not be charged again.";
+
+            $cancel_message2 = "We are sorry to see you go.";
+
+            $cancel_message3 = "Your data will be deleted in the next 4 - 5 days.
+              If you want to reactivate your account, just Log In and follow the
+              instructions.";
+
+              unset($_SESSION['user']);
+              unset($_SESSION['loggedIn']);
+              unset($_SESSION['user_id']);
+              unset($_SESSION['access_level']);
+              unset($_SESSION['full_name']);
+              session_destroy();
+
+              // render view
+              View::renderTemplate("Success/index.html", [
+                  'cancelpayment'   => 'true',
+                  'cancel_message1' => $cancel_message1,
+                  'cancel_message2' => $cancel_message2,
+                  'cancel_message3' => $cancel_message3,
+              ]);
         }
         else
         {
@@ -36,7 +69,6 @@ class Logout extends \Core\Controller
             {
                 // send login notification email to `brokers`.`broker_email`
                 $result = Mail::LogoutNotification($broker, $user);
-
             }
 
             unset($_SESSION['user']);
@@ -48,20 +80,11 @@ class Logout extends \Core\Controller
 
             $message = "You have been logged out";
 
-            // $usubscribe_message1 = "You have successfully cancelled
-            // your subscription. Sorry to see you go.";
-            //
-            // $usubscribe_message2 = "Your listings might be deleted
-            // in 3 - 4 days. If you want to reactivate your account now to avoid
-            // having to re-enter your listings and/or agent data in the future, please
-            // Log In now and follow the reactivate account instructions.";
-
+            // render view
             View::renderTemplate("Success/index.html", [
-                'message'               => $message,
-                // 'unsubscribe_message1'  => $usubscribe_message1,
-                // 'unsubscribe_message2'  => $usubscribe_message2,
-                'unsubscribe'           => 'true'
+                'message'     => $message,
             ]);
         }
     }
+
 }

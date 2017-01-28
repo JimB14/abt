@@ -84,7 +84,8 @@ class Brokers extends \Core\Controller
             View::renderTemplate('Admin/index.html', [
                 'broker'      => $broker,
                 'agents'      => $agents,
-                'broker_type' => $broker_type
+                'broker_type' => $broker_type,
+                'home'        => 'active'
             ]);
         }
     }
@@ -96,9 +97,6 @@ class Brokers extends \Core\Controller
     {
         // query string variable
         $broker_id = (isset($_REQUEST['id'])) ? filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING) : '';
-
-        // get agents id, last name, first name & broker ID only for drop-down
-        $agents = BrokerAgent::getNamesOfAllBrokerAgents($_SESSION['broker_id'], $orderby = 'broker_agents.last_name');
 
         // get company name
         $company_name = Broker::getBrokerCompanyName($broker_id);
@@ -143,27 +141,26 @@ class Brokers extends \Core\Controller
             exit();
         }
 
+        // if courtesy account
         if($profileid == 'courtesy')
         {
-            echo "<h3>";
-            echo 'This is a Courtesy account, compliments of American Biz
-                  Trader.';
-            echo '<br>';
-            echo 'No account information available.';
-            echo '<br><br>';
-            echo '<button onclick="goBack()">';
-            echo '<< Go back';
-            echo '</button>';
-            echo '<script>';
-            echo 'function goBack()';
-            echo '{window.history.go(-1);}';
-            echo '</script>';
-            exit();
+          // render view
+          View::renderTemplate('Admin/Show/my-account.html', [
+              'company_name'  => $company_name,
+              'user'          => $user,
+              'agent_count'   => $agent_count,
+              'broker_type'   => $broker_type,
+              'extra_agents'  => $extra_agents,
+              'myaccount'     => 'active',
+              'courtesy'      => 'true'
+          ]);
+          exit();
         }
 
         // get paypal profile data from payflow gateway
         $ppProfile = Paypal::profileStatusInquiry($profileid);
 
+        // test
         // echo '<pre>';
         // print_r($ppProfile);
         // echo '</pre>';
@@ -205,7 +202,7 @@ class Brokers extends \Core\Controller
 
             // render view
             View::renderTemplate('Admin/Show/my-account.html', [
-                'agents'        => $agents,
+                // 'agents'        => $agents,
                 'company_name'  => $company_name,
                 'user'          => $user,
                 'agent_count'   => $agent_count,
@@ -215,7 +212,8 @@ class Brokers extends \Core\Controller
                 'creation_date' => $creation_date,
                 'last_changed'  => $last_changed,
                 'next_payment'  => $next_payment,
-                'extra_agents'  => $extra_agents
+                'extra_agents'  => $extra_agents,
+                'myaccount'     => 'active'
             ]);
         }
         else
@@ -262,10 +260,11 @@ class Brokers extends \Core\Controller
 
         // render view & pass $broker object
         View::renderTemplate('Admin/Show/company-profile.html', [
-            'broker'      => $broker,
-            'states'      => $states,
-            'user'        => $user,
-            'broker_type' => $broker_type
+            'broker'          => $broker,
+            'states'          => $states,
+            'user'            => $user,
+            'broker_type'     => $broker_type,
+            'companyprofile'  => 'active'
         ]);
     }
 
@@ -355,7 +354,8 @@ class Brokers extends \Core\Controller
             View::renderTemplate('Admin/Add/add-new-agent.html', [
                 'broker_id'     => $broker_id,
                 'states'        => $states,
-                'broker_type'   => $broker_type
+                'broker_type'   => $broker_type,
+                'addnewagent'   => 'active'
             ]);
         }
         else
@@ -533,9 +533,10 @@ class Brokers extends \Core\Controller
 
         // render view & pass $agents object
         View::renderTemplate('Admin/Show/agents.html', [
-            'agents'      => $agents,
-            'broker_id'   => $broker_id,
-            'broker_type' => $broker_type
+            'agents'        => $agents,
+            'broker_id'     => $broker_id,
+            'broker_type'   => $broker_type,
+            'manageagents'  => 'active'
         ]);
     }
 
@@ -594,7 +595,8 @@ class Brokers extends \Core\Controller
                 'states'              => $states,
                 'broker_company_name' => $broker_company_name,
                 'broker_id'           => $broker_id,
-                'broker_type'         => $broker_type
+                'broker_type'         => $broker_type,
+                'addnewlisting'       => 'active'
             ]);
         }
     }
@@ -661,9 +663,10 @@ class Brokers extends \Core\Controller
 
         // render view, pass $listings object
         View::renderTemplate('Admin/Show/listings.html', [
-            'listings'    => $listings,
-            'agents'      => $agents,
-            'broker_type' => $broker_type
+            'listings'        => $listings,
+            'agents'          => $agents,
+            'broker_type'     => $broker_type,
+            'managelistings'  => 'active'
         ]);
     }
 
@@ -1583,9 +1586,9 @@ class Brokers extends \Core\Controller
 
 
 
-    public function  changePassword()
+    public function changePassword()
     {
-        // retrieve variable
+        // retrieve query string variable
         $user_id = (isset($_REQUEST['user_id'])) ? filter_var($_REQUEST['user_id'], FILTER_SANITIZE_STRING) : '';
 
         // update password
@@ -1787,7 +1790,8 @@ class Brokers extends \Core\Controller
               'states'                => $states,
               'broker_company_name'   => $broker_company_name,
               'broker_id'             => $broker_id,
-              'broker_type'           => $broker_type
+              'broker_type'           => $broker_type,
+              'addnewrealtylisting'   => 'active'
               // 'for_sale_categories'   => $for_sale_categories,
               // 'for_lease_categories'  => $for_lease_categories
           ]);
@@ -1824,9 +1828,10 @@ class Brokers extends \Core\Controller
 
         // render view, pass $listings object
         View::renderTemplate('Admin/Show/realty-listings.html', [
-            'listings'    => $listings,
-            'agents'      => $agents,
-            'broker_type' => $broker_type
+            'listings'              => $listings,
+            'agents'                => $agents,
+            'broker_type'           => $broker_type,
+            'managerealtylistings'  => 'active'
         ]);
     }
 
@@ -2106,7 +2111,8 @@ class Brokers extends \Core\Controller
         View::renderTemplate('Admin/Show/leads.html', [
             'leads'       => $leads,
             'agents'      => $agents,
-            'broker_type' => $broker_type
+            'broker_type' => $broker_type,
+            'manageleads' => 'active'
         ]);
     }
 

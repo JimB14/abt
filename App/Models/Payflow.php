@@ -47,7 +47,7 @@ class Payflow extends \Core\Model
     var $errors = '';
     var $currencies_allowed = ['USD', 'EUR', 'GBP', 'CAD', 'JPY', 'AUD'];
     // set test mode for testing or LIVE
-    var $test_mode = 2; // 1 for sandbox; see line #93
+    var $test_mode = 0; // 1 for sandbox; see line #93
 
 
     /**

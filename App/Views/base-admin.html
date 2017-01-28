@@ -58,81 +58,106 @@
           <ul class="sidebar-nav" style="margin-bottom: 20px; margin-top: {% if broker_type == 3 %} 221px;{% endif %}">
               <li style="font-size: 130%; color: #fff;">Company</li>
 
-              <li>
-                  <a href="/admin/brokers/my-account?id={{ session.broker_id }}">
+              <li class="{% if myaccount == 'active' %}sidebar-active{% endif %}">
+                  <a class="{% if myaccount == 'active' %}sidebar-active{% endif %}"
+                    href="/admin/brokers/my-account?id={{ session.broker_id }}">
                     My account
                   </a>
               </li>
 
-              <li>
-                  <a  href="/admin/brokers/company-profile?id={{ session.broker_id }}">
+              <li class="{% if companyprofile == 'active' %}sidebar-active{% endif %}">
+                  <a class="{% if companyprofile == 'active' %}sidebar-active{% endif %}"
+                    href="/admin/brokers/company-profile?id={{ session.broker_id }}">
                       Company profile
                   </a>
               </li>
 
               <li>
-                  <a href="/admin/brokers/preview-company-page?id={{ session.broker_id }}" title="Shows how Company listings will appear on live website">
+                  <a href="/admin/brokers/preview-company-page?id={{ session.broker_id }}"
+                    title="Shows how Company listings will appear on live website">
                       Preview company page
                   </a>
               </li>
 
-              <li style="font-size: 130%; color: #fff;">Agent / Broker</li>
+              <li style="font-size: 130%; color: #fff; margin-top:10px;">
+                Agent / Broker
+              </li>
 
-              <li>
-                  <a href="/admin/brokers/add-new-agent?id={{ session.broker_id }}">
+              <li class="{% if addnewagent == 'active' %}sidebar-active{% endif %}">
+                  <a class="{% if addnewagent == 'active' %}sidebar-active{% endif %}"
+                  href="/admin/brokers/add-new-agent?id={{ session.broker_id }}">
                       Add new agent / broker
                   </a>
               </li>
 
-              <li>
-                  <a href="/admin/brokers/show-agents?id={{ session.broker_id }}">
+              <li class="{% if manageagents == 'active' %}sidebar-active{% endif %}">
+                  <a class="{% if manageagents == 'active' %}sidebar-active{% endif %}"
+                    href="/admin/brokers/show-agents?id={{ session.broker_id }}">
                       Manage agents / brokers
                   </a>
               </li>
 
             {% if broker_type == 1 or broker_type == 3 %}
-              <li style="font-size: 130%; color: #fff;">Business Listings</li>
+              <li style="font-size: 130%; color: #fff; margin-top:10px;">
+                Business Listings
+              </li>
 
-              <li>
-                  <a href="/admin/brokers/add-new-listing?id={{ session.broker_id }}">
+              <li class="{% if addnewlisting == 'active' %}sidebar-active{% endif %}">
+                  <a class="{% if addnewlisting == 'active' %}sidebar-active{% endif %}"
+                    href="/admin/brokers/add-new-listing?id={{ session.broker_id }}">
                       Add new listing
                   </a>
               </li>
             {% endif %}
 
-              <li>
-                  <a  href="/admin/brokers/show-listings?id={{ session.broker_id }}">
+              <li class="{% if managelistings == 'active' %}sidebar-active{% endif %}">
+                  <a class="{% if managelistings == 'active' %}sidebar-active{% endif %}"
+                    href="/admin/brokers/show-listings?id={{ session.broker_id }}">
                       Manage listings
                   </a>
               </li>
 
               {% if broker_type == 2 or broker_type == 3 %}
-                <li style="font-size: 130%; color: #fff;">Real Estate Listings</li>
+                <li style="font-size: 130%; color: #fff; margin-top:10px;">
+                  Real Estate Listings
+                </li>
 
-                <li>
-                    <a href="/admin/brokers/add-new-real-estate-listing?id={{ session.broker_id }}">
+                <li class="{% if addnewrealtylisting == 'active' %}sidebar-active{% endif %}">
+                    <a class="{% if addnewrealtylisting == 'active' %}sidebar-active{% endif %}"
+                      href="/admin/brokers/add-new-real-estate-listing?id={{ session.broker_id }}">
                         Add new listing
                     </a>
                 </li>
 
-                <li>
-                    <a  href="/admin/brokers/show-real-estate-listings?id={{ session.broker_id }}">
+                <li class="{% if managerealtylistings == 'active' %}sidebar-active{% endif %}">
+                    <a class="{% if managerealtylistings == 'active' %}sidebar-active{% endif %}"
+                    href="/admin/brokers/show-real-estate-listings?id={{ session.broker_id }}">
                         Manage listings
                     </a>
                 </li>
               {% endif %}
 
-              <li style="font-size: 130%; color: #fff;">My Leads</li>
+              <li style="font-size: 130%; color: #fff; margin-top:10px;">
+                My Leads
+              </li>
 
-              <li>
-                  <a href="/admin/brokers/show-leads?id={{ session.broker_id }}">
+              <li class="{% if manageleads == 'active' %}sidebar-active{% endif %}">
+                  <a class="{% if manageleads == 'active' %}sidebar-active{% endif %}"
+                    href="/admin/brokers/show-leads?id={{ session.broker_id }}">
                       Manage leads
                   </a>
               </li>
 
-              <li style="font-size: 130%; color: #fff;">Home</li>
+              <li style="font-size: 130%; color: #fff; margin-top:10px;">
+                Home
+              </li>
 
-              <li><a href="/admin/brokers/index?user_id={{ session.user_id }}">Home</a></li>
+              <li class="{% if home == 'active' %}sidebar-active{% endif %}">
+                <a class="{% if home == 'active' %}sidebar-active{% endif %}"  
+                  href="/admin/brokers/index?user_id={{ session.user_id }}">
+                  Home
+                </a>
+              </li>
 
               <!-- <li><a href="/logout">Logout</a></li> -->
 

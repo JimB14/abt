@@ -76,16 +76,20 @@
 
           {% if broker %}
             <ul class="sidebar-nav" style="margin-bottom: 20px; margin-top: 5px">
-                <li style="font-size: 130%; color: #ff0000;">{% if broker.company_name|length > 18 %}{{ broker.company_name|slice(0, 19) }}...{% else %}{{ broker.company_name }}{% endif %}</li>
+                <li style="font-size: 130%; color: #ff0000; margin-top:10px;">
+                  {% if broker.company_name|length > 18 %}{{ broker.company_name|slice(0, 19) }}...{% else %}{{ broker.company_name }}{% endif %}
+                </li>
 
-                <li>
-                    <a href="/admin/siteadmin/my-account?id={{ broker.broker_id }}">
+                <li class="{% if myaccount == 'active' %}sidebar-active{% endif %}">
+                    <a class="{% if myaccount == 'active' %}sidebar-active{% endif %}"
+                      href="/admin/siteadmin/my-account?id={{ broker.broker_id }}">
                       My account
                     </a>
                 </li>
 
-                <li>
-                    <a  href="/admin/siteadmin/company-profile?id={{ broker.broker_id }}">
+                <li class="{% if companyprofile == 'active' %}sidebar-active{% endif %}">
+                    <a class="{% if companyprofile == 'active' %}sidebar-active{% endif %}"
+                      href="/admin/siteadmin/company-profile?id={{ broker.broker_id }}">
                         Company profile
                     </a>
                 </li>
@@ -97,41 +101,52 @@
                     </a>
                 </li>
 
-                <li style="font-size: 130%; color: #fff;">Agent / Broker</li>
+                <li style="font-size: 130%; color: #fff; margin-top:10px;">
+                  Agent / Broker
+                </li>
 
-                <li>
-                    <a href="/admin/siteadmin/show-agents?id={{ broker.broker_id }}">
+                <li class="{% if manageagents == 'active' %}sidebar-active{% endif %}">
+                    <a class="{% if manageagents == 'active' %}sidebar-active{% endif %}"
+                      href="/admin/siteadmin/show-agents?id={{ broker.broker_id }}">
                         Manage agents / brokers
                     </a>
                 </li>
 
 
-              <li style="font-size: 130%; color: #fff;">Business Listings</li>
+              <li style="font-size: 130%; color: #fff; margin-top:10px;">
+                Business Listings
+              </li>
 
-              <li>
-                  <a href="/admin/siteadmin/add-new-listing?id={{ broker.broker_id }}">
+              <li class="{% if addnewlisting == 'active' %}sidebar-active{% endif %}">
+                  <a class="{% if addnewlisting == 'active' %}sidebar-active{% endif %}"
+                    href="/admin/siteadmin/add-new-listing?id={{ broker.broker_id }}">
                       Add new listing
                   </a>
               </li>
 
 
-                <li>
-                    <a  href="/admin/siteadmin/show-listings?id={{ broker.broker_id }}">
+                <li class="{% if managelistings == 'active' %}sidebar-active{% endif %}">
+                    <a class="{% if managelistings == 'active' %}sidebar-active{% endif %}"
+                      href="/admin/siteadmin/show-listings?id={{ broker.broker_id }}">
                         Manage listings
                     </a>
                 </li>
 
 
-                <li style="font-size: 130%; color: #fff;">Real Estate Listings</li>
+                <li style="font-size: 130%; color: #fff; margin-top:10px;">
+                  Real Estate Listings
+                </li>
 
-                <li>
-                    <a href="/admin/siteadmin/add-new-real-estate-listing?id={{ broker.broker_id }}">
+                <li class="{% if addnewrealtylisting == 'active' %}sidebar-active{% endif %}">
+                    <a class="{% if addnewrealtylisting == 'active' %}sidebar-active{% endif %}"
+                      href="/admin/siteadmin/add-new-real-estate-listing?id={{ broker.broker_id }}">
                         Add new listing
                     </a>
                 </li>
 
-                <li>
-                    <a  href="/admin/siteadmin/show-real-estate-listings?id={{ broker.broker_id }}">
+                <li class="{% if managerealtylistings == 'active' %}sidebar-active{% endif %}">
+                    <a class="{% if managerealtylistings == 'active' %}sidebar-active{% endif %}"
+                      href="/admin/siteadmin/show-real-estate-listings?id={{ broker.broker_id }}">
                         Manage listings
                     </a>
                 </li>
@@ -145,9 +160,16 @@
                     </a>
                 </li> -->
 
-                <li style="font-size: 130%; color: #fff;">Home</li>
+                <li style="font-size: 130%; color: #fff; margin-top:10px;">
+                  Home
+                </li>
 
-                <li><a href="/admin/siteadmin/index?user_id={{ session.user_id }}">Home</a></li>
+                <li class="{% if home == 'active' %}sidebar-active{% endif %}">
+                  <a class="{% if home == 'active' %}sidebar-active{% endif %}"
+                    href="/admin/siteadmin/index?user_id={{ session.user_id }}">
+                    Home
+                  </a>
+                </li>
 
                 <!-- <li><a href="/logout">Logout</a></li> -->
 

@@ -653,7 +653,7 @@ class Paypal extends \Core\Model
             'CVV2'          => $CVV2,
             'CURRENCY'      => 'USD',
             'AMT'           => $AMT,
-            'START'         => $tomorrow,
+            'START'         => $billDate,
             'IPADDRESS'     => $_SERVER['REMOTE_ADDR']
         ];
 

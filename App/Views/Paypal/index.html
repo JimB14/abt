@@ -285,9 +285,9 @@
                           {% endif %}
                         </label>
                         <div class="col-sm-3">
+                          <!-- Twig likes code on one continuous line and without any spaces between elements -->
                           <input type="text" class="form-control required" name="amt"
-                            id="amt" placeholder="Amount"
-                            value="{% if new_subscription == 'true' %}9.95{% else %}{{ reactivation_rate }}{% endif %}">
+                            id="amt" placeholder="Amount" value="{% if new_subscription == 'true' %}{{ subscriptiononly }}{%endif%}{% if reactivate == 'true' and reactivation_rate < 1%}{{ subscriptiononly }}{% else %}{{ reactivation_rate }}{% endif %}">
                         </div>
                       </div>
                   {% endif %}

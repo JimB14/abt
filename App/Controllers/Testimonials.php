@@ -57,7 +57,13 @@ class Testimonials extends \Core\Controller
      */
     public function addTestimonial()
     {
-        View::renderTemplate('Testimonials/add-testimonial.html', []);
+        // get user data
+        $user = User::getUser($_SESSION['user_id']);
+
+        // render view
+        View::renderTemplate('Testimonials/add-testimonial.html', [
+            'user' => $user
+        ]);
     }
 
 
