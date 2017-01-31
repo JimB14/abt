@@ -108,12 +108,9 @@ class Testimonials extends \Core\Controller
             // send email to website owner or designee & pass testimonial data
             $result = Mail::sendNewTestimonialNotification($id, $user_id, $user_full_name, $token, $title, $testimonial);
 
-            // define message
-            $message = "Thank you for your testimonial! It will be reviewed
-                        before being published.";
-
             View::renderTemplate('Success/index.html', [
-                'message' => $message
+                'testimonialsuccess'  => 'true',
+                'user'                => $user
             ]);
         }
 
@@ -160,7 +157,7 @@ class Testimonials extends \Core\Controller
 
             if($results)
             {
-                header("Location: http://americanbiztrader.site/testimonials");
+                header("Location: http://americanbiztrader.com/testimonials");
                 exit();
             }
             else

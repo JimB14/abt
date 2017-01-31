@@ -1217,6 +1217,13 @@ table.display-broker-agents{
 #edit-state-county05{display:none;}
 
 /* View/Buy/listing-details.html */
+.social-media-icons-bar {
+    margin-top:-16px;
+    padding: 0;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 15px;
+}
+
 #biz-listing-image-gallery img {
     width: auto;
     max-height: 70px;
@@ -1331,6 +1338,21 @@ table.display-broker-agents{
   margin: 0px;
 }
 
+.testimonial-wrapper {
+  width: 100%;
+  height: auto;
+  padding: 15px;
+  border:1px solid #eee;
+  border-bottom: 3px solid #005ab3;
+  border-radius: 4px;
+  margin-bottom: 40px;
+}
+
+.testimonial-wrapper h4 {
+  margin: 0px;
+}
+
+
  /* register-form */
  .help-block {
     display: block;
@@ -1434,4 +1456,19 @@ table.display-broker-agents{
 /* readonly styles paypal/index.html */
 .current-agents-input input[readonly] {
   background-color: #fff;
+}
+
+/*  buy/sidebar-right.html  */
+.sidebar-contact-form .form-group {
+  margin-bottom: 5px;
+}
+
+/*  buy/agent-profile  */
+.agent-profile-contact-form .form-group {
+    margin-bottom: 5px;
+}
+
+/*  buy/agent-profile  */
+.broker-only-contact-form .form-group {
+    margin-bottom: 5px;
 }

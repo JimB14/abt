@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 
 
-{% block browsertitle %}
-  Testimonials
+{% block title %}
+  Testimonials for American Biz Trader
+{% endblock %}
+
+{% block metadescriptin %}
+
 {% endblock %}
 
 
@@ -15,26 +19,38 @@
         </div>
 
         <div class="col-md-8">
-            <div>
-                <div class="list-group">
-                  <div class="list-group-item testimonials-title-bg-box">
-                    <h3>What clients are saying . . .</h3>
+            <h3 style="margin-bottom: 30px;">What clients are <i>saying</i> about American Biz Trader
+                <i class="fa fa-quote-left" aria-hidden="true"></i>
+                  . . .
+                <i class="fa fa-quote-right" aria-hidden="true"></i>
+            </h3>
+
+
+            {% for item in testimonials %}
+              <div class="testimonial-wrapper">
+                      <h4>
+                        <strong>
+                          {{ item.title }}
+                        </strong>
+                      </h4>
+                      <p>
+                        {{ item.created_at|date("m-d-Y") }}
+                      </p>
+                  <div class="pull-left">
+                      <i class="fa fa-quote-left fa-3x" aria-hidden="true"></i>
                   </div>
-                    {% for item in testimonials %}
-                    <a href="#" class="list-group-item">
-                      <h4 class="list-group-item-heading"><strong>{{ item.title }}</strong></h4>
-                      <p class="list-group-item-text">{{ item.created_at }}</p>
-                      <p class="list-group-item-text">{{ item.testimonial }}</p>
-                    </a>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
+                  <div style="margin: 55px 43px 0px 43px">
+                      {{ item.testimonial|raw }}
+                  </div>
+              </div><!-- // testimonial-wrapper -->
+            {% endfor %}
+
+        </div><!-- // col-md-8  -->
 
         <div class="col-md-4">
-              
-              <br><br>
+            <br><br><br><br>
         </div>
+
     </div><!-- // .row  -->
 </div>
 {% endblock %}

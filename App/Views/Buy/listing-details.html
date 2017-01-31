@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Business for sale in {{ listing.state }}
+    {{ listing.ad_title }} | Business for sale {{ listing.state }}
 {% endblock %}
 
 {% block metadescription %}
@@ -115,6 +115,13 @@
                     <!--  -  -  -  -  -  -  Key Metrics  -  -  -  -  -  -  -  -  -  -  -  -->
 
                     <div class="row">
+
+                        <div class="social-media-icons-bar text-center">
+                          <span class='st_facebook_large' displayText='Facebook'></span>
+                          <span class='st_twitter_large' displayText='Tweet'></span>
+                          <span class='st_linkedin_large' displayText='LinkedIn'></span>
+                          <span class='st_email_large' displayText='Email'></span>
+                        </div>
 
                         <h3 class="listing-red ls1 text-center" style="margin-top:-5px;">
                             Key metrics
@@ -317,6 +324,10 @@
 {% endblock %}
 
 {% block bottomjs %}
+<!-- sharethis social media scripts -->
+<script type="text/javascript">var switchTo5x=true;</script>
+<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+<script type="text/javascript">stLight.options({publisher: "836f2219-54c3-41b6-9231-ea04c710728a", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
 <script>
 $(document).ready(function(){
 

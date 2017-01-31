@@ -5,8 +5,9 @@
             {{ agent.first_name }}  {{ agent.last_name }}
         {% endif %}
     </h3>
-    <form method="post" action="/buy/contact-broker?listing_id={{ listing.listing_id }}&amp;broker_id={{ broker.broker_id }}&amp;agent_id={{ agent.id }}"
-    name="broker_contact_form" id="broker_contact_form">
+
+    <form method="post" name="broker_contact_form" id="broker_contact_form" class="sidebar-contact-form"
+      action="/buy/contact-broker?listing_id={{ listing.listing_id }}&amp;broker_id={{ broker.broker_id }}&amp;agent_id={{ agent.id }}">
 
         <div class="form-group has-feedback">
             <label class="control-label">
@@ -16,7 +17,7 @@
               <span class="red glyphicon glyphicon-asterisk"></span>
             </sup>
             <input type="text" name="first_name" class="form-control required"
-            id="first_name" placeholder="First name" value="">
+            id="first_name" placeholder="First name">
             <i class="form-control-feedback"></i>
         </div>
 
@@ -28,7 +29,7 @@
               <span class="red glyphicon glyphicon-asterisk"></span>
             </sup>
             <input type="text" name="last_name" class="form-control required"
-            id="last_name" placeholder="Last name" value="">
+            id="last_name" placeholder="Last name">
             <i class="form-control-feedback"></i>
         </div>
 
@@ -40,7 +41,7 @@
               <span class="red glyphicon glyphicon-asterisk"></span>
             </sup>
             <input type="text" name="telephone" class="form-control required"
-            id="telephone" placeholder="Telephone" value="">
+            id="telephone" placeholder="Telephone">
             <i class="form-control-feedback"></i>
         </div>
 
@@ -52,7 +53,7 @@
               <span class="red glyphicon glyphicon-asterisk"></span>
             </sup>
             <input type="email" name="email" class="form-control required"
-            id="email" placeholder="Email" value="">
+            id="email" placeholder="Email">
             <i class="form-control-feedback"></i>
         </div>
 
@@ -65,7 +66,7 @@
                 <span class="red glyphicon glyphicon-asterisk"></span>
               </sup>
               <input type="number" name="investment" class="form-control required"
-              id="investment" placeholder="Amount to invest" value="">
+              id="investment" placeholder="Amount to invest">
               <i class="form-control-feedback"></i>
           </div>
         {% endif %}
@@ -91,6 +92,11 @@
             <label for="message">Message</label>
             <!-- textarea tags must be on same line to avoid text indentation and other peculiar behavior  -->
             <textarea id="message" class="form-control required" style="text-align: left;" name="message" placeholder="Message" rows="2"></textarea>
+        </div>
+
+        <!-- Google recaptcha -->
+        <div class="form-group" style="margin: 10px 0px;">
+              <div class="g-recaptcha" data-sitekey="{{ site_key }}"></div>
         </div>
 
 

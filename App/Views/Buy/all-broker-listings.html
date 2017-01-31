@@ -91,7 +91,7 @@
                             <input
                               type="text"
                               name="first_name"
-                              class="form-control required"
+                              class="form-control broker-only-contact-form required"
                               id="first_name"
                               placeholder="First name"
                               value="">
@@ -143,6 +143,11 @@
                             </label>
                             <!-- textarea tags must be on same line to avoid text indentation and other peculiar behavior  -->
                             <textarea id="message" class="form-control required" style="text-align: left;" name="message" rows="3" placeholder="Message"></textarea>
+                        </div>
+
+                        <!-- Google recaptcha -->
+                        <div class="form-group">
+                            <div class="g-recaptcha" data-sitekey="{{ site_key }}"></div>
                         </div>
 
                         <button id="contact-broker-only-submit-btn" type="submit" class="btn btn-buy btn-lg btn-block">

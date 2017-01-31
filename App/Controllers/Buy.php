@@ -15,6 +15,7 @@ use \App\Models\Realtylisting;
 use \App\Mail;
 use \App\Config;
 use \App\Models\Lead;
+use \App\Models\Recaptcha;
 
 use \Core\Model\PDO;
 
@@ -360,8 +361,9 @@ class Buy extends \Core\Controller
 
 
     /**
-     * [viewListingDetailsAction description]
-     * @return [type] [description]
+     * displays details of listing
+     *
+     * @return view
      */
     public function viewListingDetailsAction()
     {
@@ -472,7 +474,8 @@ class Buy extends \Core\Controller
             'agent_id'                => $agent_id,
             'img_width'               => $img01_width,
             'agent_realty_listings'   => $agent_realty_listings,
-            'broker_realty_listings'  => $broker_realty_listings
+            'broker_realty_listings'  => $broker_realty_listings,
+            'site_key'                => Config::RECAPTCHASITEKEY
         ]);
     }
 
@@ -552,7 +555,8 @@ class Buy extends \Core\Controller
           'broker_realty_listings'        => $broker_realty_listings,
           'agent_full_name'               => $agent_full_name,
           'agent_business_listings_sold'  => $agent_business_listings_sold,
-          'agent_realty_listings_sold'    => $agent_realty_listings_sold
+          'agent_realty_listings_sold'    => $agent_realty_listings_sold,
+          'site_key'                      => Config::RECAPTCHASITEKEY
       ]);
 
     }
@@ -606,7 +610,8 @@ class Buy extends \Core\Controller
             'broker'                  => $broker,
             'broker_sold_listings'    => $broker_sold_listings,
             'agent_list'              => $agent_list,
-            'broker_realty_listings'  => $broker_realty_listings
+            'broker_realty_listings'  => $broker_realty_listings,
+            'site_key'                => Config::RECAPTCHASITEKEY
         ]);
     }
 
@@ -615,121 +620,148 @@ class Buy extends \Core\Controller
 
     public function contactBroker()
     {
-        // retrieve variables
-        $listing_id = (isset($_REQUEST['listing_id'])) ? filter_var($_REQUEST['listing_id'], FILTER_SANITIZE_NUMBER_INT): '';
-        $broker_id  = (isset($_REQUEST['broker_id'])) ? filter_var($_REQUEST['broker_id'], FILTER_SANITIZE_NUMBER_INT): '';
-        $agent_id   = (isset($_REQUEST['agent_id'])) ? filter_var($_REQUEST['agent_id'], FILTER_SANITIZE_NUMBER_INT): '';
-
-        // test
-        // echo $listing_id . '<br>';
-        // echo $broker_id . '<br>';
-        // echo $agent_id . '<br>';
-        // exit();
-
-        // get listing details
-        $listing = Listing::getListingDetails($listing_id);
-
-        // get broker details
-        $broker = Broker::getBrokerDetails($broker_id);
-
-        // get agent details
-        $agent = BrokerAgent::getAgent($agent_id);
+        // run Google ReCAPTCHA
+        $data = Recaptcha::recaptcha();
 
         // test
         // echo '<pre>';
-        // print_r($agent);
+        // print_r($data);
         // echo '</pre>';
         // exit();
 
-        // validate user data; return $results[] w/ form data
-        $results = Contact::validateBrokerContactFormData();
-
-        // test
-        // echo '<pre>';
-        // print_r($results);
-        // echo '</pre>';
-        // exit();
-
-        // store data for email in array
-        $listing_inquiry = [
-            'id'              => $listing->clients_id,
-            'ad_title'        => $listing->ad_title,
-            'business_name'   => $listing->business_name,
-            'agent_first_name'=> $agent->first_name,
-            'agent_last_name' => $agent->last_name,
-            'agent_email'     => $agent->agent_email,
-            'company_name'    => $broker->company_name,
-            'broker_email'    => $broker->broker_email,
-            'first_name'      => $results['first_name'],
-            'last_name'       => $results['last_name'],
-            'telephone'       => $results['telephone'],
-            'email'           => $results['email'],
-            'investment'      => $results['investment'],
-            'time_frame'      => $results['time_frame'],
-            'message'         => $results['message']
-        ];
-
-        // test
-        // echo '<pre>';
-        // print_r($listing_inquiry);
-        // echo '</pre>';
-        // exit();
-
-        // store lead data in array (field names match db.leads field names)
-        $lead_data = [
-          'listing_id'        => $listing_id,
-          'broker_id'         => $broker_id,
-          'listing_agent_id'  => $agent_id,
-          'clients_id'        => $listing->clients_id,
-          // 'type'              => $listing->type,
-          'ad_title'          => $listing->ad_title,
-          'asking_price'      => $listing->asking_price,
-          'description'       => $listing->biz_description,
-          'first_name'        => $results['first_name'],
-          'last_name'         => $results['last_name'],
-          'telephone'         => $results['telephone'],
-          'email'             => $results['email'],
-          'investment'        => $results['investment'],
-          'time_frame'        => $results['time_frame'],
-          'message'           => $results['message'],
-          'agent_first_name'  => $agent->first_name,
-          'agent_last_name'   => $agent->last_name,
-        ];
-
-        // test
-        // echo '<pre>';
-        // print_r($lead_data);
-        // echo '</pre>';
-        // exit();
-
-        // send email to broker with user data
-        $result = Mail::mailBrokerContactFormData($listing_inquiry);
-
-        if($result)
+        if($data)
         {
-            // store lead data in `leads` table
-            $result = Lead::setLeadData($lead_data);
+            $success = $data->success;
+        }
+        else
+        {
+            echo "Error. Please try again.";
+            exit();
+        }
+
+        // if recaptcha is successful, process form submission
+        if($success)
+        {
+            // retrieve variables
+            $listing_id = (isset($_REQUEST['listing_id'])) ? filter_var($_REQUEST['listing_id'], FILTER_SANITIZE_NUMBER_INT): '';
+            $broker_id  = (isset($_REQUEST['broker_id'])) ? filter_var($_REQUEST['broker_id'], FILTER_SANITIZE_NUMBER_INT): '';
+            $agent_id   = (isset($_REQUEST['agent_id'])) ? filter_var($_REQUEST['agent_id'], FILTER_SANITIZE_NUMBER_INT): '';
+
+            // test
+            // echo $listing_id . '<br>';
+            // echo $broker_id . '<br>';
+            // echo $agent_id . '<br>';
+            // exit();
+
+            // get listing details
+            $listing = Listing::getListingDetails($listing_id);
+
+            // get broker details
+            $broker = Broker::getBrokerDetails($broker_id);
+
+            // get agent details
+            $agent = BrokerAgent::getAgent($agent_id);
+
+            // test
+            // echo '<pre>';
+            // print_r($agent);
+            // echo '</pre>';
+            // exit();
+
+            // validate user data; return $results[] w/ form data
+            $results = Contact::validateBrokerContactFormData();
+
+            // test
+            // echo '<pre>';
+            // print_r($results);
+            // echo '</pre>';
+            // exit();
+
+            // store data for email in array
+            $listing_inquiry = [
+                'id'              => $listing->clients_id,
+                'ad_title'        => $listing->ad_title,
+                'business_name'   => $listing->business_name,
+                'agent_first_name'=> $agent->first_name,
+                'agent_last_name' => $agent->last_name,
+                'agent_email'     => $agent->agent_email,
+                'company_name'    => $broker->company_name,
+                'broker_email'    => $broker->broker_email,
+                'first_name'      => $results['first_name'],
+                'last_name'       => $results['last_name'],
+                'telephone'       => $results['telephone'],
+                'email'           => $results['email'],
+                'investment'      => $results['investment'],
+                'time_frame'      => $results['time_frame'],
+                'message'         => $results['message']
+            ];
+
+            // test
+            // echo '<pre>';
+            // print_r($listing_inquiry);
+            // echo '</pre>';
+            // exit();
+
+            // store lead data in array (field names match db.leads field names)
+            $lead_data = [
+              'listing_id'        => $listing_id,
+              'broker_id'         => $broker_id,
+              'listing_agent_id'  => $agent_id,
+              'clients_id'        => $listing->clients_id,
+              'ad_title'          => $listing->ad_title,
+              'asking_price'      => $listing->asking_price,
+              'description'       => $listing->biz_description,
+              'first_name'        => $results['first_name'],
+              'last_name'         => $results['last_name'],
+              'telephone'         => $results['telephone'],
+              'email'             => $results['email'],
+              'investment'        => $results['investment'],
+              'time_frame'        => $results['time_frame'],
+              'message'           => $results['message'],
+              'agent_first_name'  => $agent->first_name,
+              'agent_last_name'   => $agent->last_name,
+            ];
+
+            // test
+            // echo '<pre>';
+            // print_r($lead_data);
+            // echo '</pre>';
+            // exit();
+
+            // send email to broker with user data
+            $result = Mail::mailBrokerContactFormData($listing_inquiry);
 
             if($result)
             {
-                $contact_msg1 = "Your information was sent.";
-                $contact_msg2 = "You will be contacted as soon as possible.";
-                $contact_msg3 = "Thank you for using American Biz Trader!";
+                // store lead data in `leads` table
+                $result = Lead::setLeadData($lead_data);
 
-                View::renderTemplate('Success/index.html', [
-                    'first_name'      => $results['first_name'],
-                    'last_name'       => $results['last_name'],
-                    'contact_msg1'    => $contact_msg1,
-                    'contact_msg2'    => $contact_msg2,
-                    'contact_msg3'    => $contact_msg3,
-                    'contact_broker'  => 'true'
-                ]);
+                if($result)
+                {
+                    $contact_msg1 = "Your information was sent.";
+                    $contact_msg2 = "You will be contacted as soon as possible.";
+                    $contact_msg3 = "Thank you for using American Biz Trader!";
+
+                    View::renderTemplate('Success/index.html', [
+                        'first_name'      => $results['first_name'],
+                        'last_name'       => $results['last_name'],
+                        'contact_msg1'    => $contact_msg1,
+                        'contact_msg2'    => $contact_msg2,
+                        'contact_msg3'    => $contact_msg3,
+                        'contact_broker'  => 'true'
+                    ]);
+                }
+                else
+                {
+                    echo 'Error inserting lead data into database.';
+                    exit();
+                }
             }
-            else
-            {
-                echo 'Error inserting lead data into database.';
-                exit();
-            }
+        }
+        else
+        {
+            echo "Error. Please try again.";
+            exit();
         }
     }
 
@@ -738,42 +770,70 @@ class Buy extends \Core\Controller
 
     public function contactBrokerOnly()
     {
-        // retrieve variables
-        $broker_id = (isset($_REQUEST['broker_id'])) ? filter_var($_REQUEST['broker_id'], FILTER_SANITIZE_NUMBER_INT): '';
+        // run Google ReCAPTCHA
+        $data = Recaptcha::recaptcha();
 
         // test
-        // echo $broker_id . '<br>';
+        // echo '<pre>';
+        // print_r($data);
+        // echo '</pre>';
         // exit();
 
-        // get broker details
-        $broker = Broker::getBrokerDetails($broker_id);
-
-        // validate user data; return $results[] w/ form data
-        $results = Contact::validateAgentOnlyContactFormData();
-
-        // store data for email in array
-        $listing_inquiry = [
-            'company_name'  => $broker->company_name,
-            'broker_email'  => $broker->broker_email,
-            'first_name'    => $results['first_name'],
-            'last_name'     => $results['last_name'],
-            'telephone'     => $results['telephone'],
-            'email'         => $results['email'],
-            'message'       => $results['message']
-        ];
-
-        // send email to broker with user data
-        $result = Mail::mailBrokerOnlyContactFormData($listing_inquiry);
-
-        if($result)
+        if($data)
         {
-            $message = "Your information was sent. You will be contacted as
-                soon as possible. Thank you for using American Biz Trader!";
+            $success = $data->success;
+        }
+        else
+        {
+            echo "Error. Please try again.";
+            exit();
+        }
 
-            View::renderTemplate('Success/index.html', [
-                'first_name' => $results['first_name'],
-                'message'    => $message
-            ]);
+        // if recaptcha is successful, process form submission
+        if($success)
+        {
+            // retrieve variables
+            $broker_id = (isset($_REQUEST['broker_id'])) ? filter_var($_REQUEST['broker_id'], FILTER_SANITIZE_NUMBER_INT): '';
+
+            // test
+            // echo $broker_id . '<br>';
+            // exit();
+
+            // get broker details
+            $broker = Broker::getBrokerDetails($broker_id);
+
+            // validate user data; return $results[] w/ form data
+            $results = Contact::validateAgentOnlyContactFormData();
+
+            // store data for email in array
+            $listing_inquiry = [
+                'company_name'  => $broker->company_name,
+                'broker_email'  => $broker->broker_email,
+                'first_name'    => $results['first_name'],
+                'last_name'     => $results['last_name'],
+                'telephone'     => $results['telephone'],
+                'email'         => $results['email'],
+                'message'       => $results['message']
+            ];
+
+            // send email to broker with user data
+            $result = Mail::mailBrokerOnlyContactFormData($listing_inquiry);
+
+            if($result)
+            {
+                $message = "Your information was sent. You will be contacted as
+                    soon as possible. Thank you for using American Biz Trader!";
+
+                View::renderTemplate('Success/index.html', [
+                    'first_name' => $results['first_name'],
+                    'message'    => $message
+                ]);
+            }
+        }
+        else
+        {
+            echo "Error. You must check reCAPTCHA box before submitting form.";
+            exit();
         }
     }
 
@@ -782,50 +842,78 @@ class Buy extends \Core\Controller
 
     public function contactAgentOnly()
     {
-        // retrieve variables
-        $broker_id = (isset($_REQUEST['broker_id'])) ? filter_var($_REQUEST['broker_id'], FILTER_SANITIZE_NUMBER_INT): '';
-        $agent_id = (isset($_REQUEST['agent_id'])) ? filter_var($_REQUEST['agent_id'], FILTER_SANITIZE_NUMBER_INT): '';
+        // run Google ReCAPTCHA
+        $data = Recaptcha::recaptcha();
 
         // test
-        // echo $broker_id . '<br>';
-        // echo $agent_id . '<br>';
+        // echo '<pre>';
+        // print_r($data);
+        // echo '</pre>';
         // exit();
 
-        // get broker details
-        $broker = Broker::getBrokerDetails($broker_id);
-
-        // get agent details
-        $agent = BrokerAgent::getAgent($agent_id);
-
-        // validate user data; return $results[] w/ form data
-        $results = Contact::validateAgentOnlyContactFormData();
-
-        // store data for email in array
-        $listing_inquiry = [
-            'company_name'     => $broker->company_name,
-            'broker_email'     => $broker->broker_email,
-            'agent_email'      => $agent->agent_email,
-            'agent_first_name' => $agent->first_name,
-            'agent_last_name'  => $agent->last_name,
-            'first_name'       => $results['first_name'],
-            'last_name'        => $results['last_name'],
-            'telephone'        => $results['telephone'],
-            'email'            => $results['email'],
-            'message'          => $results['message']
-        ];
-
-        // send email to broker with user data
-        $result = Mail::mailAgentOnlyContactFormData($listing_inquiry);
-
-        if($result)
+        if($data)
         {
-            $message = "Your information was sent. You will be contacted as
-                soon as possible. Thank you for using American Biz Trader!";
+            $success = $data->success;
+        }
+        else
+        {
+            echo "Error. Please try again.";
+            exit();
+        }
 
-            View::renderTemplate('Success/index.html', [
-                'first_name' => $results['first_name'],
-                'message'    => $message
-            ]);
+        // if recaptcha is successful, process form submission
+        if($success)
+        {
+            // retrieve variables
+            $broker_id = (isset($_REQUEST['broker_id'])) ? filter_var($_REQUEST['broker_id'], FILTER_SANITIZE_NUMBER_INT): '';
+            $agent_id = (isset($_REQUEST['agent_id'])) ? filter_var($_REQUEST['agent_id'], FILTER_SANITIZE_NUMBER_INT): '';
+
+            // test
+            // echo $broker_id . '<br>';
+            // echo $agent_id . '<br>';
+            // exit();
+
+            // get broker details
+            $broker = Broker::getBrokerDetails($broker_id);
+
+            // get agent details
+            $agent = BrokerAgent::getAgent($agent_id);
+
+            // validate user data; return $results[] w/ form data
+            $results = Contact::validateAgentOnlyContactFormData();
+
+            // store data for email in array
+            $listing_inquiry = [
+                'company_name'     => $broker->company_name,
+                'broker_email'     => $broker->broker_email,
+                'agent_email'      => $agent->agent_email,
+                'agent_first_name' => $agent->first_name,
+                'agent_last_name'  => $agent->last_name,
+                'first_name'       => $results['first_name'],
+                'last_name'        => $results['last_name'],
+                'telephone'        => $results['telephone'],
+                'email'            => $results['email'],
+                'message'          => $results['message']
+            ];
+
+            // send email to broker with user data
+            $result = Mail::mailAgentOnlyContactFormData($listing_inquiry);
+
+            if($result)
+            {
+                $message = "Your information was sent. You will be contacted as
+                    soon as possible. Thank you for using American Biz Trader!";
+
+                View::renderTemplate('Success/index.html', [
+                    'first_name' => $results['first_name'],
+                    'message'    => $message
+                ]);
+            }
+        }
+        else
+        {
+            echo "Error. You must check reCAPTCHA box before submitting form.";
+            exit();
         }
     }
 

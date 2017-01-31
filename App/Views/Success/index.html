@@ -204,6 +204,19 @@
               <br><br><br><br>
             {% endif %}
 
+            {% if testimonialsuccess == 'true' %}
+              <h3 style="margin-top: 15px">
+                Thanks {{ user.first_name }} {{ user.last_name }}! Your testimonial
+                was successfully submitted!
+              </h3>
+              <h4 style="margin-top: 15px">
+                Your testimonial will be reviewed before being published. If
+                approved, you will receive an email notification with a link to
+                view it on AmericanBizTrader.com.
+              </h4>
+              <br><br><br><br>
+            {% endif %}
+
         </div>
 
         <div class="col-md-4">

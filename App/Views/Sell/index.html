@@ -1,20 +1,22 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Sell
+    American Biz Trader | Sell or Lease Your Business
+{% endblock %}
+
+{% block metadescription %}
+    American Biz Trader is for brokers only. Join American Biz Trader today. Post unlimited high-quality business and real estate listings for sale or lease.
 {% endblock %}
 
 {% block css %}
-
 {% endblock %}
 
 
 {% block content %}
-
 <div class="page-wrapper">
 
     <h1 style="margin-top:30px;" class="text-center">
-      Sell or Lease a Business
+      Join American Biz Trader Now and Save
     </h1>
     <h2 style="margin-top:-10px;" class="text-center">
       Business &amp; Real Estate Brokers Only
@@ -259,10 +261,27 @@
 
         <div class="col-md-4 col-sm-12">
 
-          <div class="box-for-text">
+          <!-- <div class="box-for-text">
             <div class="sell-sidebar">
                 <h2>Get started now!</h2>
                 <h3><a href="/register">Register</a></h3>
+            </div>
+          </div> -->
+
+          <div class="box-for-text">
+            <div class="sell-sidebar">
+                <h3>
+                  <a style="cursor:pointer;" data-toggle="modal" data-target="#myModal">
+                    About ABT
+                  </a>
+                </h3>
+            </div><!-- // .sell-sidebar  -->
+          </div>
+
+
+          <div class="box-for-text">
+            <div class="sell-sidebar">
+                <h3><a href="/register">Register Now</a></h3>
             </div><!-- // .sell-sidebar  -->
           </div>
 
@@ -270,12 +289,12 @@
             <div class="sell-sidebar">
                 <h2>Sell or Lease Your Business Today</h2>
                 <h3><a href="/find-a-business-expert">Hire an Expert</a></h3>
-            </div><!-- // .sell-sidebar  -->
+            </div>
           </div>
 
           <div class="box-for-text">
             <div class="sell-sidebar">
-                <h2>Business Brokers</h2>
+                <h2>Membership</h2>
                 <h3>Only $9.95/month</h3>
                 <ul>
                   <li>Cancel anytime</li>
@@ -305,10 +324,42 @@
 
           <div class="box-for-text">
             <div class="sell-sidebar">
-                <h2>Sell or Lease Your Business Today</h2>
-                <h3><a href="/find-a-business-expert">Hire an Expert</a></h3>
+                <h3>Data Entry Services</h3>
+                <img src="/assets/images/sell/data_entry_staff_300x200.jpg">
+                <div class="text-center" style="margin-top: 15px;">
+                  <p>
+                      Lack time or personnel to post your listings?
+                      <br><br>
+                      Need assistance creating agent profiles?
+                      <br><br>
+                      Need help creating attention-grabbing, powerful ads like this --
+                      <br><br>
+                      <a style="color: #0000ff;" href="http://americanbiztrader.com/buy/view-listing-details?listing_id=948&broker_id=133&listing_agent_id=467">
+                        Precision Machining and Fabrication Facility
+                      </a>
+                      <br><br>
+                      -- created for William Bruce, President of American Business
+                      Brokers Association?
+                      <br><br>
+                      We can help! Our data entry staff is here to help you look
+                      your best.
+                  </p>
+                  <h4 class="bold">
+                    Rates as low as $5.00 per each
+                  </h4>
+                  <h3>
+                    <a href="/contact?id=">Contact us today</a>
+                  </h3>
+                </div>
             </div><!-- // .sell-sidebar  -->
           </div>
+
+          <!-- <div class="box-for-text">
+            <div class="sell-sidebar">
+                <h2>Sell or Lease Your Business Today</h2>
+                <h3><a href="/find-a-business-expert">Hire an Expert</a></h3>
+            </div>
+          </div> -->
 
           <!-- <div class="box-for-text">
             <div class="sell-sidebar">
@@ -325,7 +376,7 @@
             </div>
           </div> -->
 
-          <div class="box-for-text">
+          <!-- <div class="box-for-text">
             <div class="sell-sidebar">
                 <h2>Real Estate Brokers</h2>
                 <h4 class="text-center">Commercial Only</h4>
@@ -353,6 +404,31 @@
                   <li>Ad Manager Friendly</li>
                 </ul>
                 <h3><a href="/register">Register Now</a></h3>
+            </div>
+          </div> -->
+
+          <div class="box-for-text">
+            <div class="sell-sidebar text-center">
+                <h3>Ad Free Zone</h3>
+                <h4>
+                  Your ad belongs to you!
+                </h4>
+                <p>
+                  American Biz Trader will never show advertisements or links to
+                  competitor listings on your dedicated ad pages.
+                </p>
+            </div><!-- // .sell-sidebar  -->
+          </div>
+
+          <div class="box-for-text">
+            <div class="sell-sidebar">
+                <h3>Coming Soon!</h3>
+                <ul>
+                  <li>California Biz Trader</li>
+                  <li>Florda Biz Trader</li>
+                  <li>Texas Biz Trader</li>
+                  <li>American Biz by Owner</li>
+                </ul>
             </div><!-- // .sell-sidebar  -->
           </div>
 
@@ -382,7 +458,62 @@
     </div><!-- // .row -->
 </div><!--  // .page-wrapper  -->
 
-
+<!-- Button trigger modal -->
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title" id="myModalLabel">
+          <img src="/assets/images/star_71x59.png" alt="American Biz Trader" height="39">
+          About American Biz Trader
+        </h3>
+      </div>
+      <div class="modal-body">
+        <p>
+          Jan 30, 2017
+        </p>
+        <br>
+        Since Jan 2016, American Biz Trader has been in development, and inspired by the support of Roger Murphy of Murphy Business Brokers and his professional team.
+        <br><br>
+        Thank you for visiting this site and for reading this.
+        <br><br>
+        As a business broker, my goal was to create a public, affordable, high-quality, business-for-sale website designed for brokers only -- &quot;By a broker for brokers only.&quot; At its launch, Jan 2017, I believe that we have succeeded, and I hope that you will agree.
+        <br><br>
+        The site is easy to navigate, fast and clean, without annoying ads or hidden fees.
+        <br><br>
+        It is sad that Roger did not live to see its launch, having passed away late in 2016.
+        <br><br>
+        I hope that committed professionals nationwide who share the vision that I hold and that Roger endorsed will support the industry and join this website today.
+        <br><br>
+        We believe that our approach reflects what professionals and prospective buyers want -- a straightforward, no-nonsense website committed to bringing together buyers and professional brokers.
+        <br><br>
+        We understand the challenges faced by professional brokers, prospective buyers and business sellers, and want to be part of a solution.
+        <br><br>
+        Our objective is simple: to help our members succeed. Our aim is to unite buyers with professional brokers to find the best-suited business opportunities.
+        <br><br>
+        Welcome to American Biz Trader. Please join today.
+        <br><br>
+        Best,
+        <br>
+        <span style="color:#0000ff; font-family:Shadows Into Light Two;font-size:180%">
+          Dave Didion
+        </span>
+        <br>
+        Dave Didion
+        <br>
+        President
+        <br>
+        American Biz Trader
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block bottomjs %}

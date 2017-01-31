@@ -13,11 +13,12 @@
           content must come *after* these tags -->
     <meta name="description" content="
       {% block metadescription %}
-        America&#39;s best businesses for sale nationwide at American Biz Trader.
+
       {% endblock %}
     ">
     <meta name="norton-safeweb-site-verification" content="kdhpf9lsp44jn-vkn1hxrve97q0icpniul5rfv026kbok1yfs0rx8m-pckaqicmrstbgt7f26zzwqxgdzsygkbrd-9i8303jqruuwirvw7j048ge2k2eon59jwu3843t" />
     <meta name="google-site-verification" content="OrnfKuDJGC1V2bjJTXObvzHcdAl8Zd3jmYAHf2-sh6A" />
+    <meta name="msvalidate.01" content="6E7729FEBA94E8B2574AE1606EF95B0A" />
     <link rel="shortcut icon" href="/assets/images/favicon.ico" type="image/x-icon">
     <!-- ckeditor must be in head not just above closing body tag -->
     <script src="//cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
@@ -36,6 +37,7 @@
     <link rel="stylesheet" href="/assets/css/styles.css">
 
     <link href="//fonts.googleapis.com/css?family=Open+Sans:400,700|PT+Sans+Narrow:400,700|PT+Sans:400,700|Raleway:400,700" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Shadows+Into+Light+Two" rel="stylesheet">
 
     <!-- <link href='//fonts.googleapis.com/css?family=Raleway:400,700' rel='stylesheet' type='text/css'>
     <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow' rel='stylesheet' type='text/css'>
@@ -47,6 +49,7 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body>
 
@@ -91,7 +94,7 @@
                         <a class="footer-menu" href="/sell-a-business">Sell</a>
                         <a class="footer-menu" href="/buy-lease-commercial-real-estate">Real Estate</a>
                         <a class="footer-menu" href="/find-a-business-expert">Experts</a>
-                        <a class="footer-menu" href="/contact?id=">Contact</a>
+                        <a class="footer-menu" href="/contact">Contact</a>
                         <a class="footer-menu" href="/register">Register</a>
                         <a style="padding-left: 8px;" href="/login">Log In</a>
                     </div>
@@ -122,5 +125,6 @@
     {% endblock %}
 
   {% include '/Quantcast/index.html' %}
+  {% include '/Google/google-analytics.html' %}
   </body>
 </html>

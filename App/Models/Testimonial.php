@@ -48,7 +48,9 @@ class Testimonial extends \Core\Model
 
         // retrieve form data
         $title = ( isset($_REQUEST['title']) ) ? filter_var($_REQUEST['title'], FILTER_SANITIZE_STRING) : "";
-        $testimonial = ( isset($_REQUEST['testimonial']) ) ? filter_var($_REQUEST['testimonial'], FILTER_SANITIZE_STRING) : "";
+        $testimonial = ( isset($_REQUEST['testimonial']) ) ? $_REQUEST['testimonial'] : "";
+
+        // echo $testimonial; exit();
 
         // validate data
         if($title == '' || filter_var($title, FILTER_SANITIZE_STRING === false))
@@ -95,10 +97,10 @@ class Testimonial extends \Core\Model
 
                 // return array of data to testimonials controller
                 $results = [
-                    'result' => $result,
-                    'id'     => $id,
-                    'token'  => $token,
-                    'title'  => $title,
+                    'result'      => $result,
+                    'id'          => $id,
+                    'token'       => $token,
+                    'title'       => $title,
                     'testimonial' => $testimonial
                 ];
 

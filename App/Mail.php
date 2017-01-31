@@ -75,8 +75,8 @@ class Mail
         //$mail->addCC('jim.burns14@gmail.com');
 
         // "Bcc" address
-        $mail->addBCC('dave.didion@americangymtrader.com');
-        $mail->addBCC('jim.burns14@gmail.com');
+        $mail->addBCC(Config::DAVEEMAIL);
+        $mail->addBCC(Config::JIMEMAIL);
         //$mail->addBCC('jim.burns@webmediapartners.com');
 
         // add different "Reply to" email address
@@ -167,11 +167,11 @@ class Mail
         /**
          * Send email
          */
-        $mail->setFrom('sales@americanbiztrader.com', $first_name . ' ' . $last_name);
-        $mail->addAddress('dave.didion@americangymtrader.com', 'ABT');
-        $mail->addCC('sales@americanbiztrader.com');
+        $mail->setFrom(Config::SALESEMAIL, $first_name . ' ' . $last_name);
+        $mail->addAddress(Config::DAVEEMAIL, 'ABT');
+        $mail->addCC(Config::SALESEMAIL);
         // $mail->addCC('jim.burns@webmediapartners.com');
-        $mail->addBCC('jim.burns14@gmail.com');
+        $mail->addBCC(Config::JIMEMAIL);
         $mail->isHTML(true);
 
         // Subject & body
@@ -257,12 +257,12 @@ class Mail
          * Send an email
          */
         // "From" and "To"
-        $mail->setFrom('sales@americanbiztrader.com', 'AmericanBizTrader');
-        //$mail->addAddress('sales@americanbiztrader.com', 'Dave');
+        $mail->setFrom(Config::SALESEMAIL, 'AmericanBizTrader');
+        //$mail->addAddress(Config::SALESEMAIL, 'Dave');
         //$mail->addAddress('dave.didion@americangymtrader.com', 'Dave');
         //$mail->addCC('wesleyajohnston@gmail.com');
-        $mail->addBCC('jim.burns14@gmail.com');
-        $mail->addBCC('dave.didion@americangymtrader.com');
+        $mail->addBCC(Config::JIMEMAIL);
+        $mail->addBCC(Config::DAVEEMAIL);
         $mail->isHTML(true);
 
         // Subject & body
@@ -280,7 +280,7 @@ class Mail
                     .  $testimonial
                     . '</p>'
                     . '<h3>'
-                    . 'To publish this testimonial on your website, click the link below.'
+                    . 'To publish this testimonial on the website, click the link below.'
                     . '<br>'
                     . 'If you do not wish to publish this testimonial, no action is required.'
                     . '</h3>'
@@ -351,13 +351,13 @@ class Mail
          * Send an email
          */
         // "From" and "To"
-        $mail->setFrom('sales@americanbiztrader.com', 'AmericanBizTrader');
+        $mail->setFrom(Config::SALESEMAIL, 'AmericanBizTrader');
         $mail->addAddress($user_email, $user_full_name);
         //$mail->addCC('jim.burns@webmediapartners.com');
         //$mail->addAddress('dave.didion@americangymtrader.com', 'Dave');
-        $mail->addBCC('sales@americanbiztrader.com');
-        $mail->addBCC('jim.burns14@gmail.com');
-        $mail->addBCC('dave.didion@americangymtrader.com');
+        $mail->addBCC(Config::SALESEMAIL);
+        $mail->addBCC(Config::JIMEMAIL);
+        $mail->addBCC(Config::DAVEEMAIL);
         $mail->isHTML(true);
 
         // Subject & body
@@ -462,8 +462,8 @@ class Mail
         //$mail->addCC('jim.burns14@gmail.com');
 
         // "Bcc" address
-        $mail->addBCC('jim.burns14@gmail.com');
-        $mail->addBCC('dave.didion@americangymtrader.com');
+        $mail->addBCC(Config::JIMEMAIL);
+        $mail->addBCC(Config::DAVEEMAIL);
         //$mail->addBCC('jim.burns@webmediapartners.com');
 
         // add different "Reply to" email address
@@ -568,8 +568,8 @@ class Mail
         $mail->addCC($listing_inquiry['agent_email']);
         //$mail->addAddress('jim.burns14@gmail.com');
         //$mail->addCC('dave.didion@americangymtrader.com');
-        $mail->addBCC('jim.burns14@gmail.com');
-        //$mail->addBCC('dave.didion@americangymtrader.com');
+        $mail->addBCC(Config::JIMEMAIL);
+        $mail->addBCC(Config::DAVEEMAIL);
 
         $mail->isHTML(true);
 
@@ -659,8 +659,8 @@ class Mail
         //$mail->addAddress('jim.burns14@gmail.com');
         //$mail->addCC('dave.didion@americangymtrader.com');
         $mail->addBCC('noreply@americanbiztrader.com');
-        $mail->addBCC('jim.burns14@gmail.com');
-        $mail->addBCC('dave.didion@americangymtrader.com');
+        $mail->addBCC(Config::JIMEMAIL);
+        $mail->addBCC(Config::DAVEEMAIL);
 
         $mail->isHTML(true);
 
@@ -736,16 +736,22 @@ class Mail
         );
 
         /**
+         * Enable SMTP debug messages
+         */
+        // $mail->SMTPDebug = 2;
+        // $mail->Debugoutput = 'html';
+
+        /**
          * Send email
          */
-        $mail->setFrom('noreplyh@americanbiztrader.com', 'AmericanBizTrader');
+        $mail->setFrom('noreply@americanbiztrader.com', 'AmericanBizTrader');
         $mail->addAddress($listing_inquiry['agent_email']);
         $mail->addCC($listing_inquiry['broker_email']);
         //$mail->addAddress('jim.burns14@gmail.com');
         //$mail->addCC('dave.didion@americangymtrader.com');
-        $mail->addBCC('sales@americanbiztrader.com');
-        $mail->addBCC('jim.burns14@gmail.com');
-        $mail->addBCC('dave.didion@americangymtrader.com');
+        $mail->addBCC(Config::SALESEMAIL);
+        $mail->addBCC(Config::JIMEMAIL);
+        $mail->addBCC(Config::DAVEEMAIL);
 
         $mail->isHTML(true);
 
@@ -837,9 +843,9 @@ class Mail
         //$mail->addAddress($broker->broker_email);
         //$mail->addAddress('jim.burns14@gmail.com');
         //$mail->addCC('dave.didion@americangymtrader.com');
-        $mail->addBCC('sales@americanbiztrader.com');
-        $mail->addBCC('jim.burns14@gmail.com');
-        $mail->addBCC('dave.didion@americangymtrader.com');
+        $mail->addBCC(Config::SALESEMAIL);
+        $mail->addBCC(Config::JIMEMAIL);
+        $mail->addBCC(Config::DAVEEMAIL);
 
         $mail->isHTML(true);
 
@@ -919,9 +925,9 @@ class Mail
         //$mail->addAddress($broker->broker_email);
         //$mail->addAddress('jim.burns14@gmail.com');
         //$mail->addCC('dave.didion@americangymtrader.com');
-        $mail->addBCC('sales@americanbiztrader.com');
-        $mail->addBCC('jim.burns14@gmail.com');
-        $mail->addBCC('dave.didion@americangymtrader.com');
+        $mail->addBCC(Config::SALESEMAIL);
+        $mail->addBCC(Config::JIMEMAIL);
+        $mail->addBCC(Config::DAVEEMAIL);
 
         $mail->isHTML(true);
 
