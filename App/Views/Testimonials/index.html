@@ -5,8 +5,8 @@
   Testimonials for American Biz Trader
 {% endblock %}
 
-{% block metadescriptin %}
-
+{% block metadescription %}
+  Learn what real clients who use AmericanBizTrader.com to sell & lease businesses & commercial real estate nationwide are saying about AmericanBizTrader.com.
 {% endblock %}
 
 
@@ -42,6 +42,16 @@
                   <div style="margin: 55px 43px 0px 43px">
                       {{ item.testimonial|raw }}
                   </div>
+                  <div style="margin: 5px 43px 0px 43px">
+                      {% if item.name == 'Dave Didion' %}
+                        {{ item. name }}<br>President<br>American Biz Trader
+                      {% else %}
+                        {{ item.name }}
+                        <br>
+                        {{ item.company }}
+                      {% endif %}  
+                  </div>
+
               </div><!-- // testimonial-wrapper -->
             {% endfor %}
 

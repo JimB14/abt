@@ -70,7 +70,7 @@ html,body{
 
 .sidebar-nav {
     position: absolute;
-    top: 32;
+    top: 32px;
     width: 250px;
     margin: 0;
     padding: 0;
@@ -100,20 +100,20 @@ html,body{
 }
 
 .sidebar-active {
-    text-decoration: none;
+    text-decoration: none !important;
     /*color: #fff;
     background: rgba(255,255,255,0.2);*/
     color: #000 !important;
-    background: #fff;
-    font-weight: bold;
+    background: #fff !important;
+    font-weight: bold !important;
 }
 .sidebar-active a {
-    text-decoration: none;
+    text-decoration: none !important;
     /*color: #fff;
     background: rgba(255,255,255,0.2);*/
-    color: #000;
-    background: #fff;
-    font-weight: bold;
+    color: #000 !important;
+    background: #fff !important;
+    font-weight: bold !important;
 }
 
 .sidebar-nav li a:active,
@@ -144,7 +144,7 @@ html,body{
 .active {
     display: block;
     background-color: rgba(255,255,255,0.2);
-    color: #fff !;
+    color: #fff;
 }
 
 

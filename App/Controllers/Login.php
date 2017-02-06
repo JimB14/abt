@@ -229,9 +229,9 @@ use \App\Models\BrokerAgent;
             View::renderTemplate('Paypal/index.html', [
                 'user'              => $user,
                 'new_subscription'  => 'true',
-                'pagetitle'         => 'Subscribe',
+                'pagetitle'         => 'Subscribe - includes one month FREE',
                 'subscriptiononly'  => Config::SUBSCRIPTION,
-                'action'            => '/subscribe/process-payment?id='.$user->id
+                'action'            => '/subscribe/process-payment-with-free-trial?id='.$user->id
             ]);
             exit();
         }

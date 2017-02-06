@@ -266,7 +266,7 @@
                     <label class="col-sm-3 control-label" for="cvv2">
                       Card CVV
                     </label>
-                    <div class="col-sm-3">
+                    <div class="col-sm-9">
                       <input type="text" class="form-control required" name="cvv2" id="cvv2"
                         placeholder="Security Code"
                         {% if pagetitle == 'Add agents' %}tabindex="7"{% endif %}>
@@ -284,10 +284,21 @@
                             Amount
                           {% endif %}
                         </label>
-                        <div class="col-sm-3">
+                        <div class="col-sm-9">
                           <!-- Twig likes code on one continuous line and without any spaces between elements -->
-                          <input type="text" class="form-control required" name="amt"
-                            id="amt" placeholder="Amount" value="{% if new_subscription == 'true' %}{{ subscriptiononly }}{%endif%}{% if reactivate == 'true' and reactivation_rate < 1%}{{ subscriptiononly }}{% else %}{{ reactivation_rate }}{% endif %}">
+                          <input type="text" class="form-control required" name="amt" style="background-color: #fff";
+                            id="amt" placeholder="Amount" value="{% if new_subscription == 'true' %}{{ subscriptiononly }}{%endif%}{% if reactivate == 'true' and reactivation_rate < 1%}{{ subscriptiononly }}{% else %}{{ reactivation_rate }}{% endif %}"
+                            readonly>
+
+                          {% if new_subscription == 'true' %}
+                            <small>
+                              Your credit card will NOT be charged today. It will be
+                              charged automatically one month from tomorrow and each
+                              month after unless you cancel your account. If during
+                              your free trial you wish to cancel, you can cancel in
+                              &apos;My account&apos; in the Admin Panel.
+                            </small>
+                          {% endif %}
                         </div>
                       </div>
                   {% endif %}
@@ -321,6 +332,8 @@
                           Update membership
                         {% elseif pagetitle == 'Authorize new credit card' %}
                           Authorize Now
+                        {% elseif new_subscription == 'true' %}
+                          Join Now
                         {% else %}
                           Pay Now
                         {% endif %}

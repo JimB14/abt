@@ -36,6 +36,120 @@ class Subscribe extends \Core\Controller
     }
 
 
+    /**
+     * processes subscription payment NOW & sets up recurring billing
+     *
+     * @return boolean   The success view or error
+     */
+    public function processPaymentWithFreeTrial()
+    {
+        // retrieve user ID from query string
+        $user_id = (isset($_GET['id'])) ? filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT) : '';
+
+        // test
+        // echo "Connected to processPayment() method in Subscribe Controller!<br><br>";
+        // exit();
+
+        // process the payment; get back response
+        $response = Paypal::processPaymentWithFreeTrial($user_id);
+
+        // test
+        // echo '<pre>';
+        // print_r($response);
+        // echo '</pre>';
+        // exit();
+
+        // if successful
+        if($response)
+        {
+            // store PP response data in array
+            $data_array = [
+                'RESULT'        => $response['RESULT'],
+                'PROFILEID'     => $response['PROFILEID'],
+                'RESPMSG'       => $response['RESPMSG'],
+                'TRXRESULT'     => $response['TRXRESULT'],
+                'TRXPNREF'      => $response['TRXPNREF'],
+                'TRXRESPMSG'    => $response['TRXRESPMSG'],
+                'AUTHCODE'      => $response['AUTHCODE'],
+                'CVV2MATCH'     => $response['CVV2MATCH'],
+                'PPREF'         => $response['PPREF'],
+                'CORRELATIONID' => $response['CORRELATIONID'],
+                'PROCCVV2'      => $response['PROCCVV2'],
+                'TRANSTIME'     => $response['TRANSTIME'],
+                'FIRSTNAME'     => $response['FIRSTNAME'],
+                'LASTNAME'      => $response['LASTNAME'],
+                'AMT'           => $response['AMT'],
+                'ACCT'          => $response['ACCT'],
+                'EXPDATE'       => $response['EXPDATE'],
+                'CARDTYPE'      => $response['CARDTYPE']
+            ];
+
+            // store $response['AMT'] in variable
+            $sub_amt = $data_array['AMT'];
+
+            // store subscription amount in variable
+            $subscription = config::SUBSCRIPTION;
+
+            // store transaction response data in paypal_log
+            $result = Paypallog::addNewSubscriberWithFreeTrialTransactionData($user_id, $data_array);
+
+            if($result)
+            {
+                // modify users.current field to true (1)
+                $result = User::updateCurrent($user_id, $current=1, $sub_amt, $max_agents=1);
+
+                if($result)
+                {
+                    // get user data
+                    $user = User::getUser($user_id);
+
+                    // define message
+                    $subscribe_msg1 = "You have successfully joined American Biz
+                    Trader!";
+
+                    $subscribe_msg2 = "Your credit card will be charged $$subscription
+                    one month from tomorrow and each month afterward unless you
+                    cancel your membership.";
+
+                    $subscribe_msg3 = "You can now Log In to complete the
+                    registration process.";
+
+                    $subscribe_msg4 = "Congratulations and welcome to American
+                      Biz Trader!";
+
+                    $subscribe_msg5 = "Log In here.";
+
+                    View::renderTemplate('Success/index.html', [
+                        'subscribe_success' => 'true',
+                        'subscribe_msg1'    => $subscribe_msg1,
+                        'subscribe_msg2'    => $subscribe_msg2,
+                        'subscribe_msg3'    => $subscribe_msg3,
+                        'subscribe_msg4'    => $subscribe_msg4,
+                        'subscribe_msg5'    => $subscribe_msg5,
+                        'first_name'        => $user->first_name,
+                        'last_name'         => $user->last_name
+                    ]);
+                }
+                else
+                {
+                    echo "Error updating user data.";
+                    exit();
+                }
+            }
+            else
+            {
+                echo "Error inserting transaction data.";
+                exit();
+            }
+        }
+    }
+
+
+    /**
+     * processes subscription payment NOW & sets up recurring billing
+     *
+     * @return boolean   The success view or error
+     */
     public function processPayment()
     {
         // retrieve user ID from query string
@@ -92,7 +206,7 @@ class Subscribe extends \Core\Controller
 
                     $subscribe_msg2 = "Your credit card will be charged for the
                     same amount ($$sub_amt) one month from tomorrow and each
-                    month afterward unless you cancel your subscription.";
+                    month afterward unless you cancel your membership.";
 
                     $subscribe_msg3 = "You can now Log In to complete the
                     registration process and begin posting your listings.";
@@ -252,7 +366,7 @@ class Subscribe extends \Core\Controller
 
                     $added_agent_success2 = "Your credit card will be charged $$returned_amount
                     on $next_payment and each month on the same date unless you
-                    cancel your subscription.";
+                    cancel your membership.";
 
                     $added_agent_success3 = "You can now add a new agent profile.";
 
@@ -411,7 +525,7 @@ class Subscribe extends \Core\Controller
 
                     $subscribe_msg2 = "Your credit card will be charged $$returned_amount
                     on $next_payment and each month after unless you cancel your
-                    subscription.";
+                    membership.";
 
                     $subscribe_msg3 = "You can verify these changes in the Admin
                     Panel by clicking on 'My account' under 'Company'.";
@@ -490,7 +604,11 @@ class Subscribe extends \Core\Controller
     }
 
 
-
+    /**
+     * processes new credit card data submitted by user
+     *
+     * @return array  The PayPal response
+     */
     public function processCreditCardAuthorization()
     {
         // retrieve query string data
@@ -599,7 +717,11 @@ class Subscribe extends \Core\Controller
     }
 
 
-
+    /**
+     * cancels recurring billing (PayPal PROFILEID is maintained by PayPal)
+     *
+     * @return
+     */
     public function cancelPayment()
     {
         // echo "Successfully connected to cancelPayment() method in Subscribe Controller <br><br>";
@@ -709,7 +831,11 @@ class Subscribe extends \Core\Controller
     }
 
 
-
+    /**
+     * processes account reactivation with PayPal
+     *
+     * @return boolean
+     */
     public function processReactivation()
     {
         // echo "Connected to processReactivation() in Subscribe Controller.<br><br>";

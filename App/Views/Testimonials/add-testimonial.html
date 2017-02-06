@@ -52,6 +52,26 @@
                       </div>
                   </div>
 
+                  <div class="form-group">
+                      <label for="title"  class="col-sm-3 control-label">
+                        Name
+                      </label>
+                      <div class="col-sm-9">
+                          <input type="text" class="form-control required"
+                          id="testimonial_full_name" name="testimonial_full_name" value="{{ user.first_name }} {{ user.last_name }}">
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                      <label for="title"  class="col-sm-3 control-label">
+                        Company
+                      </label>
+                      <div class="col-sm-9">
+                          <input type="text" class="form-control required"
+                          id="testimonial_company" name="testimonial_company" value="{{ user.company }}">
+                      </div>
+                  </div>
+
                   <hr>
 
                   <div class="form-group">

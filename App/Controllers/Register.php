@@ -65,6 +65,15 @@ class Register extends \Core\Controller
      */
     public function registerNewUser()
     {
+        // check honeypot for robot content
+        $honeypot = filter_var($_REQUEST['honeypot'], FILTER_SANITIZE_STRING);
+
+        if($honeypot != '')
+        {
+           return false;
+           exit();
+        }
+
         // add new user to users table; get data & store in $results array
         $results = User::addNewUser();
 
@@ -106,8 +115,8 @@ class Register extends \Core\Controller
               // define message
               $success_registration1 = 'You have successfully registered!';
 
-              $success_registration2 = "Please check your email to verify that
-                you are not a robot. If you do not receive an email from
+              $success_registration2 = "Please check your email to verify your
+                account. If you do not receive an email from
                 noreply@americanbiztrader.com in the next few minutes, please
                 check your spam folder and white-list americanbiztrader.com.";
 

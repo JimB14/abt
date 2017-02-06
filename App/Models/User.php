@@ -9,6 +9,13 @@ use PDO;
 class User extends \Core\Model
 {
 
+    /**
+     * checks if email is in users table
+     *
+     * @param  string   $email  The user's email address
+     *
+     * @return string           The answer
+     */
     public static function checkIfAvailable($email)
     {
         if($email == '' || strlen($email) < 3)
@@ -22,7 +29,9 @@ class User extends \Core\Model
             // establish db connection
             $db = static::getDB();
 
-            $sql = "SELECT * FROM users WHERE email = :email";
+            $sql = "SELECT * FROM users
+                    WHERE email = :email
+                    LIMIT 1";
             $stmt = $db->prepare($sql);
             $parameters = [
                 ':email' => $email

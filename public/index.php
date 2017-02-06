@@ -16,8 +16,8 @@ session_start();
 
 // resource: http://stackoverflow.com/questions/520237/how-do-i-expire-a-php-session-after-30-minutes
 // destroy session after 45 minutes of inactivity
-if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 2700)) {
-
+if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 2700))
+{
     // last request was more than 45 minutes ago
     session_unset();     // unset $_SESSION variable for the run-time
     session_destroy();   // destroy session data in storage

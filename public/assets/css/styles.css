@@ -28,7 +28,7 @@ body {
       top: -35px;
   }
   .affix + .container-fluid {
-      //padding-top: 170px;
+      padding-top: 170px;
   }
 
   /*  Fonts  */
@@ -128,10 +128,10 @@ body {
 .business-listings li {display:inline-block; padding-right: 15px; margin-bottom:15px;}
 .business-listings img {
     padding:20px 12px;
-    //border:1px solid #dedede;
-    //border-radius: 4px;
+    border:1px solid #dedede;
+    border-radius: 4px;
 }
-//.business-listings img:hover{transform: scale(1);border: #000 1px solid; background-color:#fefefe;}
+.business-listings img:hover{transform: scale(1);border: #000 1px solid; background-color:#fefefe;}
 
 .box {
   overflow: hidden;
@@ -417,7 +417,7 @@ fieldset[disabled] .btn-search.active {
 .navbar-nav {padding-top: 10px;}
 
 .navbar-brand {height:63px;}
-//.nav > li {top:5px;}
+.nav > li {top:5px;}
 
 /*.nav > li {padding-right:5px;}*/
 
@@ -591,7 +591,7 @@ fieldset[disabled] .btn-search.active {
 
 /*--------------------------- buy-a-biz.php ------------------*/
 .search-div {
-    //margin: 0 auto;
+    margin: 0 auto;
     border: #ddd 1px solid;
     border-radius: 4px;
     padding:10px;
@@ -602,13 +602,13 @@ fieldset[disabled] .btn-search.active {
 
 .listing-buy-a-biz img {
   max-width: 272px;
-  heigth: auto;
+  height: auto;
   margin-bottom:10px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   border-radius: 4px;
 }
 
-.listing-all-listings img {max-height: 203px; heigth: auto;}
+.listing-all-listings img {max-height: 203px; height: auto;}
 
 .business-listing p {text-align: left; margin-bottom:5px; padding-left:0px;}
 .business-listing h5 {font-weight: bold; text-align: left; margin: 0px; margin-bottom: 5px;}
@@ -813,7 +813,9 @@ fieldset[disabled] .btn-search.active {
 
 /* - - - - - - - -  franchise-details.html.php   - - - - - - -  */
 
-.contact-form-textarea-text{};
+.contact-form-textarea-text{
+
+};
 
 /*-------------- Footer ---------------*/
 .bg-footer {background-color: #fff;}
@@ -843,7 +845,7 @@ fieldset[disabled] .btn-search.active {
     text-decoration: none;
 }
 #footer-style a {
-  //color: #FFF;
+  color: #FFF;
   text-decoration: none;
   font-size: 79%;
 }
@@ -904,16 +906,99 @@ fieldset[disabled] .btn-search.active {
 }
 
 
-
-.social-icons {
-    margin: 0px;
-    padding: 0px;
-    width: auto;
+.sitelock {
+  z-index: 1000;
+  width: 80px;  /*164px;*/
+  height: auto;  /*98px;*/
+  margin: 0 auto;
 }
-.social-icons li {
-    display: inline-block;
-    margin: -1px 1px 5px 0px;
-    padding: 0px;
+
+/* - - - - - - - -   Social bar   - - - - - - - - */
+/* http://bootsnipp.com/snippets/featured/spinning-social-icons */
+#social-bar {
+  text-align: center;
+}
+
+/* - - - - - - -  Icons  - - - - - - - - - */
+
+/* footer social icons */
+#social-bar ul.social-network {
+	list-style: none;
+	display: inline;
+	margin-left:0 !important;
+	padding: 0;
+}
+#social-bar ul.social-network li {
+	display: inline;
+	margin: 0 5px;
+}
+
+
+/* footer social icons */
+#social-bar .social-network a.icoRss:hover {
+	background-color: #F56505;
+}
+#social-bar .social-network a.icoFacebook:hover {
+	background-color:#3B5998;
+}
+#social-bar .social-network a.icoTwitter:hover {
+	background-color:#33ccff;
+}
+#social-bar .social-network a.icoGoogle:hover {
+	background-color:#BD3518;
+}
+#social-bar .social-network a.icoVimeo:hover {
+	background-color:#0590B8;
+}
+#social-bar .social-network a.icoLinkedin:hover {
+	background-color:#007bb7;
+}
+#social-bar .social-network a.icoRss:hover i, .social-network a.icoFacebook:hover i, .social-network a.icoTwitter:hover i,
+#social-bar .social-network a.icoGoogle:hover i, .social-network a.icoVimeo:hover i, .social-network a.icoLinkedin:hover i {
+	color:#fff;
+}
+
+
+#social-bar .social-circle li a {
+	display:inline-block;
+	position:relative;
+	margin:0 auto 0 auto;
+	-moz-border-radius:50%;
+	-webkit-border-radius:50%;
+	border-radius:50%;
+	text-align:center;
+	width: 30px;
+	height: 30px;
+	font-size:20px;
+}
+#social-bar .social-circle li i {
+	margin:0;
+	line-height:29px;
+	text-align: center;
+}
+
+/*#social-bar .social-circle li a:hover i {
+	-moz-transform: rotate(360deg);
+	-webkit-transform: rotate(360deg);
+	-ms--transform: rotate(360deg);
+	transform: rotate(360deg);
+	-webkit-transition: all 0.2s;
+	-moz-transition: all 0.2s;
+	-o-transition: all 0.2s;
+	-ms-transition: all 0.2s;
+	transition: all 0.2s;
+}
+#social-bar .social-circle i {
+	color: #fff;
+	-webkit-transition: all 0.8s;
+	-moz-transition: all 0.8s;
+	-o-transition: all 0.8s;
+	-ms-transition: all 0.8s;
+	transition: all 0.8s;
+}*/
+
+#social-bar a {
+ //background-color: #D3D3D3;  // displays circular background
 }
 
 /* - - - - - - - - -  new-user-login.php   - - - - - - - - - - - */

@@ -543,7 +543,6 @@ class Broker extends \Core\Model
         $type = ( isset($_POST['type']) ) ? filter_var($_POST['type'], FILTER_SANITIZE_NUMBER_INT) : '';
         $company_bio = ( isset($_POST['company_bio']) ) ? $_POST['company_bio'] : '';
         $services = ( isset($_POST['services']) ) ? $_POST['services'] : '';
-
         $website = ( isset($_POST['website']) ) ? filter_var($_POST['website'], FILTER_SANITIZE_STRING) : '';
 
         // test
@@ -552,16 +551,28 @@ class Broker extends \Core\Model
         // echo '</pre>';
         // exit();
 
-        // Fallback validation code if user has disabled JavaScript
+        // PHP validation code (required if user has disabled JavaScript)
         if (
-          ($first_name == '') || ($last_name == '') || ($title == '') || ($broker_email == '')
-          || ($broker_cell == '') || ($company_name == '') || ($type == '') || ($address1 == '')
-          || ($city == '') || ($state == '') || ($zip == '') || ($telephone == '')
-          || ($services == '') || ($company_bio == '') || ($website == '')
-        )
+            ($first_name === '') ||
+            ($last_name === '') ||
+            ($title === '') ||
+            ($broker_email === '') ||
+            ($broker_cell === '') ||
+            ($company_name === '') ||
+            ($type === '') ||
+            ($address1 === '') ||
+            ($city === '') ||
+            ($state === '') ||
+            ($zip === '') ||
+            ($telephone === '') ||
+            ($services === '') ||
+            ($company_bio === '') ||
+            ($website === '')
+          )
         {
-          echo '<script>alert("All fields except Address2 and Fax are required.")</script>';
-          exit();
+            echo '<script>alert("All fields except Address2 and Fax are required. You must login again to continue.")</script>';
+            echo '<script>window.location.href="/login"</script>';
+            exit();
         }
 
         // Check if company logo image was uploaded; if true, process

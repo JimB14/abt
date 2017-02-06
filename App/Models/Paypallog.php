@@ -51,6 +51,76 @@ class Paypallog extends \Core\Model
      * @param array   $data_array Required and addtional data for PP
      * @return boolean
      */
+    public static function addNewSubscriberWithFreeTrialTransactionData($user_id, $data_array)
+    {
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            // insert paypal transaction data into paypal_log
+            $sql = "INSERT INTO paypal_log SET
+                    user_id       = :user_id,
+                    RESULT        = :RESULT,
+                    PROFILEID     = :PROFILEID,
+                    RESPMSG       = :RESPMSG,
+                    TRXRESULT     = :TRXRESULT,
+                    TRXPNREF      = :TRXPNREF,
+                    TRXRESPMSG    = :TRXRESPMSG,
+                    AUTHCODE      = :AUTHCODE,
+                    CVV2MATCH     = :CVV2MATCH,
+                    CORRELATIONID = :CORRELATIONID,
+                    PPREF         = :PPREF,
+                    PROCCVV2      = :PROCCVV2,
+                    TRANSTIME     = :TRANSTIME,
+                    FIRSTNAME     = :FIRSTNAME,
+                    LASTNAME      = :LASTNAME,
+                    AMT           = :AMT,
+                    ACCT          = :ACCT,
+                    EXPDATE       = :EXPDATE,
+                    CARDTYPE      = :CARDTYPE";
+            $parameters = [
+                ':user_id'        => $user_id,
+                ':RESULT'         => $data_array['RESULT'],
+                ':PROFILEID'      => $data_array['PROFILEID'],
+                ':RESPMSG'        => $data_array['RESPMSG'],
+                ':TRXRESULT'      => $data_array['TRXRESULT'],
+                ':TRXPNREF'       => $data_array['TRXPNREF'],
+                ':TRXRESPMSG'     => $data_array['TRXRESPMSG'],
+                ':AUTHCODE'       => $data_array['AUTHCODE'],
+                ':PPREF'          => $data_array['PPREF'],
+                ':CVV2MATCH'      => $data_array['CVV2MATCH'],
+                ':CORRELATIONID'  => $data_array['CORRELATIONID'],
+                ':PROCCVV2'       => $data_array['PROCCVV2'],
+                ':TRANSTIME'      => $data_array['TRANSTIME'],
+                ':FIRSTNAME'      => $data_array['FIRSTNAME'],
+                ':AMT'            => $data_array['AMT'],
+                ':LASTNAME'       => $data_array['LASTNAME'],
+                ':ACCT'           => $data_array['ACCT'],
+                ':EXPDATE'        => $data_array['EXPDATE'],
+                ':CARDTYPE'       => $data_array['CARDTYPE']
+            ];
+            $stmt = $db->prepare($sql);
+            $result = $stmt->execute($parameters);
+
+            // return boolean to Paypal Controller
+            return $result;
+        }
+        catch (PDOException $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
+    }
+
+
+    /**
+     * adds transaction data to paypal_log
+     *
+     * @param integer $user_id    The user's ID
+     * @param array   $data_array Required and addtional data for PP
+     * @return boolean
+     */
     public static function addTransactionData($user_id, $data_array)
     {
         try

@@ -273,39 +273,40 @@
           </tbody>
       </table>
 
-      <table class="table table-hover table-responsive table-condensed">
-          <thead>
-              <tr>
-                  <th>Real Estate</th>
-                  <th>City</th>
-                  <th>State</th>
-                  <th>Asking</th>
-              </tr>
-          </thead>
+      {% if broker_realty_listings %} <!-- display table only if realty listings exist -->
+        <table class="table table-hover table-responsive table-condensed">
+            <thead>
+                <tr>
+                    <th>Real Estate</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Asking</th>
+                </tr>
+            </thead>
 
-          <tbody>
-              {% for listing in broker_realty_listings %}
-              <tr>
-                  <td>
-                      <a href="/realty/view-listing-details?listing_id={{ listing.id }}&amp;broker_id={{ broker.broker_id}}&amp;listing_agent_id={{ listing.listing_agent_id}}">
-                        {% if listing.ad_title %} {{ listing.ad_title|raw }} {% endif %}
-                      </a>
-                  </td>
-                  <td>
-                      {% if listing.city %} {{ listing.city }} {% endif %}
-                  </td>
-                  <td>
-                      {% if listing.state %} {{ listing.state }} {% endif %}
-                  </td>
-                  <td>
-                      {% if listing.asking_price %} {{ listing.asking_price|number_format(0) }} {% endif %}
-                  </td>
-              </tr>
-              {% endfor %}
+            <tbody>
+                {% for listing in broker_realty_listings %}
+                <tr>
+                    <td>
+                        <a href="/realty/view-listing-details?listing_id={{ listing.id }}&amp;broker_id={{ broker.broker_id}}&amp;listing_agent_id={{ listing.listing_agent_id}}">
+                          {% if listing.ad_title %} {{ listing.ad_title|raw }} {% endif %}
+                        </a>
+                    </td>
+                    <td>
+                        {% if listing.city %} {{ listing.city }} {% endif %}
+                    </td>
+                    <td>
+                        {% if listing.state %} {{ listing.state }} {% endif %}
+                    </td>
+                    <td>
+                        {% if listing.asking_price %} {{ listing.asking_price|number_format(0) }} {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
 
-          </tbody>
-      </table>
-
+            </tbody>
+        </table>
+      {% endif %}
   </div>
 {% endif %}
 

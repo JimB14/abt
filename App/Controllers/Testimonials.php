@@ -41,10 +41,33 @@ class Testimonials extends \Core\Controller
      */
     public function indexAction()
     {
+        // get all testimonials
         $content = Testimonial::getAllTestimonials();
+
+        // get values from user_id column in $content array & store in associative array;
+        // http://php.net/manual/en/function.array-column.php
+        // $users = array_column($content, 'user_id');
+
+        // test
+        // echo '<pre>';
+        // print_r($users);
+        // echo '</pre>';
+        // exit();
+
+        // get user data
+        // foreach($users as $user_id)
+        // {
+        //     $user[$user_id] = User::getUser($user_id);
+        // }
+
+        // echo '<pre>';
+        // print_r($user);
+        // echo '</pre>';
+        // exit();
 
         View::renderTemplate('Testimonials/index.html', [
             'testimonials'      => $content,
+            // 'user'              => $user[$user_id], // assoc array
             'testimonialsindex' => 'active'
         ]);
     }

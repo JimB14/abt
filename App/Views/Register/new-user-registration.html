@@ -142,7 +142,7 @@
                   </label>
                   <div class="col-sm-9">
                       <input type="text" name="address2" class="form-control"
-                      id="address2" placeholder="Address2">
+                        id="address2" placeholder="Address2 - not required">
                       <span class="glyphicon form-control-feedback" id="address21"></span>
                   </div>
               </div>
@@ -211,7 +211,7 @@
                   </label>
                   <div class="col-sm-9">
                       <input type="text" class="form-control" name="fax"
-                      id="fax" placeholder="Fax">
+                      id="fax" placeholder="Fax - not required">
                       <span class="glyphicon form-control-feedback" id="fax1"></span>
                   </div>
               </div>
@@ -224,7 +224,7 @@
                   </label>
                   <div class="col-sm-9">
                       <input type="file" name="company_logo" id="company_logo" class="required">
-                      <p class="help-block small">
+                      <p class="help-block small" style="color: #222">
                           *Must be gif, jpg, jpeg or png under 2MB
                       </p>
                       <span class="glyphicon form-control-feedback" id="company_logo1"></span>
@@ -239,7 +239,7 @@
                   </label>
                   <div class="col-sm-9">
                       <input type="file" name="broker_photo" id="broker_photo" class="required">
-                      <p class="help-block small">
+                      <p class="help-block small" style="color: #222">
                           *Must be gif, jpg, jpeg or png under 2MB
                       </p>
                       <span class="glyphicon form-control-feedback" id="broker_photo1"></span>
@@ -251,9 +251,13 @@
               <div class="form-group has-feedback">
                   <label for="services" class="control-label col-sm-3">
                       Services offered
+                      <small class="red text-left">
+                        <br>
+                        *Required
+                      </small>
                   </label>
                   <div class="col-sm-9">
-                      <textarea name="services" class="form-control required" id="services" placeholder="Services offered"></textarea>
+                      <textarea  class="form-control" name="services" id="services" placeholder="Services offered"></textarea>
                       <script>
                         CKEDITOR.replace( 'services' );
                       </script>
@@ -266,9 +270,13 @@
               <div class="form-group has-feedback">
                   <label for="company_bio" class="control-label col-sm-3">
                       Company Biography
+                      <small class="red">
+                        <br>
+                        *Required
+                      </small>
                   </label>
                   <div class="col-sm-9">
-                      <textarea name="company_bio" class="form-control required" id="company_bio" placeholder="Company Biography"></textarea>
+                      <textarea name="company_bio" class="form-control" id="company_bio" placeholder="Company Biography"></textarea>
                       <script>
                         CKEDITOR.replace( 'company_bio' );
                       </script>

@@ -44,7 +44,6 @@
 </head>
 <body style="background: #fff;">
 
-
   <div id="wrapper">
       <!-- - - - - - - - - - - -  Sidebar  - - - - - - - - - - -->
       <div id="sidebar-wrapper">
@@ -55,8 +54,10 @@
             </a>
           </p>
 
-          <ul class="sidebar-nav" style="margin-bottom: 20px; margin-top: {% if broker_type == 3 %} 221px;{% endif %}">
-              <li style="font-size: 130%; color: #fff;">Company</li>
+          <ul class="sidebar-nav" style="margin-bottom: 20px; margin-top: {% if broker_type == 3 %} 236px;{% endif %}">
+              <li style="font-size: 130%; color: #fff;">
+                Company
+              </li>
 
               <li class="{% if myaccount == 'active' %}sidebar-active{% endif %}">
                   <a class="{% if myaccount == 'active' %}sidebar-active{% endif %}"
@@ -153,7 +154,7 @@
               </li>
 
               <li class="{% if home == 'active' %}sidebar-active{% endif %}">
-                <a class="{% if home == 'active' %}sidebar-active{% endif %}"  
+                <a class="{% if home == 'active' %}sidebar-active{% endif %}"
                   href="/admin/brokers/index?user_id={{ session.user_id }}">
                   Home
                 </a>

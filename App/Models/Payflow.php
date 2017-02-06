@@ -47,7 +47,7 @@ class Payflow extends \Core\Model
     var $errors = '';
     var $currencies_allowed = ['USD', 'EUR', 'GBP', 'CAD', 'JPY', 'AUD'];
     // set test mode for testing or LIVE
-    var $test_mode = 0; // 1 for sandbox; see line #93
+    var $test_mode = config::PAYPALTEST;
 
 
     /**
@@ -90,7 +90,7 @@ class Payflow extends \Core\Model
             return false;
         }
         // set submiturl for test or live
-        if ($this->test_mode == 1)
+        if ($this->test_mode == config::PAYPALTEST)
         {
             $this->submiturl = 'https://pilot-payflowpro.paypal.com';
         }
@@ -111,6 +111,152 @@ class Payflow extends \Core\Model
 
   /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
   // SALE with Recurring Billing = Subscription
+
+  /**
+   * Recurring billing sale transaction; accepts 9 parameters (one is an array)
+   * @param  string   $vendor       PP credential
+   * @param  string   $user         PP credential
+   * @param  string   $partner      PayPal or merchant
+   * @param  string   $password     Account password
+   * @param  string   $card_number  Payment card number
+   * @param  string   $card_expire  Card expiration date
+   * @param  integer  $amount       Total amount of charge
+   * @param  string   $currency     Type of currency
+   * @param  array    $data_array   Additional data
+   * @return [type]                 Name-value pair string
+   */
+  function sale_transaction_with_free_trial($vendor, $user, $partner, $password, $card_number, $card_expire, $currency, $data_array)
+  {
+      $this->vendor = $vendor;
+      $this->user = $user;
+      $this->partner = $partner;
+      $this->password = $password;
+
+      // validate card number (ACCT)
+      if ($this->validate_card_number($card_number) == false)
+      {
+          $this->set_errors('Card Number not valid');
+          return;
+      }
+      // validate EXPDATE
+      if ($this->validate_card_expire($card_expire) == false)
+      {
+          $this->set_errors('Card Expiration Date not valid');
+          return;
+      }
+      // validate AMT
+      if (!is_numeric($data_array['AMT']) || $data_array['AMT'] <= 0)
+      {
+          $this->set_errors('Amount is not valid');
+          return;
+      }
+      // validate currency (if currency drop-down used)
+      if (!in_array($currency, $this->currencies_allowed))
+      {
+          $this->set_errors('Currency not allowed');
+          return;
+      }
+
+      // set submit URL (endpoint)
+      if ($this->test_mode == 1)
+      {
+          $this->submiturl = 'https://pilot-payflowpro.paypal.com';
+      }
+      else
+      {
+          $this->submiturl = 'https://payflowpro.paypal.com';
+      }
+
+      // create request_id for use in headers - see line #210
+      $tempstr = $card_number . $data_array['AMT'] . date('YmdGis') . "1";
+      $request_id = md5($tempstr);
+
+      // alternative $request_id creation method
+      // $request_id = date('YmdGis'); // must be unique ID
+
+      // build query string for recurring billing to pass to PP
+      $plist  = 'USER=' . $this->user . '&';
+      $plist .= 'VENDOR=' . $this->vendor . '&';
+      $plist .= 'PARTNER=' . $this->partner . '&';
+      $plist .= 'PWD=' . $this->password . '&';
+      $plist .= 'TENDER=' . 'C' . '&'; // C = credit card, P = PayPal
+      $plist .= 'TRXTYPE=' . 'R' . '&'; //  R = Recurring, S = Sale transaction, A = Authorisation, C = Credit, D = Delayed Capture, V = Void
+      $plist .= 'ACCT=' . $card_number . '&';
+      $plist .= 'EXPDATE=' . $card_expire . '&';
+      $plist .= 'AMT=' . $data_array['AMT'] . '&';
+      $plist .= 'CURRENCY=' . $currency . '&';
+      $plist .= 'COMMENT1=' . $data_array['COMMENT1'] . '&';
+      $plist .= 'FIRSTNAME=' . $data_array['FIRSTNAME'] . '&';
+      $plist .= 'LASTNAME=' . $data_array['LASTNAME'] . '&';
+      $plist .= 'ACTION=' . $data_array['ACTION'] . '&';
+      $plist .= 'PROFILENAME=' . $data_array['PROFILENAME'] . '&';
+      $plist .= 'START=' . $data_array['START'] . '&';
+      $plist .= 'PAYPERIOD=' . $data_array['PAYPERIOD'] . '&';
+      $plist .= 'TERM=' . $data_array['TERM'] . '&';
+      $plist .= 'OPTIONALTRX=' . $data_array['OPTIONALTRX'] . '&';
+      // $plist .= 'OPTIONALTRXAMT=' . $data_array['OPTIONALTRXAMT'] . '&';
+      $plist .= 'RETRYNUMDAYS=' . $data_array['RETRYNUMDAYS'] . '&';
+      if (isset($data_array['CVV2']))
+      {
+          $plist .= 'CVV2=' . $data_array['CVV2'] . '&';
+      }
+      $plist .= 'IPADDRESS=' . $data_array['IPADDRESS'] . '&';
+
+      // verbosity
+      $plist .= 'VERBOSITY=HIGH';
+
+      // call method for headers
+      $headers = $this->get_curl_headers();
+      $headers[] = "X-VPS-Request-ID: " . $request_id;
+
+      $user_agent = "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)"; // play as Mozilla
+
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL, $this->submiturl);
+      curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+      curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
+      curl_setopt($ch, CURLOPT_HEADER, 1); // tells curl to include headers in response
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // return into a variable
+      curl_setopt($ch, CURLOPT_TIMEOUT, 45); // times out after 45 secs
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // this line makes it work under https
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $plist); //adding POST data
+      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,  2); //verifies ssl certificate
+      curl_setopt($ch, CURLOPT_FORBID_REUSE, TRUE); //forces closure of connection when done
+      curl_setopt($ch, CURLOPT_POST, 1); //data sent as POST
+
+      $result = curl_exec($ch);
+      $headers = curl_getinfo($ch);
+      curl_close($ch);
+
+      $pfpro = $this->get_curl_result($result); //result arrray
+
+      // parse query string & store name-value pairs in array $response[]
+      parse_str($pfpro, $response);
+
+      // test
+      // echo $response['TRXPNREF'].'<br><br>';
+      // echo 'Response array<br>';
+      // echo '<pre>';
+      // print_r($response);
+      // echo '</pre>';
+      // exit();
+
+      // if successful return PP response
+      if (isset($response['RESULT']) && $response['RESULT'] == 0)
+      {
+          return $response;
+      }
+      else
+      {
+          $this->set_errors($response['RESPMSG'] . ' ['. $response['RESULT'] . ']');
+          return false;
+      }
+  }
+
+
+
+
     /**
      * Recurring billing sale transaction; accepts 9 parameters (one is an array)
      * @param  string   $vendor       PP credential
