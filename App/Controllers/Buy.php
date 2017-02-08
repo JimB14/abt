@@ -111,7 +111,7 @@ class Buy extends \Core\Controller
 
 
     /**
-     * test
+     * retrieves listings
      */
     public function getAllListingsForLoadMore()
     {

@@ -46,6 +46,9 @@ class Experts extends \Core\Controller
         // get broker agents for all brokers
         $agents = BrokerAgent::getAllBrokerAgents($limit=20, $broker_id=null, $orderby='broker_agents.regDate DESC');
 
+        // get all agents
+        $allagents = BrokerAgent::getAllBrokerAgents($limit=null, $broker_id=null, $orderby=null);
+
         // test
         // echo '<pre>';
         // print_r($agents);
@@ -57,6 +60,7 @@ class Experts extends \Core\Controller
         View::renderTemplate('Experts/index.html', [
             'states'        => $states,
             'agents'        => $agents,
+            'allagents'     => $allagents,
             'pagetitle'     => $pagetitle,
             'expertsindex'  => 'active'
         ]);

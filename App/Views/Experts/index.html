@@ -45,7 +45,7 @@
 
             <form method="get" action="/experts/find-expert" name="find_expert_form" id="find_expert_form">
                 <div class="col-md-4">
-                    <h3>Expert</h3>
+                    <h3>Search {{ allagents|length }} Experts</h3>
                     <select class="form-control p1" name="expert_category" id="expert_category" autofocus>
                         <option value="">{% if expert_type %}{{ expert_type }}{% else %}Select Expert{% endif %}</option>
                         <option value="1">Business only Broker</option>
