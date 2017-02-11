@@ -1286,8 +1286,8 @@ table.display-broker-agents{
 #listings-by-category{margin-top:30px;}
 
 /* agent profile styles  */
-#agent-contact-data p {margin-bottom: 5px;}
-#agent-contact-data-preview p {margin-bottom: 5px;}
+#agent-contact-data p {margin-bottom: 0px;}
+#agent-contact-data-preview p {margin-bottom: 0px;}
 
 
 /*  add-an-agent-form.html.php styles  */
@@ -1307,6 +1307,9 @@ table.display-broker-agents{
     padding: 0;
     border-bottom: 1px solid #ddd;
     margin-bottom: 15px;
+}
+.no-border {
+    border: none;
 }
 
 #biz-listing-image-gallery img {
