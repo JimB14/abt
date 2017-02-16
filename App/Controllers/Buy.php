@@ -277,6 +277,50 @@ class Buy extends \Core\Controller
 
 
 
+    public function findBusinessesForSaleByCategoryAction()
+    {
+        // retrieve query string data
+        $id = (isset($_REQUEST['id'])) ? filter_var($_REQUEST['id'], FILTER_SANITIZE_NUMBER_INT) : '';
+
+        // retrieve listing data from db per user criteria
+        $results = Listing::findBusinessesByCategoryId($id);
+
+        // create variables for search criteria
+        $listings           = $results['listings'];
+        $category_id        = $results['category_id'];
+        $category_name      = $results['category_name'];
+
+        // test
+        // echo '<pre>';
+        // print_r($listings);
+        // echo '</pre>';
+        // exit();
+
+        // get business categories to populate drop-down
+        $categories = Category::getCategories();
+
+        // get states to populate drop-down
+        $states = State::getStates();
+
+        $toptitle = "Find Your Business";
+
+        $subtitle = "Search Results";
+
+        // display listings in view; pass values
+        View::renderTemplate('Buy/index.html', [
+            'listings'      => $listings,
+            'categories'    => $categories,
+            'states'        => $states,
+            'category_id'   => $category_id,
+            'category_name' => $category_name,
+            'toptitle'      => $toptitle,
+            'subtitle'      => $subtitle
+        ]);
+    }
+
+
+
+
     public function findBusinessesForSaleAction()
     {
         // set offset & count

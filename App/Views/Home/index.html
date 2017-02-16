@@ -86,7 +86,340 @@
                   </h4>
               </div><!-- // .box1  -->
           </div>
+      </div><!-- // .row  -->
 
+
+      <div class="col-md-6 col-md-offset-3" style="border-bottom:1px solid #eee;margin-bottom:25px"></div>
+
+
+      <!-- -  -  -  -  Featured brokers -  -  -  -  -  -  -  -  -  -  - -->
+
+      <div class="row">
+          <div class="col-md-12">
+              <!-- 5 experts -->
+              {% if agents %}
+              <h2 class="text-center bold" style="color: #666; margin-bottom:0px;">
+                {{ pagetitle }}
+              </h2>
+              <div class="text-center" style="padding: 0px 20px;color:#666;margin-bottom:20px;">
+                  <h4>
+                    American Biz Trader is the <strong>only online business-for-sale
+                    directory</strong> exclusively for professional brokers.
+                  </h4>
+                  <h5 style="line-height: 2.2rem;">
+                    Planning to sell your business? Looking to buy a business?
+                    <strong>Hire an expert.</strong> Discover qualified professionals
+                    <a href="/find-a-business-expert">right here</a> to save you
+                    time and money.
+                  </h5>
+                  <h5 class="bold" style="line-height: 2.2rem;">
+                    Search our <a href="/find-a-business-expert">directory</a> for an expert business or real estate
+                    broker near you
+                  </h5>
+              </div>
+              {% endif %}
+
+              {% for agent in agents %}
+              <div class="broker-agent-box">
+
+                  <div class="col-md-2 p1">
+                      <img id="expert-company-logo" class="img-responsive center-block"
+                      src="/assets/images/uploaded_company_logos/{{ agent.company_logo }}" alt="{{ agent.company_name  }}">
+                  </div>
+
+                  <div class="col-md-8 col-sm-8 text-center">
+                      <h2 style="font-size: 28px;font-weight: bold;">
+                        <a href="/buy/all-broker-listings/{{ agent.broker_id }}" title="See All Our Listings">
+                            {{ agent.company_name }}
+                        </a>
+                      </h2>
+                      <h2 style="margin-top: 0px;">
+                          {{ agent.agent_first_name}} {{ (agent.agent_last_name|striptags)|raw }}
+                      </h2>
+                      <h4>
+                        {% if agent.broker_agent_type == 1 %}
+                          Business Broker
+                        {% elseif agent.broker_agent_type == 2 %}
+                          Commercial Real Estate Broker
+                        {% elseif agent.broker_agent_type == 3 %}
+                          Business &amp; Commercial Real Estate Broker
+                        {% endif %}
+                      </h4>
+                      <h3 style="color: #8d8d8d;margin-top:0px;">
+                          Serving
+                          {% if agent.state_serv01 %}  {{ agent.state_serv01 }} {% endif %}
+                          {% if agent.state_serv02 %}, {{ agent.state_serv02 }} {% endif %}
+                          {% if agent.state_serv03 %}, {{ agent.state_serv03 }} {% endif %}
+                          {% if agent.state_serv04 %}, {{ agent.state_serv04 }} {% endif %}
+                          {% if agent.state_serv05 %}, {{ agent.state_serv05 }} {% endif %}
+                      </h3>
+                      <p>
+                          {% if agent.agent_address1 %} {{ agent.agent_address1 }} {% endif %}
+                          {% if agent.agent_address2 %}, {{ agent.agent_address2 }} {% endif %}
+                          {% if agent.agent_city %},  {{ agent.agent_city }} {% endif %}
+                          {% if agent.agent_state %}, {{ agent.agent_state }} {% endif %}
+                          {% if agent.agent_zip %}  {{ agent.agent_zip }} {% endif %}
+                      </p>
+                      <a class="btn btn-buy p1"
+                      href="/buy/agent-profile/{{ agent.agent_id }}&amp;broker_id={{ agent.broker_id }}">
+                      See my Profile &amp; Listings
+                    </a>
+                  </div>
+
+                  <div class="col-md-2 col-sm-2">
+                      <img style="margin-bottom:15px;" id="expert-image" class="center-block img-responsive"
+                      src="/assets/images/uploaded_profile_photos/{% if agent.profile_photo %}{{ agent.profile_photo }}{% else %}silhouette_man.png{% endif %}" alt="{{ agent.agent_first_name}} {{ agent.agent_last_name|raw }} of {{ agent.company_name }}">
+                  </div>
+
+              </div>
+              {% endfor %}
+          </div><!--  // .col-md-12 -->
+
+          <div class="col-md-6 col-md-offset-3" style="border-bottom:1px solid #eee;margin-bottom:25px; margin-top:25px;"></div>
+
+
+          <!-- -  -  -  -  Featured listings -  -  -  -  -  -  -  -  -  -  - -->
+
+          <div class="col-md-12">
+
+              {% if listings %}
+                <h2 class="text-center bold" style="color: #666; margin-bottom:0px;">
+                  {{ subtitle }}
+                </h2>
+                <div class="text-center" style="padding: 0px 20px;color:#666;margin-bottom:20px;">
+                    <h4>
+                      Search our <a href="/buy-a-business">directory</a> for hundreds of businesses for sale
+                      nationwide
+                    </h4>
+                    <h5 style="line-height: 2.2rem;">
+                      Bookmark American Biz Trader | New listings are added daily
+                    </h5>
+                </div>
+              {% endif %}
+
+              <!-- 5 business listings -->
+              {% for listing in listings %}
+              <div class="listing-buy-a-biz box p2">
+
+                  <div class="business-listing">
+                      <div class="row">
+                          <div class="col-md-5">
+                              <a href="/buy/view-listing-details?listing_id={{ listing.listing_id }}&amp;broker_id={{ listing.broker_id}}&amp;listing_agent_id={{ listing.listing_agent_id }}">
+                                  <img class="img-responsive" src="/assets/images/uploaded_business_photos/{% if listing.img01 %}{{ listing.img01 }}{% endif %}" alt="image">
+                              </a>
+                                  <p style="font-size:14px;"><i style="vertical-align:0;" class="fa fa-camera fa-lg"></i>
+                                    <span style="display:inline-block; font-size: 120%; margin-top:5px;">
+                                      {% if listing.img01 and listing.img02 and listing.img03 and listing.img04 and listing.img05 and listing.img06 %}
+                                      6
+                                      {% elseif listing.img01 and listing.img02 and listing.img03 and listing.img04 and listing.img05 %}
+                                      5
+                                      {% elseif listing.img01 and listing.img02 and listing.img03 and listing.img04 %}
+                                      4
+                                      {% elseif listing.img01 and listing.img02 and listing.img03 %}
+                                      3
+                                      {% elseif listing.img01 and listing.img02 %}
+                                      2
+                                      {% else %}
+                                      1
+                                      {% endif %}
+                                    </span>
+                                  </p>
+                          </div>
+
+                          <div style="margin-left: 0px;" class="col-md-7">
+                              <h4 class="media-heading p1 raleway-font bold">
+                                  <a href="/buy/view-listing-details?listing_id={{ listing.listing_id }}&amp;broker_id={{ listing.broker_id}}&amp;listing_agent_id={{ listing.listing_agent_id }}">
+                                      {{ (listing.ad_title|striptags)|raw }}
+                                  </a>
+                              </h4>
+                              <h5 style="margin-bottom: 10px;">
+                                  Asking Price:
+                                  <span class="font-normal">
+                                      ${{ listing.asking_price|number_format }}
+                                  </span>
+                                  <span style="padding-left: 10px">
+                                      Cash Flow:
+                                      <span class="font-normal">
+                                          ${{ listing.cash_flow|number_format }}
+                                      </span>
+                                  </span>
+                              </h5>
+                              <h5>
+                                  Broker:
+                                  <span class="font-normal">
+                                      <a href="/buy/all-broker-listings/{{ listing.broker_id }}">
+                                        {{ listing.company_name }}
+                                      </a>
+                                  </span>
+                              </h5>
+                              <h5>
+                                  Presented by:
+                                  <span class="font-normal">
+                                      <a href="/buy/agent-profile/{{ listing.listing_agent_id }}&amp;broker_id={{ listing.broker_id }}">
+                                        {{ listing.agent_first_name}}  {{ listing.agent_last_name }}
+                                      </a>
+                                  </span>
+                              </h5>
+                              <h5 style="margin-bottom: 10px;">
+                                  Description:
+                                  <span class="font-normal" style="line-height: 20px;">
+                                      {{ (listing.biz_description|striptags|slice(0, 120))|raw }}
+                                  </span>
+                              </h5>
+                              <h5 style="margin-bottom: 10px;">
+                                  City:
+                                  <span class="font-normal">
+                                      {% if listing.hide_city == 0 %}
+                                        {{ listing.city }}
+                                        {% else %}
+                                        Undisclosed
+                                      {% endif %}
+                                  </span>
+                                  <span style="padding-left: 10px">
+                                      State:
+                                      <span class="font-normal">
+                                          {{ listing.state }}
+                                      </span>
+                                  </span>
+                                  <span style="padding-left: 10px">
+                                      County:
+                                      <span class="font-normal">
+                                        {% if listing.hide_county == 0 %}
+                                          {{ listing.county }}
+                                          {% else %}
+                                          Undisclosed
+                                        {% endif %}
+                                      </span>
+                                  </span>
+
+                              </h5>
+                              <h5 style="font-weight: normal; margin-bottom: 10px;">
+                                  <span class="bold">
+                                      Seller ID:
+                                  </span>
+                                  <span style="padding-left: 0px">
+                                      <span class="font-normal">
+                                          {{ listing.clients_id }}
+                                      </span>
+                                  </span>
+
+                                  <span style="padding-left: 2px">
+                                      {% if listing.seller_financing_available == 1 %}
+                                        |
+                                        <span class="buy-seller-financing bold red">
+                                            Seller Financing
+                                        </span>
+                                      {% endif %}
+                                  </span>
+                                  <span style="padding-left: 2px">
+                                      {% if listing.lender_prequalified == 1 %}
+                                        |
+                                        <span class="buy-lender-prequalified bold red">
+                                          Lender Pre-qualified
+                                        </span>
+                                      {% endif %}
+                                  </span>
+                              </h5>
+
+                              <a class="btn btn-buy btn-block" href="/buy/view-listing-details?listing_id={{ listing.listing_id }}&amp;broker_id={{ listing.broker_id}}&amp;listing_agent_id={{ listing.listing_agent_id }}">
+                                View Details
+                              </a>
+                          </div><!-- // .col-md-7  -->
+                      </div><!-- // .row  -->
+                  </div><!-- // #business-listing  -->
+
+              </div><!-- // .listing-buy-a-biz  -->
+              {% endfor %}
+            </div><!--  // .col-md-12 -->
+
+
+            <div class="col-md-6 col-md-offset-3" style="border-bottom:1px solid #eee;margin-bottom:25px; margin-top:25px;"></div>
+
+
+            <!-- -  -  -  -  Popular Categories -  -  -  -  -  -  -  -  -  - -->
+
+            <div class="col-md-12">
+
+              {% if listings %}
+                <h2 class="text-center bold" style="color: #666; margin-bottom:0px;">
+                  {{ populartitle }}
+                </h2>
+                <div class="text-center" style="padding: 0px 20px;color:#666;margin-bottom:20px;">
+                    <h4>
+                      Search our <a href="/buy-a-business">directory</a> for
+                      businesses for sale by category
+                    </h4>
+                    <!-- <h5 style="line-height: 2.2rem;">
+                      Bookmark American Biz Trader | New listings are added daily
+                    </h5> -->
+                </div>
+              {% endif %}
+
+
+                <div class="col-sm-4">
+                    <div class="category-image-box">
+                        <a href="/buy/find-businesses-for-sale-by-category?id=10">
+                            <img class="img-responsive" src="/assets/images/biz_categories/automotive.jpg">
+                            <span class="category-caption">
+                                Automotive
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="category-image-box">
+                        <a href="/buy/find-businesses-for-sale-by-category?id=13">
+                            <img class="img-responsive" src="/assets/images/biz_categories/beauty_personal_care.jpg">
+                            <span class="category-caption">
+                                Beauty and Personal Care
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="category-image-box">
+                        <a href="/buy/find-businesses-for-sale-by-category?id=23">
+                            <img class="img-responsive" src="/assets/images/biz_categories/construction.jpg">
+                            <span class="category-caption">
+                                Construction
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="category-image-box">
+                        <a href="/buy/find-businesses-for-sale-by-category?id=37">
+                            <img  class="img-responsive" src="/assets/images/biz_categories/fitness.jpg">
+                            <span class="category-caption">
+                                Fitness
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="category-image-box">
+                        <a href="/buy/find-businesses-for-sale-by-category?id=91">
+                            <img class="img-responsive" src="/assets/images/biz_categories/restaurants.jpg">
+                            <span class="category-caption">
+                                Restaurants
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="category-image-box">
+                        <a href="/buy/find-businesses-for-sale-by-category?id=92">
+                            <img class="img-responsive" src="/assets/images/biz_categories/retail_miscellaneous.jpg">
+                            <span class="category-caption">
+                                Retail
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+
+          </div><!--  // .col-md-12 -->
       </div><!-- // .row  -->
   </div><!-- // .main-wrapper  -->
 {% endblock %}

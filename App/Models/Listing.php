@@ -128,6 +128,81 @@ class Listing extends \Core\Model
 
 
 
+    public static function findBusinessesByCategoryId($category)
+    {
+        // Retrieve listing data from tables
+        try
+        {
+            // establish db connection
+            $db = static::getDB();
+
+            $sql = "SELECT
+                    listing.listing_id, listing.listing_agent_id, listing.ad_title,
+                    listing.biz_description, listing.county, listing.hide_county,
+                    listing.state, listing.clients_id,
+                    listing_financial.asking_price, listing_financial.cash_flow,
+                    listing_financial.seller_financing_available,
+                    listing_financial.lender_prequalified,
+                    listing_images.img01,
+                    brokers.broker_id, brokers.company_name,
+                    broker_agents.first_name as agent_first_name,
+                    broker_agents.last_name as agent_last_name,
+                    category.name
+                    FROM listing
+                    INNER JOIN category
+                    ON category.id = listing.category_id
+                    INNER JOIN brokers
+                    ON listing.broker_id = brokers.broker_id
+                    INNER JOIN broker_agents
+                    ON listing.listing_agent_id = broker_agents.id
+                    INNER JOIN listing_financial
+                    ON listing.listing_id = listing_financial.listing_id
+                    LEFT JOIN listing_images
+                    ON listing.listing_id = listing_images.listing_id
+                    WHERE category_id = :category_id
+                    AND listing.display = '1'
+                    ORDER BY create_date DESC";
+
+            $stmt = $db->prepare($sql);
+            $parameters = [
+                ':category_id'  => $category
+            ];
+            $stmt->execute($parameters);
+
+            // Store results in array
+            $listings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if($category != '')
+            {
+                // get name of category from category ID
+                $category_name = Category::getCategoryName($category);
+            }
+            else
+            {
+                $category_name = 'Not searched';
+                // $subcategory_name = 'Not searched';
+            }
+
+            // create array to pass values back to Buy Controller
+            $results = [
+                'listings'         => $listings,
+                'category_id'      => $category,
+                'category_name'    => $category_name
+            ];
+
+            // return $results to Buy Controller
+            return $results;
+
+        }
+        catch (PDOException $e) {
+            echo "Error fetching listing details from database" . $e->getMessage();
+            exit();
+        }
+    }
+
+
+
+
 
     public static function findBusinessesBySearchCriteria($offset, $count)
     {

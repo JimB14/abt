@@ -588,8 +588,42 @@ fieldset[disabled] .btn-search.active {
 
 .hi-icon-wrap a:hover {border-color:#E10915; border-width: 3px;} /* DC3522 */
 
+/* -  -  -  popular category section -  -  - */
+.category-image-box {
+  vertical-align: top;
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 25px;
+}
+.category-image-box img {
+  display: block;
+  width: auto;
+  margin: 0 auto;
+  max-height: 177px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 4px;
+}
+.category-caption {
+  display: block;
+  padding-top: 10px;
+  color: #666;
+  font-size: 1.8rem;
+}
 
-/*--------------------------- buy-a-biz.php ------------------*/
+@media (max-width: 991px) {
+    .category-caption {
+      font-size: 1.2rem;
+    }
+    .category-image-box img {
+      max-height: 130px;
+    }
+}
+
+
+
+
+/* - - - - - - - buy-a-biz.php - - - - - - - - */
 .search-div {
     margin: 0 auto;
     border: #ddd 1px solid;
@@ -597,7 +631,7 @@ fieldset[disabled] .btn-search.active {
     padding:10px;
     width: 100%;
     margin: 0 auto;
-    margin-bottom: 18px; /*74px;*/
+    margin-bottom: 18px; /* 74px; */
 }
 
 .listing-buy-a-biz img {

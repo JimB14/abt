@@ -115,7 +115,6 @@ class Experts extends \Core\Controller
             'countysearched'  => $county,
             'expert_type'     => $expert_type
         ]);
-
     }
 
 }
