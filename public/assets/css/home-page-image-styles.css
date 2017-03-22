@@ -11,7 +11,8 @@ and open the template in the editor.
 
 /*  Simon's answer deep in comments of checked response:; http://stackoverflow.com/questions/20763684/full-width-image-with-fixed-height */
 #image-container {
-    background-image: url(../images/2.jpg);
+    /*background-image: url(../images/2.jpg);*/
+    background-image: url(../images/3.jpg);
     background-repeat: no-repeat;
     background-position: center center;
     -webkit-background-size: cover;
@@ -58,7 +59,7 @@ and open the template in the editor.
     text-align: center;
     color: #fff;
     padding: 20px 0px;
-    font-size: 69px;
+    font-size: 60px;
 }
 
 .home-image-text ul {list-style-type: none; display:inline-block}
@@ -74,7 +75,7 @@ and open the template in the editor.
 
 .home-image-text {
     position: relative;
-    top:-156px;
+    top: -333px;  /*-156px;*/
 }
 
 .yantramanav-font{
@@ -85,10 +86,10 @@ and open the template in the editor.
 
 .full-width-bg-color {
     position:absolute;
-    top: 96px;
+    top: 9px;  /*96px;*/
     width:100%;
-    background-color: #000;
-    opacity: .35;
+    /*background-color: #000;
+    opacity: .35;*/
 }
 
 .stroke{
@@ -100,33 +101,51 @@ and open the template in the editor.
     1px  1px 0 #000;
 }
 
-/* - - -  @media MUST be below rules to which it applies  - - - - */
-
-@media (min-width:991px) and (max-width:1199px){
-
+.margintopminus311 {
+  margin-top: -311px;
 }
 
-@media (min-width:768px) and (max-width:990px){
+.margintopminus366 {
+  margin-top: -366px;
+}
+
+/* - - -  @media MUST be below rules to which it applies  - - - - */
+
+@media (max-width:1199px) and (min-width:991px){
     .home-image-text h4 {font-size: 24px;}
     .home-image-text li {font-size: 20px;}
     .yantramanav-font{font-size:42px; }
-    #image-container h1{font-size: 47px;}
-    .home-image-text {top:-214px; }
+    #image-container h1{font-size: 44px;}
+    .home-image-text {top:-346px; }
+}
+
+@media (max-width:990px) and (min-width:768px){
+    .home-image-text h4 {font-size: 24px;}
+    .home-image-text li {font-size: 20px;}
+    .yantramanav-font{font-size:42px; }
+    #image-container h1{font-size: 34px;}
+    .home-image-text {top:-337px; }
 }
 
 /* landscape iPhone 5, 6, 6 Plus*/
-@media (min-width:568px) and (max-width:767px){
-    #image-container h1{font-size: 40px;}
-    .home-image-text {top:-214px; }
+@media (max-width:767px) and (min-width:568px){
+    #image-container h1{font-size: 26px;}
+    .home-image-text {top:-366px; }
+    .home-page-image-text {text-align:center;}
+    .home-image-text h2 {font-size: 26px;}
+    .home-image-text h3 {font-size: 26px;}
 }
 
 /* landscape iPhone 5, 6, 6 Plus*/
-@media (min-width:436px) and (max-width:567px){
+@media (max-width:567px) and (min-width:436px){
      #image-container h1{font-size: 35px;}
     .home-image-text {top:-224px; }
 }
 
-@media (max-width:435px){
+@media (max-width:435px) and (min-width:320px){
     #image-container{display:none;}
     .navbar-header{padding-bottom: 61px;}
+    .margintopminus366 {
+      margin-top: -87px;
+    }
 }

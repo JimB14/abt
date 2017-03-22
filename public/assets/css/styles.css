@@ -556,7 +556,7 @@ fieldset[disabled] .btn-search.active {
     box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.3);
     border-bottom: 4px solid #C80813;
     z-index: 100;
-    margin-top: -56px;
+    /*margin-top: -56px;*/
     margin-bottom: -9px; /*-63px;*/
 }
 
@@ -1577,12 +1577,12 @@ table.display-broker-agents{
 
 /* readonly styles paypal/index.html */
 .current-agents-input input[readonly] {
-  background-color: #fff;
+    background-color: #fff;
 }
 
 /*  buy/sidebar-right.html  */
 .sidebar-contact-form .form-group {
-  margin-bottom: 5px;
+    margin-bottom: 5px;
 }
 
 /*  buy/agent-profile  */
@@ -1594,3 +1594,33 @@ table.display-broker-agents{
 .broker-only-contact-form .form-group {
     margin-bottom: 5px;
 }
+
+/* home/index.html -- see css/home-page-image-styles.css */
+/*.home-page-image-text {
+  text-align: center;
+}
+
+@media(max-width:1199px) and (min-width:769px) {
+    #image-container h1 {
+        font-size: 43px;
+    }
+}
+
+@media(max-width:768px) and (min-width:668px) {
+    #image-container h1 {
+        font-size: 34px;
+    }
+    .home-image-text h3 {
+      font-size: 33px;
+    }
+}
+
+
+@media(max-width:667px) {
+    #image-container h1 {
+        font-size: 28px;
+    }
+    .home-image-text h3 {
+      font-size: 30px;
+    }
+}*/

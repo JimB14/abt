@@ -169,46 +169,57 @@
 
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active">
-                            <a href="#active_listings" aria-controls="active_listings" role="tab" data-toggle="tab">
-                                Business Listings
-                                {% if listings|length > 0 %}
-                                  <span class="badge" style="margin: -18px 0px 0px 7px;">
-                                      {{ listings|length }}
-                                  </span>
-                                {% endif %}
-                            </a>
-                        </li>
-                        <li role="presentation">
-                            <a href="#broker_realty_listings" aria-controls="broker_realty_listings" role="tab" data-toggle="tab">
-                                Real Estate Listings
-                                {% if broker_realty_listings|length > 0 %}
-                                  <span class="badge" style="margin: -18px 0px 0px 7px;">
-                                      {{ broker_realty_listings|length }}
-                                  </span>
-                                {% endif %}
-                            </a>
-                        </li>
-                        <li role="presentation">
-                            <a href="#sold_listings" aria-controls="sold_listings" role="tab" data-toggle="tab">
-                                Sold Listings
-                                {% if broker_sold_listings|length > 0 %}
-                                  <span class="badge" style="margin: -18px 0px 0px 7px;">
-                                      {{ broker_sold_listings|length }}
-                                  </span>
-                                {% endif %}
-                            </a>
-                        </li>
-                        <li role="presentation">
-                            <a href="#our_team" aria-controls="our_team" role="tab" data-toggle="tab">
-                                Our Team
-                                {% if agent_list|length > 0 %}
-                                  <span class="badge" style="margin: -18px 0px 0px 7px;">
-                                      {{ agent_list|length }}
-                                  </span>
-                                {% endif %}
-                            </a>
-                        </li>
+                        {% if listings %}
+                          <li role="presentation" class="active">
+                              <a href="#active_listings" aria-controls="active_listings" role="tab" data-toggle="tab">
+                                  Business Listings
+                                  {% if listings|length > 0 %}
+                                    <span class="badge" style="margin: -18px 0px 0px 7px;">
+                                        {{ listings|length }}
+                                    </span>
+                                  {% endif %}
+                              </a>
+                          </li>
+                        {% endif %}
+
+                        {% if broker_realty_listings %}
+                          <li role="presentation">
+                              <a href="#broker_realty_listings" aria-controls="broker_realty_listings" role="tab" data-toggle="tab">
+                                  Real Estate Listings
+                                  {% if broker_realty_listings|length > 0 %}
+                                    <span class="badge" style="margin: -18px 0px 0px 7px;">
+                                        {{ broker_realty_listings|length }}
+                                    </span>
+                                  {% endif %}
+                              </a>
+                          </li>
+                        {% endif %}
+
+                        {% if broker_sold_listings %}
+                          <li role="presentation">
+                              <a href="#sold_listings" aria-controls="sold_listings" role="tab" data-toggle="tab">
+                                  Sold Listings
+                                  {% if broker_sold_listings|length > 0 %}
+                                    <span class="badge" style="margin: -18px 0px 0px 7px;">
+                                        {{ broker_sold_listings|length }}
+                                    </span>
+                                  {% endif %}
+                              </a>
+                          </li>
+                        {% endif %}
+
+                        {% if agent_list %}
+                          <li role="presentation">
+                              <a href="#our_team" aria-controls="our_team" role="tab" data-toggle="tab">
+                                  Our Team
+                                  {% if agent_list|length > 0 %}
+                                    <span class="badge" style="margin: -18px 0px 0px 7px;">
+                                        {{ agent_list|length }}
+                                    </span>
+                                  {% endif %}
+                              </a>
+                          </li>
+                        {% endif %}
                     </ul>
 
                     <!-- Tab panes -->

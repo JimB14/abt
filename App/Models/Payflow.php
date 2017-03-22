@@ -47,7 +47,7 @@ class Payflow extends \Core\Model
     var $errors = '';
     var $currencies_allowed = ['USD', 'EUR', 'GBP', 'CAD', 'JPY', 'AUD'];
     // set test mode for testing or LIVE
-    var $test_mode = config::PAYPALTEST;
+    var $test_mode = config::PAYPALLIVE;
 
 
     /**
@@ -600,7 +600,7 @@ class Payflow extends \Core\Model
 
 
       /**
-       * retrives inquiry status response from PayPal
+       * retrieves inquiry status response from PayPal
        *
        * @param  String   $vendor       PP credential
        * @param  String   $user         PP credential

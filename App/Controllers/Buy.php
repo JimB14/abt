@@ -418,9 +418,9 @@ class Buy extends \Core\Controller
 
         // retrieve GET variables
         $listing_id = (isset($_REQUEST['listing_id'])) ? filter_var($_REQUEST['listing_id'], FILTER_SANITIZE_NUMBER_INT): '';
-        $broker_id = (isset($_REQUEST['broker_id'])) ? filter_var($_REQUEST['broker_id'], FILTER_SANITIZE_NUMBER_INT): '';
-        $agent_id = (isset($_REQUEST['listing_agent_id'])) ? filter_var($_REQUEST['listing_agent_id'], FILTER_SANITIZE_NUMBER_INT): '';
-        $limit = '';
+        $broker_id  = (isset($_REQUEST['broker_id'])) ? filter_var($_REQUEST['broker_id'], FILTER_SANITIZE_NUMBER_INT): '';
+        $agent_id   = (isset($_REQUEST['listing_agent_id'])) ? filter_var($_REQUEST['listing_agent_id'], FILTER_SANITIZE_NUMBER_INT): '';
+        $limit      = '';
 
         // test
         // echo $listing_id . "<br>";
@@ -439,14 +439,14 @@ class Buy extends \Core\Controller
 
         if($_SERVER['SERVER_NAME'] != 'localhost')
         {
-          // path for live server
-          // UPLOAD_PATH = '/home/pamska5/public_html/americanbiztrader.site/public'
-          $image_path = Config::UPLOAD_PATH . '/assets/images/uploaded_business_photos/';
+            // path for live server
+            // UPLOAD_PATH = '/home/pamska5/public_html/americanbiztrader.site/public'
+            $image_path = Config::UPLOAD_PATH . '/assets/images/uploaded_business_photos/';
         }
         else
         {
-          // path for local machine
-          $image_path = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/uploaded_business_photos/';
+            // path for local machine
+            $image_path = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/uploaded_business_photos/';
         }
 
         $size = getimagesize($image_path . $image);
