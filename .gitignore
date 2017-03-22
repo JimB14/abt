@@ -3,4 +3,5 @@ composer.lock
 twig-templates/
 vendor/
 Config.php
+Mail.php
 z/
